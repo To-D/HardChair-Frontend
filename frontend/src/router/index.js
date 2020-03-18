@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import Login from '@/components/Login'
 import Register from '@/components/Register'
+import ConferenceApplication from '@/components/ConferenceApplication'
 import store from '../store'
 
 Vue.use(Router)
@@ -26,6 +27,11 @@ export const router = new Router({
       path: '/register',
       name: 'Register',
       component: Register
+    },
+    {
+      path:'/ConferenceApplication',
+      name:'ConferenceApplication',
+      component:ConferenceApplication
     }
   ]
 })
