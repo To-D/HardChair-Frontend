@@ -5,6 +5,7 @@ import App from './App'
 import {router} from './router'
 import store from './store'
 import ElementUI from 'element-ui'
+import './assets/css/theme.css'
 
 Vue.use(ElementUI)
 
