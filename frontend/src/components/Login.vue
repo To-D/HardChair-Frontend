@@ -28,6 +28,7 @@
               <span>Into the world of <router-link to="ConferenceApplication">ArkChair</router-link></span>
             </div>
             <el-form
+              status-icon
               :model="loginForm"
               :rules="rules"
               class="login_container"
@@ -35,7 +36,8 @@
               label-width="0px"
               v-loading="loading"
             >
-              <el-form-item prop="username" size="medium">
+
+              <el-form-item prop="username" size="medium" >
                 <el-input
                   size="medium"
                   type="text"
@@ -44,6 +46,7 @@
                   placeholder="Username"
                 ></el-input>
               </el-form-item>
+
               <el-form-item prop="password" size="medium">
                 <el-input
                   size="medium"
@@ -53,8 +56,10 @@
                   placeholder="Password"
                 ></el-input>
               </el-form-item>
+
               <el-form-item size="medium">
                 <el-button
+                  :disabled ="isDisabled"
                   size="medium"
                   type="primary"
                   style="width:100%"
@@ -196,47 +201,93 @@
 </template>
 
 <script>
-export default {
-  name: "Login",
-  data() {
-    return {
-      loginForm: {
-        username: "",
-        password: ""
-      },
-      rules: {
-        username: [
-          { required: true, message: "Username is required", trigger: "blur" }
-        ],
-        password: [
-          { required: true, message: "Password is required", trigger: "blur" }
-        ]
-      },
-      loading: false
-    };
-  },
-  methods: {
-    login() {
-      this.$axios
-        .post("/login", {
-          username: this.loginForm.username,
-          password: this.loginForm.password
-        })
-        .then(resp => {
-          if (resp.status === 200 && resp.data.hasOwnProperty("token")) {
-            this.$store.commit("login", resp.data);
-            this.$router.replace({ path: "/" });
-          } else {
-            alert("login error");
+  export default {
+    name: "Login",
+    data() {
+      var validateUsername=(rule,value,callback)=>{
+        this.isUsernameValid = false;
+        if (value === ''||!value) {
+          callback(new Error('Username is required'));
+        } else {
+          let pattern = /^[a-zA-Z-][a-zA-Z0-9-_]{4,31}$/;
+          if (!pattern.test(value )) {
+            callback(new Error('Invalid username '));
+          }else {
+            this.isUsernameValid = true;
           }
-        })
-        .catch(error => {
-          console.log(error);
-          alert("login error");
+        }
+        callback();
+        this.changeDisabled();
+      }
+
+      var validatePassword=(rule,value,callback)=>{
+        this.isPasswordValid = false;
+        if (value === ''|| !value) {
+          callback(new Error('Password is required'));
+        } else if(value.length < 6 || value.length > 32){
+          callback(new Error('Password must be between 6 and 32 characters'));
+        } else {
+          this.isPasswordValid = true;
+        }
+        callback();
+        this.changeDisabled();
+      }
+
+      return {
+        isDisabled:true,
+        isUsernameValid:false,
+        isPasswordValid:false,
+        loginForm: {
+          username: "",
+          password: ""
+        },
+        rules: {
+          username: [{validator:validateUsername, trigger:"blur"}],
+          password: [{validator:validatePassword, trigger:"blur"}]
+        },
+        loading: false,
+      };
+    },
+
+    methods: {
+      login() {
+        // Turn to loading mode when the form is submitted,and come back when getting response
+        this.loading = true;
+        this.$axios
+          .post("/login", {
+            username: this.loginForm.username,
+            password: this.loginForm.password
+          })
+          .then(resp => {
+            if (resp.status === 200 && resp.data.hasOwnProperty("token")) {
+              //Save token
+              this.$store.commit("login", resp.data);
+              this.$router.replace({ path: "/" });
+            } else {
+              this.errorNotification();
+              this.loading = false;
+            }
+          })
+          .catch(error => {
+            console.log(error);
+            this.errorNotification();
+            this.loading = false;
+          });
+      },
+
+      //Control the "disable" attribution of the "sign in" button
+      changeDisabled(){
+       this.isDisabled = !this.isUsernameValid || !this.isPasswordValid;
+       },
+
+      errorNotification(){
+        this.$notify.error({
+          title: 'Login error',
+          message: 'Please check your username and password or try again later!'
         });
+      }
     }
-  }
-};
+  };
 </script>
 
 <style scoped>
