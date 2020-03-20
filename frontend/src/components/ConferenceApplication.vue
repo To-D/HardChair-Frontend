@@ -132,7 +132,7 @@
                   id="resultAnnuoceDate"
                   placeholder="Enter the date of announcing the result"
                 ></el-input>-->
-                <el-date-picker v-model="applicationForm.resultAnnounceDate" type="date" placeholder="pick result annoucement date" style="width: 100%"></el-date-picker>
+                <el-date-picker v-model="applicationForm.resultAnnounceDate" type="date" placeholder="Pick result annoucement date" style="width: 100%"></el-date-picker>
               </el-form-item>
 
               <br>
@@ -287,27 +287,27 @@ export default {
       rules: {
         // blur 失去鼠标焦点时触发验证
         nameAbbreviation: [
-          { required: true, message: "", trigger: "blur" },
+          { required: true, message: "Short name of conference is required", trigger: "blur" },
           { validator: dataValid, trigger: "blur" }
         ],
         fullName: [
-          { required: true, message: "", trigger: "blur" },
+          { required: true, message: "Full name of conference is required", trigger: "blur" },
           { validator: dataValid, trigger: "blur" }
         ],
         place: [
-          { required: true, message: "", trigger: "blur" },
+          { required: true, message: "Location of conference is required", trigger: "blur" },
           { validator: dataValid, trigger: "blur" }
         ],
         time: [
-          { required: true, message: "", trigger: "blur" },
+          { required: true, message: "Start and end dates of conference are required", trigger: "blur" },
           { validator: dataValid, trigger: "blur" }
         ],
         deadline: [
-          { required: true, message: "", trigger: "blur" },
+          { required: true, message: "Submission deadline is required", trigger: "blur" },
           { validator: dataValid, trigger: "blur" }
         ],
         resultAnnounceDate: [
-          { required: true, message: "", trigger: "blur" },
+          { required: true, message: "Result announcement date is required", trigger: "blur" },
           { validator: dataValid, trigger: "blur" }
         ]
       },
