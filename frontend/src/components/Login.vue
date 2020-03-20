@@ -44,7 +44,39 @@
               <h1 class="mb-1">Welcome back</h1>
               <span>Enter your account details below</span>
             </div>
-            <form
+            <el-form
+              :model="loginForm"
+              :rules="rules"
+              class="login_container"
+              label-position="left"
+              label-width="0px"
+              v-loading="loading"
+            >
+              <h3 class="login_title">Login</h3>
+              <el-form-item prop="username">
+                <el-input
+                  type="text"
+                  v-model="loginForm.username"
+                  auto-complete="off"
+                  placeholder="username"
+                ></el-input>
+              </el-form-item>
+              <el-form-item prop="password">
+                <el-input
+                  type="password"
+                  v-model="loginForm.password"
+                  auto-complete="off"
+                  placeholder="password"
+                ></el-input>
+              </el-form-item>
+              <el-form-item style="width: 100%">
+                <el-button type="primary" v-on:click="login">login</el-button>
+                <router-link to="register">
+                  <el-button type="primary">register</el-button>
+                </router-link>
+              </el-form-item>
+            </el-form>
+            <!-- <form
               :model="loginForm"
               :rules="rules"
               class="login_container"
@@ -80,7 +112,7 @@
                   <router-link to="register">Create one</router-link>
                 </span>
               </div>
-            </form>
+            </form>-->
           </div>
         </div>
       </div>
