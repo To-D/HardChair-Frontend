@@ -1,5 +1,78 @@
 <template>
   <div id="base_login">
+    <section class="row no-gutters min-vh-100 p-0">
+      <div class="col-lg-4 bg-primary-3 d-flex justify-content-end">
+        <img src="../assets/img/amiya.png" alt="Image" class="bg-image" />
+        <div class="divider divider-vertical d-none d-lg-block">
+          <svg
+            width="100%"
+            height="100%"
+            version="1.1"
+            viewBox="0 0 100 100"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            preserveAspectRatio="none"
+          >
+            <path
+              d="M0,0 L100,0 L100,100 L0,100 C66.6666667,83.3333333 100,66.6666667 100,50 C100,33.3333333 66.6666667,16.6666667 0,0 Z"
+              fill="#ffffff"
+            />
+          </svg>
+        </div>
+      </div>
+      <div class="col px-5 position-relative d-flex align-items-center">
+        <div class="row justify-content-center w-100">
+          <div class="col-md-8 col-lg-7 col-xl-6">
+            <div class="text-center mb-4">
+              <h1 class="mb-1">Welcome back</h1>
+              <span>Into the world of <router-link to="ConferenceApplication">ArkChair</router-link></span>
+            </div>
+            <el-form
+              :model="loginForm"
+              :rules="rules"
+              class="login_container"
+              label-position="left"
+              label-width="0px"
+              v-loading="loading"
+            >
+              <el-form-item prop="username" size="medium">
+                <el-input
+                  size="medium"
+                  type="text"
+                  v-model="loginForm.username"
+                  auto-complete="off"
+                  placeholder="Username"
+                ></el-input>
+              </el-form-item>
+              <el-form-item prop="password" size="medium">
+                <el-input
+                  size="medium"
+                  type="password"
+                  v-model="loginForm.password"
+                  auto-complete="off"
+                  placeholder="Password"
+                ></el-input>
+              </el-form-item>
+              <el-form-item size="medium">
+                <el-button
+                  size="medium"
+                  type="primary"
+                  style="width:100%"
+                  v-on:click="login"
+                >Sign In</el-button>
+              </el-form-item>
+            </el-form>
+            <!-- <hr /> -->
+            <div class="text-center text-small text-muted">
+              <span>
+                Don't have an account yet?
+                <router-link to="register">Create one</router-link>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
     <!-- <el-form :model="loginForm"
              :rules="rules"
              class="login_container"
@@ -29,13 +102,12 @@
         </router-link>
       </el-form-item>
     </el-form>-->
-    <section class="min-vh-100 py-5">
+    <!-- <section class="min-vh-100 py-5">
       <div class="container">
+        
         <div class="row justify-content-center mb-md-6">
           <div class="col-auto">
-            <a>
-              <img src="../assets/img/logo.svg" alt="Leap" />
-            </a>
+            ArkChair
           </div>
         </div>
         <div class="row justify-content-center pt-6">
@@ -52,7 +124,6 @@
               label-width="0px"
               v-loading="loading"
             >
-              <h3 class="login_title">Login</h3>
               <el-form-item prop="username">
                 <el-input
                   type="text"
@@ -69,14 +140,18 @@
                   placeholder="password"
                 ></el-input>
               </el-form-item>
-              <el-form-item style="width: 100%">
-                <el-button type="primary" v-on:click="login">login</el-button>
-                <router-link to="register">
-                  <el-button type="primary">register</el-button>
-                </router-link>
+              <el-form-item>
+                <el-button type="primary" class="btn-block btn btn-primary" v-on:click="login">Sign In</el-button>
+                <hr />
+                <div class="text-center text-small text-muted">
+                  <span>
+                    Don't have an account yet?
+                    <router-link to="register">Create one</router-link>
+                  </span>
+                </div>
               </el-form-item>
-            </el-form>
-            <!-- <form
+    </el-form>-->
+    <!-- <form
               :model="loginForm"
               :rules="rules"
               class="login_container"
@@ -112,11 +187,11 @@
                   <router-link to="register">Create one</router-link>
                 </span>
               </div>
-            </form>-->
-          </div>
+    </form>-->
+    <!-- </div>
         </div>
       </div>
-    </section>
+    </section>-->
   </div>
 </template>
 
@@ -130,8 +205,12 @@ export default {
         password: ""
       },
       rules: {
-        username: [{ required: true, message: "", trigger: "blur" }],
-        password: [{ required: true, message: "", trigger: "blur" }]
+        username: [
+          { required: true, message: "Username is required", trigger: "blur" }
+        ],
+        password: [
+          { required: true, message: "Password is required", trigger: "blur" }
+        ]
       },
       loading: false
     };

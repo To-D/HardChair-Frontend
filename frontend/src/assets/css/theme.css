@@ -139,7 +139,7 @@ a {
   text-decoration: none;
   background-color: transparent; }
   a:hover {
-    color: #263a83;
+    color: #2e48a0;
     text-decoration: none; }
 
 a:not([href]):not([tabindex]) {
@@ -2193,7 +2193,7 @@ fieldset:disabled a.btn {
   color: #3755BE;
   text-decoration: none; }
   .btn-link:hover {
-    color: #263a83;
+    color: #2e48a0;
     text-decoration: none; }
   .btn-link:focus, .btn-link.focus {
     text-decoration: none;
@@ -3552,7 +3552,7 @@ input[type="button"].btn-block {
   border: 1px solid #dee2e6; }
   .page-link:hover {
     z-index: 2;
-    color: #263a83;
+    color: #2e48a0;
     text-decoration: none;
     background-color: #e9ecef;
     border-color: #dee2e6; }
@@ -7612,7 +7612,7 @@ button.bg-primary-3:focus {
   color: #3755BE !important; }
 
 a.text-primary:hover, a.text-primary:focus {
-  color: #263a83 !important; }
+  color: #2e48a0 !important; }
 
 .text-secondary {
   color: #6c757d !important; }
