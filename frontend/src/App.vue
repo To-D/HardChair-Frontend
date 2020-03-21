@@ -24,4 +24,9 @@ export default {
     margin: 0px;
     padding: 0px;
   } */
+  .el-button:focus, .el-button:hover {
+    background: #2e48a0;
+    border-color: #2e48a0;
+    color: #FFF;
+  }
 </style>
