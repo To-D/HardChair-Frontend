@@ -1,6 +1,7 @@
 <template>
   <div id="base_application">
-    <div class="navbar-container">
+    <navbar></navbar>
+    <!-- <div class="navbar-container">
       <nav class="navbar navbar-expand-lg bg-white navbar-light" data-sticky="top">
         <div class="container">
           <a class="navbar-brand fade-page">
@@ -25,7 +26,7 @@
           </div>
         </div>
       </nav>
-    </div>
+    </div> -->
 
     <section class="bg-primary header-inner p-0 jarallax position-relative o-hidden" data-overlay>
       <div class="container py-0 layer-2">
@@ -149,7 +150,7 @@
       </div>
     </section>
 
-    <footer class="pb-4 bg-primary-3 text-light" id="footer">
+    <!-- <footer class="pb-4 bg-primary-3 text-light" id="footer">
       <div class="container">
         <div class="row mb-5">
           <div class="col-6 col-lg-3 col-xl-2">
@@ -260,13 +261,18 @@
           </div>
         </div>
       </div>
-    </footer>
+    </footer> -->
+    <footerbar></footerbar>
   </div>
 </template>
 
 <script>
+import navbar from "./Nav";
+import footerbar from "./Footer";
+
 export default {
   name: "ConferenceApplication",
+  components: { navbar, footerbar },
   data() {
     const dataValid = (rule, value, callback) => {
       if (!value || value === "") {
@@ -354,4 +360,4 @@ export default {
 section {
   padding: 2em;
 }
-</style>>
+</style>

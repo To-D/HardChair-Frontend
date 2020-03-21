@@ -26,7 +26,7 @@
           <div class="col-md-8 col-lg-7 col-xl-6">
             <div class="text-center mb-4">
               <h1 class="mb-1">Register</h1>
-              <span>Into the world of <router-link to="ConferenceApplication">ArkChair</router-link></span>
+              <span>Into the world of <router-link to="/">ArkChair</router-link></span>
             </div>
             <el-form
               status-icon

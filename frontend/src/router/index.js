@@ -1,23 +1,27 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
 import HelloWorld from '@/components/HelloWorld'
 import Login from '@/components/Login'
 import Register from '@/components/Register'
 import ConferenceApplication from '@/components/ConferenceApplication'
+import Index from '@/components/Index'
+
 import store from '../store'
 
 Vue.use(Router)
 
 export const router = new Router({
+  mode: 'history',
   routes: [
-    {
-      path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld,
-      meta: {
-        requireAuth: true // 需要登录权限
-      }
-    },
+    // {
+    //   path: '/',
+    //   name: 'HelloWorld',
+    //   component: HelloWorld,
+    //   meta: {
+    //     requireAuth: true // 需要登录权限
+    //   }
+    // },
     {
       path: '/login',
       name: 'Login',
@@ -29,9 +33,17 @@ export const router = new Router({
       component: Register
     },
     {
-      path:'/ConferenceApplication',
-      name:'ConferenceApplication',
-      component:ConferenceApplication
+      path: '/ConferenceApplication',
+      name: 'ConferenceApplication',
+      component: ConferenceApplication,
+      meta: {
+        requireAuth: true // 需要登录权限
+      }
+    },
+    {
+      path: '/',
+      name: 'Index',
+      component: Index
     }
   ]
 })
