@@ -204,7 +204,7 @@
   export default {
     name: "Login",
     data() {
-      var validateUsername=(rule,value,callback)=>{
+      const validateUsername=(rule,value,callback)=>{
         this.isUsernameValid = false;
         if (value === ''||!value) {
           callback(new Error('Username is required'));
@@ -220,7 +220,7 @@
         this.changeDisabled();
       }
 
-      var validatePassword=(rule,value,callback)=>{
+      const validatePassword=(rule,value,callback)=>{
         this.isPasswordValid = false;
         if (value === ''|| !value) {
           callback(new Error('Password is required'));
@@ -285,6 +285,13 @@
           title: 'Login error',
           message: 'Please check your username and password or try again later!'
         });
+      },
+
+      successNotification(){
+        this.$notify.success({
+          title:'Login successfully',
+          message:'Jumping to the application page…'
+        })
       }
     }
   };
