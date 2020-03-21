@@ -231,11 +231,11 @@ export default {
       },
       rules: {
         // blur 失去鼠标焦点时触发验证
-        username: [{ validator: validateUsername, trigger: "blur" }],
-        password: [{ validator: validatePassword, trigger: "blur" }],
-        email: [{ validator: validateEmail, trigger: "blur" }],
-        organization: [{ validator: validateOrganization, trigger: "blur" }],
-        region: [{ validator: validateRegion, trigger: "blur" }]
+        username: [{ validator: validateUsername, trigger: "change" }],
+        password: [{ validator: validatePassword, trigger: "change" }],
+        email: [{ validator: validateEmail, trigger: "change" }],
+        organization: [{ validator: validateOrganization, trigger: "change" }],
+        region: [{ validator: validateRegion, trigger: "change" }]
       },
       loading: false
     };
@@ -278,7 +278,7 @@ export default {
     errorNotification(){
       this.$notify.error({
         title: 'Register error',
-        message:'User name is already registered. Please try others'
+        message:'User name is already registered. Please try another one'
       });
     },
 
