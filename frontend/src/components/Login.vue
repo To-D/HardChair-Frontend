@@ -62,7 +62,7 @@
                   :disabled ="isDisabled"
                   size="medium"
                   type="primary"
-                  style="width:100%"
+                  style="width:100% "
                   v-on:click="login"
                 >Sign In</el-button>
               </el-form-item>
@@ -243,8 +243,8 @@
           password: ""
         },
         rules: {
-          username: [{validator:validateUsername, trigger:"blur"}],
-          password: [{validator:validatePassword, trigger:"blur"}]
+          username: [{validator:validateUsername, trigger:"change"}],
+          password: [{validator:validatePassword, trigger:"change"}]
         },
         loading: false,
       };
@@ -278,7 +278,7 @@
 
       //Control the "disable" attribution of the "sign in" button
       changeDisabled(){
-       this.isDisabled = !this.isUsernameValid || !this.isPasswordValid;
+       this.isDisabled = (!this.isUsernameValid) || (!this.isPasswordValid);
        },
 
       errorNotification(){

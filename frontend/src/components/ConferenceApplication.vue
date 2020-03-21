@@ -46,14 +46,15 @@
         <div class="row">
           <div class="col-xl-6 col-lg-8">
             <el-form
+              status-icon
               :model="applicationForm"
               :rules="rules"
               label-position="top"
               v-loading="loading"
               :ref="applicationForm"
             >
+              <!-- short name -->
               <el-form-item prop="nameAbbreviation" label="Short name">
-                <!-- <el-label for="nameAbbreviation">Abbreviation</el-label> -->
                 <el-input
                   type="text"
                   v-model="applicationForm.nameAbbreviation"
@@ -63,8 +64,8 @@
                 ></el-input>
               </el-form-item>
 
+              <!--full name -->
               <el-form-item prop="fullName" label="Full name">
-                <!-- <el-label for="fullName">Full name</el-label> -->
                 <el-input
                   type="text"
                   v-model="applicationForm.fullName"
@@ -74,20 +75,19 @@
                 ></el-input>
               </el-form-item>
 
-              <el-form-item prop="place" label="Location">
-                <!-- <el-label for="place">Place</el-label> -->
+              <!-- location -->
+              <el-form-item prop="location" label="Location">
                 <el-input
                   type="text"
-                  v-model="applicationForm.place"
+                  v-model="applicationForm.location"
                   auto-complete="off"
-                  id="place"
+                  id="location"
                   placeholder="Enter the location of the conference"
                 ></el-input>
               </el-form-item>
 
+              <!-- start & end time -->
               <el-form-item prop="time" label="Start and end dates">
-                <!-- <el-label for="time">Time</el-label> -->
-
                 <el-date-picker
                   v-model="applicationForm.time"
                   type="daterange"
@@ -96,26 +96,10 @@
                   end-placeholder="End date"
                   style="width:100%"
                 ></el-date-picker>
-
-                <!-- <el-date-picker v-model="value1" type="date" placeholder="选择日期" style="width: 100%"></el-date-picker> -->
-                <!-- <el-input
-                  type="text"
-                  v-model="applicationForm.time"
-                  auto-complete="off"
-                  id="time"
-                  placeholder="Enter the time you'll hold the conference"
-                ></el-input>-->
               </el-form-item>
 
+              <!-- deadline -->
               <el-form-item prop="deadline" label="Submission deadline">
-                <!-- <el-label for="deadline">Deadline</el-label> -->
-                <!-- <el-input
-                  type="text"
-                  v-model="applicationForm.deadline"
-                  auto-complete="off"
-                  id="deadline"
-                  placeholder="Enter the contribution deadline."
-                ></el-input>-->
                 <el-date-picker
                   v-model="applicationForm.deadline"
                   type="date"
@@ -124,24 +108,20 @@
                 ></el-date-picker>
               </el-form-item>
 
+              <!-- result announcement date -->
               <el-form-item prop="resultAnnounceDate" label="Result announcement date">
-                <!-- <el-label for="resultAnnuoceDate">Result announce date</el-label> -->
-                <!-- <el-input
-                  type="text"
-                  v-model="applicationForm.resultAnnounceDate"
-                  auto-complete="off"
-                  id="resultAnnuoceDate"
-                  placeholder="Enter the date of announcing the result"
-                ></el-input>-->
                 <el-date-picker v-model="applicationForm.resultAnnounceDate" type="date" placeholder="Pick result announcement date" style="width: 100%"></el-date-picker>
               </el-form-item>
 
               <br>
+
+              <!-- submit button -->
               <el-form-item style="width: 100%">
                 <el-button
+                  :disabled="isDisabled"
                   type="primary"
                   style="width: 100%"
-                  v-on:click="apply(applicationForm)"
+                  v-on:click="apply()"
                 >Submit application</el-button>
               </el-form-item>
             </el-form>
@@ -274,83 +254,68 @@ export default {
   name: "ConferenceApplication",
   components: { navbar, footerbar },
   data() {
-    const dataValid = (rule, value, callback) => {
-      if (!value || value === "") {
-        return callback(new Error("Can't be empty"));
-      }
-      return callback();
-    };
+    //Control the "disabled" attribute of the submit button
+    const isFormReady=()=>{
+      this.changeDisabled();
+    }
 
     return {
+      isDisabled: true,
       applicationForm: {
         nameAbbreviation: "",
         fullName: "",
-        place: "",
+        location: "",
         time: "",
         deadline: "",
         resultAnnounceDate: ""
       },
       rules: {
-        // blur 失去鼠标焦点时触发验证
-        nameAbbreviation: [
-          { required: true, message: "Short name of conference is required", trigger: "blur" },
-          { validator: dataValid, trigger: "blur" }
-        ],
-        fullName: [
-          { required: true, message: "Full name of conference is required", trigger: "blur" },
-          { validator: dataValid, trigger: "blur" }
-        ],
-        place: [
-          { required: true, message: "Location of conference is required", trigger: "blur" },
-          { validator: dataValid, trigger: "blur" }
-        ],
-        time: [
-          { required: true, message: "Start and end dates of conference are required", trigger: "blur" },
-          { validator: dataValid, trigger: "blur" }
-        ],
-        deadline: [
-          { required: true, message: "Submission deadline is required", trigger: "blur" },
-          { validator: dataValid, trigger: "blur" }
-        ],
-        resultAnnounceDate: [
-          { required: true, message: "Result announcement date is required", trigger: "blur" },
-          { validator: dataValid, trigger: "blur" }
-        ]
+        nameAbbreviation: [ { required: true, message: "Short name of conference is required", trigger: "blur"},{ validator:isFormReady,trigger: "change" }],
+        fullName: [ { required: true, message: "Full name of conference is required", trigger: "blur" },{ validator:isFormReady,trigger: "change" }],
+        location:[{ required: true, message: "Location of conference is required", trigger: "blur" },{ validator:isFormReady,trigger: "change" }],
+        time: [{required: true, message: "Start and end dates of conference are required", trigger: "blur" },{validator:isFormReady,trigger: "change" }],
+        deadline: [{required: true, message: "Submission deadline is required", trigger: "blur" },{ validator:isFormReady,trigger: "change" }],
+        resultAnnounceDate:[{ required: true, message: "Result announcement date is required", trigger: "blur" },{ validator:isFormReady,trigger: "change" }]
       },
       loading: false
     };
   },
   methods: {
-    apply(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          this.$axios
-            .post("/ConferenceApplication", {
-              nameAbbreviation: this.applicationForm.nameAbbreviation,
-              fullName: this.applicationForm.fullName,
-              time: this.applicationForm.time,
-              place: this.applicationForm.place,
-              deadline: this.applicationForm.deadline,
-              resultAnnounceDate: this.applicationForm.resultAnnounceDate
-            })
-            .then(resp => {
-              // 根据后端的返回数据修改
-              if (resp.status === 200 && resp.data.hasOwnProperty("id")) {
-                // 跳转到login
-                alert("The admin will take care of your application.");
-                this.$router.replace("/login");
-              } else {
-                alert("response error");
-              }
-            })
-            .catch(error => {
-              console.log(error);
-              alert("application error");
-            });
-        } else {
-          alert("wrong submit");
-        }
-      });
+    apply() {
+      this.loading = true;
+      this.$axios
+        .post("/ConferenceApplication", {
+          nameAbbreviation: this.applicationForm.nameAbbreviation,
+          fullName: this.applicationForm.fullName,
+          time: this.applicationForm.time,
+          location: this.applicationForm.location,
+          deadline: this.applicationForm.deadline,
+          resultAnnounceDate: this.applicationForm.resultAnnounceDate
+        })
+        .then(resp => {
+          // 根据后端的返回数据修改
+          if (resp.status === 200 && resp.data.hasOwnProperty("id")) {
+            this.loading = false;
+            this.$message.success("The admin will take care of your application.")
+            //待修改成主页部分!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            this.$router.replace("/login");
+          } else {
+            this.$message.error("Application failed. Please sign in first")
+          }
+        })
+        .catch(error => {
+          console.log(error);
+          this.$message.error("Application failed")
+        });
+    },
+
+    changeDisabled(){
+      this.isDisabled =(this.applicationForm.nameAbbreviation ==="")||
+        (this.applicationForm.fullName ==="")||
+        (this.applicationForm.time ==="")||
+        (this.applicationForm.location ==="")||
+        (this.applicationForm.deadline ==="") ||
+        (this.applicationForm.resultAnnounceDate ==="");
     }
   }
 };
