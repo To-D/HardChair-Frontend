@@ -123,7 +123,7 @@
                 ></el-date-picker>
               </el-form-item>
 
-              <el-form-item prop="resultAnnounceDate" label="Result annoucement date">
+              <el-form-item prop="resultAnnounceDate" label="Result announcement date">
                 <!-- <el-label for="resultAnnuoceDate">Result announce date</el-label> -->
                 <!-- <el-input
                   type="text"
@@ -132,7 +132,7 @@
                   id="resultAnnuoceDate"
                   placeholder="Enter the date of announcing the result"
                 ></el-input>-->
-                <el-date-picker v-model="applicationForm.resultAnnounceDate" type="date" placeholder="Pick result annoucement date" style="width: 100%"></el-date-picker>
+                <el-date-picker v-model="applicationForm.resultAnnounceDate" type="date" placeholder="Pick result announcement date" style="width: 100%"></el-date-picker>
               </el-form-item>
 
               <br>
@@ -282,7 +282,7 @@ export default {
         place: "",
         time: "",
         deadline: "",
-        resultAnnouceDate: ""
+        resultAnnounceDate: ""
       },
       rules: {
         // blur 失去鼠标焦点时触发验证
@@ -325,7 +325,7 @@ export default {
               time: this.applicationForm.time,
               place: this.applicationForm.place,
               deadline: this.applicationForm.deadline,
-              resultAnnouceDate: this.applicationForm.resultAnnouceDate
+              resultAnnounceDate: this.applicationForm.resultAnnounceDate
             })
             .then(resp => {
               // 根据后端的返回数据修改
