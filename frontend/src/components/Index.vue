@@ -29,18 +29,6 @@ import footerbar from "./Footer";
 
 export default {
   name: "Index",
-  components: { navbar, footerbar },
-  data() {
-    return {
-
-    }
-  },
-  methods: {}
+  components: { navbar, footerbar }
 };
 </script>
-
-<style scoped>
-/* section {
-  padding: 2em;
-} */
-</style>

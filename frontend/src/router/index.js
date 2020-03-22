@@ -14,14 +14,6 @@ Vue.use(Router)
 export const router = new Router({
   mode: 'history',
   routes: [
-    // {
-    //   path: '/',
-    //   name: 'HelloWorld',
-    //   component: HelloWorld,
-    //   meta: {
-    //     requireAuth: true // 需要登录权限
-    //   }
-    // },
     {
       path: '/login',
       name: 'Login',

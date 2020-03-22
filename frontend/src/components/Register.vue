@@ -256,8 +256,8 @@ export default {
           // 根据后端的返回数据修改
           if (resp.status === 200 && resp.data.hasOwnProperty("id")) {
             // 跳转到login
-            this.successNotification();
             this.$router.replace("/login");
+            this.$message.success("Register successfully! You can sign in now.")
           } else {
             this.errorNotification();
             this.loading=false;
@@ -280,13 +280,6 @@ export default {
         title: 'Register error',
         message:'User name is already registered. Please try another one'
       });
-    },
-
-    successNotification(){
-      this.$notify.success({
-        title:'Register successfully',
-        message:'Jumping to the login page…'
-      })
     }
   }
 };
