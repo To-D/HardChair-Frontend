@@ -107,11 +107,11 @@
         <div class="row justify-content-center">
           <div class="col col-md-auto text-center">
             <small class="text-muted">
-              &copy;2019 This page is protected by reCAPTCHA and is subject to the Google
+              &copy;2020 Proudly delivered by Xuan and his teammates with
               <a
-                href="https://www.google.com/policies/privacy/"
-              >Privacy Policy</a> and
-              <a href="https://policies.google.com/terms">Terms of Service.</a>
+                href="https://cn.vuejs.org/"
+              >Vue.js</a> and
+              <a href="https://spring.io/projects/spring-boot">Spring Boot.</a>
             </small>
           </div>
         </div>
