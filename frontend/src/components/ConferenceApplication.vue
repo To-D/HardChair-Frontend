@@ -20,6 +20,7 @@
         <div class="row">
           <div class="col-xl-6 col-lg-8">
             <el-form
+              @submit.native.prevent
               status-icon
               :model="applicationForm"
               :rules="rules"
@@ -92,6 +93,7 @@
               <!-- submit button -->
               <el-form-item style="width: 100%">
                 <el-button
+                  native-type="submit"
                   :disabled="isDisabled"
                   type="primary"
                   style="width: 100%"

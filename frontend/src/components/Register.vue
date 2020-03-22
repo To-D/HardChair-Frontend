@@ -29,6 +29,7 @@
               <span>Into the world of <router-link to="/">ArkChair</router-link></span>
             </div>
             <el-form
+              @submit.native.prevent
               status-icon
               :model="registerForm"
               :rules="rules"
@@ -116,6 +117,7 @@
               <!-- register button-->
               <el-form-item style="width: 100%">
                 <el-button
+                  native-type="submit"
                   :disabled="isDisabled"
                   size="medium"
                   type="primary"

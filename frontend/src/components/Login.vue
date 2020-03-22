@@ -28,6 +28,7 @@
               <span>Into the world of <router-link to="/">ArkChair</router-link></span>
             </div>
             <el-form
+              @submit.native.prevent
               status-icon
               :model="loginForm"
               :rules="rules"
@@ -59,6 +60,7 @@
 
               <el-form-item size="medium">
                 <el-button
+
                   :disabled ="isDisabled"
                   size="medium"
                   type="primary"
@@ -144,7 +146,7 @@
             if (resp.status === 200 && resp.data.hasOwnProperty("token")) {
               //Save token
               this.$store.commit("login", resp.data);
-              this.$router.replace({ path: "/index" });
+              this.$router.replace({ path: "/" });
               this.$message.success("Login successfully");
             } else {
               this.errorNotification();
