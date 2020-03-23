@@ -22,14 +22,13 @@
                   <a class="nav-link">FAQ</a>
                 </li>
                 <li class="nav-item">
-                  <div class="nav-link">
-                    <router-link to="login">Sign in</router-link>
-                  </div>
+                  <loginbtn></loginbtn>
                 </li>
                 <li class="nav-item">
-                  <div class="nav-link">
-                    <router-link to="register">Register</router-link>
-                  </div>
+                  <registerbtn></registerbtn>
+                </li>
+                <li class="nav-item">
+                  <signoutbtn></signoutbtn>
                 </li>
               </ul>
             </div>
@@ -41,8 +40,13 @@
 </template>
 
 <script>
+import loginbtn from "./LoginBtn";
+import registerbtn from "./RegisterBtn";
+import signoutbtn from "./SignoutBtn";
+
 export default {
   name: "navbar",
+  components: {loginbtn, registerbtn, signoutbtn},
   data() {
     return {
 
