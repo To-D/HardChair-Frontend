@@ -251,9 +251,14 @@ export default {
               .then(resp => {
                 // 根据后端的返回数据修改
                 if (resp.status === 200 && resp.data.hasOwnProperty("id")) {
-                  this.loading = false;
-                  this.$message.success("Your application has been recorded, the admin will audit it.Please wait in patient.")
-                  this.$router.replace("/");
+                    this.loading = false;
+                    this.$message({
+                      type:'success',
+                      center:true,
+                      dangerouslyUseHTMLString: true,
+                      message:"<strong style='color:teal'>Your application has been recorded, the admin will audit it.Please wait in patient.</strong>"
+                    });
+                    this.$router.replace("/");
                 } else {
                   this.$message.error("Application failed. Please sign in first")
                 }

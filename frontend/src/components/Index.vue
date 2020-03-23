@@ -31,11 +31,9 @@ export default {
   components: { navbar, footerbar },
   data(){
     return{
-
     }
   },
   methods:{
-
   }
 };
 </script>

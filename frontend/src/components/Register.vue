@@ -146,7 +146,6 @@ export default {
   name: "Register",
   data() {
     //Validators
-
     const validateUsername = (rule, value, callback)=>{
       this.isUsernameValid = false;
       if (value === ''||!value) {
@@ -257,7 +256,7 @@ export default {
         .then(resp => {
           // 根据后端的返回数据修改
           if (resp.status === 200 && resp.data.hasOwnProperty("id")) {
-            this.$message.success("Register successfully! You can sign in now.")
+            this.successNotification();
             // 跳转到login
             this.$router.replace("/login");
           } else {
@@ -276,7 +275,14 @@ export default {
     changeDisabled(){
       this.isDisabled = (!this.isUsernameValid)||(!this.isPasswordValid)||(!this.isEmailValid)||(!this.isOrganizationValid)||(!this.isRegionValid);
     },
-
+    successNotification(){
+      this.$message({
+        dangerouslyUseHTMLString: true,
+        type:'success',
+        message: '<strong style="color:teal">Register successfully! You can sign in now.</strong>',
+        center:true
+      });
+    },
     errorNotification(){
       this.$notify.error({
         title: 'Register error',

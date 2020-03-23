@@ -145,10 +145,10 @@
             if (resp.status === 200 && resp.data.hasOwnProperty("token")) {
               //Save token
               this.$store.commit("login", resp.data);
-              this.$message.success("Login successfully");
+              this.successNotification();
               this.$router.replace({ path: "/" });
             } else {
-              this.errorNotification();
+              this.errorNotice();
               this.loading = false;
             }
           })
@@ -163,11 +163,20 @@
       changeDisabled(){
        this.isDisabled = (!this.isUsernameValid) || (!this.isPasswordValid);
        },
-
+      successNotification(){
+        this.$message({
+          dangerouslyUseHTMLString: true,
+          type:'success',
+          message: '<strong style="color:teal">Welcome back!</strong>',
+          center:true
+        });
+      },
       errorNotification(){
-        this.$notify.error({
+        this.$notify({
+          type:'error',
+          dangerouslyUseHTMLString: true,
           title: 'Login error',
-          message: 'Please check your username and password or try again later!'
+          message: '<strong style="color:teal">Please check your username and password or try again later!</strong>'
         });
       },
     }

@@ -13,12 +13,17 @@ export default {
   },
   methods: {
     signOut(){
-      this.$confirm('Are you sure to sign out?', {
+      this.$confirm('Are you sure to sign out?','Sign Out', {
         confirmButtonText: 'Yes',
         cancelButtonText: 'No'
       }).then(() => {
         this.$store.commit('logout');
         this.reload();
+        this.$message({
+          dangerouslyUseHTMLString: true,
+          message: '<strong style="color:teal">You have signed out!</strong>',
+          center:true
+        })
       }).catch((error) => {
         console.log(error);
       })
