@@ -145,6 +145,8 @@
 export default {
   name: "Register",
   data() {
+    //Validators
+
     const validateUsername = (rule, value, callback)=>{
       this.isUsernameValid = false;
       if (value === ''||!value) {

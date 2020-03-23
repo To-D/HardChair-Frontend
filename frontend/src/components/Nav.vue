@@ -21,13 +21,13 @@
                 <li>
                   <a class="nav-link">FAQ</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" v-if ="loginSeen" >
                   <loginbtn></loginbtn>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" v-if="registerSeen">
                   <registerbtn></registerbtn>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" v-if="signOutSeen">
                   <signoutbtn></signoutbtn>
                 </li>
               </ul>
@@ -47,13 +47,23 @@ import signoutbtn from "./SignoutBtn";
 export default {
   name: "navbar",
   components: {loginbtn, registerbtn, signoutbtn},
-  data() {
-    return {
-
+  data(){
+    return{
+      loginSeen:false,
+      registerSeen:false,
+      signOutSeen:false
     }
   },
-  methods: {}
-};
+  created() {
+    if(this.$store.state.token){
+      this.signOutSeen = true;
+    }else {
+      this.loginSeen = true;
+      this.registerSeen = true
+    }
+  }
+
+}
 </script>
 
 <style scoped>

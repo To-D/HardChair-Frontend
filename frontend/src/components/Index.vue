@@ -29,7 +29,12 @@ import footerbar from "./Footer";
 export default {
   name: "Index",
   components: { navbar, footerbar },
-  created() {
+  data(){
+    return{
+
+    }
+  },
+  methods:{
 
   }
 };
