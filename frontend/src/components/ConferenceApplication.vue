@@ -1,5 +1,5 @@
 <template>
-  <div id="base_application">
+  <div id="base_application" v-title data-title="ArkChair - Conference Application">
     <navbar></navbar>
 
     <section class="bg-primary header-inner p-0 jarallax position-relative o-hidden" data-overlay>

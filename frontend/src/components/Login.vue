@@ -1,5 +1,5 @@
 <template>
-  <div id="base_login">
+  <div id="base_login" v-title data-title="ArkChair - Login">
     <section class="row no-gutters min-vh-100 p-0">
       <div class="col-lg-4 bg-primary-3 d-flex justify-content-end">
         <img src="../assets/img/amiya.png" alt="Image" class="bg-image" />

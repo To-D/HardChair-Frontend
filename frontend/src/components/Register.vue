@@ -1,5 +1,5 @@
 <template>
-  <div id="base_register">
+  <div id="base_register" v-title data-title="ArkChair - Register">
     <section class="row no-gutters min-vh-100 p-0">
       <div class="col-lg-4 bg-primary-3 d-flex justify-content-end">
         <img src="../assets/img/sora.png" alt="Image" class="bg-image" />

@@ -57,6 +57,12 @@ axios.interceptors.response.use(
   }
 )
 
+Vue.directive('title', {
+  inserted: function (el, binding) {
+    document.title = el.dataset.title
+  }
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

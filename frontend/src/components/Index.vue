@@ -1,5 +1,5 @@
 <template>
-  <div id="base_application">
+  <div id="base_application" v-title data-title="ArkChair - Welcome">
     <navbar></navbar>
 
     <section class="bg-info text-light p-0 o-hidden">
