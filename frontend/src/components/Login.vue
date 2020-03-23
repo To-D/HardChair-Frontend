@@ -60,7 +60,7 @@
 
               <el-form-item size="medium">
                 <el-button
-
+                  native-type="submit"
                   :disabled ="isDisabled"
                   size="medium"
                   type="primary"
@@ -146,8 +146,8 @@
             if (resp.status === 200 && resp.data.hasOwnProperty("token")) {
               //Save token
               this.$store.commit("login", resp.data);
-              this.$router.replace({ path: "/" });
               this.$message.success("Login successfully");
+              this.$router.replace({ path: "/" });
             } else {
               this.errorNotification();
               this.loading = false;

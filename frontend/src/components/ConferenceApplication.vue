@@ -64,6 +64,8 @@
               <!-- start & end time -->
               <el-form-item prop="time" label="Start and end dates">
                 <el-date-picker
+                  :clearable="false"
+                  :picker-options="dateRangePickerOptions"
                   v-model="applicationForm.time"
                   type="daterange"
                   range-separator="to"
@@ -76,6 +78,8 @@
               <!-- deadline -->
               <el-form-item prop="deadline" label="Submission deadline">
                 <el-date-picker
+                  :clearable="false"
+                  :picker-options="deadlinePickerOptions"
                   v-model="applicationForm.deadline"
                   type="date"
                   placeholder="Pick submission deadline"
@@ -85,7 +89,7 @@
 
               <!-- result announcement date -->
               <el-form-item prop="resultAnnounceDate" label="Result announcement date">
-                <el-date-picker v-model="applicationForm.resultAnnounceDate" type="date" placeholder="Pick result announcement date" style="width: 100%"></el-date-picker>
+                <el-date-picker :clearable="false" :picker-options="announcementDatePickerOptions" v-model="applicationForm.resultAnnounceDate" type="date" placeholder="Pick result announcement date" style="width: 100%"></el-date-picker>
               </el-form-item>
 
               <br>
@@ -97,7 +101,7 @@
                   :disabled="isDisabled"
                   type="primary"
                   style="width: 100%"
-                  v-on:click="apply()"
+                  v-on:click="apply(applicationForm)"
                 >Submit application</el-button>
               </el-form-item>
             </el-form>
@@ -118,26 +122,111 @@ export default {
   name: "ConferenceApplication",
   components: { navbar, footerbar },
   data() {
-    //Control the "disabled" attribute of the submit button
-    const isFormReady=()=>{
+    //Validators
+
+    //Judgement whether the submit button can work when the from changes
+    const isFormReady=(rule,value,callback)=>{
+      callback();
+      this.changeDisabled();
+    }
+
+    // If the deadline or the announcement date has been set, the date range should include it
+    const containDDLAndAnnounceDate = (rule,value,callback)=> {
+      this.isTimeValid = false;
+      if (this.applicationForm.deadline) {
+        if(value[0] > this.applicationForm.deadline || value[1] < this.applicationForm.deadline){
+          this.applicationForm.time = "";
+          callback(new Error("The date range should contain the deadline you have chosen"));
+          this.changeDisabled();
+          return;
+        }
+      }
+      if(this.applicationForm.resultAnnounceDate){
+        if(value[0] > this.applicationForm.resultAnnounceDate || value[1] < this.applicationForm.resultAnnounceDate){
+          this.applicationForm.time = "";
+          callback(new Error("The date range should contain the result announcement date you have chosen"));
+          this.changeDisabled();
+          return;
+        }
+      }
+      if(value!=='') {
+        this.isTimeValid = true;
+      }
+      callback();
       this.changeDisabled();
     }
 
     return {
-      isDisabled: true,
+      isDisabled: true, //Control the function of the submit button
+      isTimeValid: false, //Since date range should also contain ddl and announcement date to be valid, so define a boolean value to judge
+
+      //Picker options
+      dateRangePickerOptions: {
+        disabledDate: (time) => {
+          // The date range should start after today
+          const oneDayTime = 24*3600*1000;
+          return time.getTime() < Date.now() - oneDayTime;
+        }
+      },
+
+      deadlinePickerOptions:{
+        disabledDate: (time) => {
+          // 1. If the announcement date has been set, the deadline should before it.
+          // 2. If the date range has been set, the deadline should be within it.
+          // 3.  If not, make sure it's a date after today
+          const oneDayTime = 24*3600*1000;
+          if(this.applicationForm.time){
+            if(this.applicationForm.resultAnnounceDate){
+              let earlier = this.applicationForm.resultAnnounceDate < this.applicationForm.time[1] ? this.applicationForm.resultAnnounceDate:this.applicationForm.time[1];
+              return time.getTime() < this.applicationForm.time[0] || time.getTime() > earlier;
+            }else{
+              return time.getTime() <  this.applicationForm.time[0] ||time.getTime() >  this.applicationForm.time[1];
+            }
+          }else{
+            if(this.applicationForm.resultAnnounceDate){
+              return time.getTime() < Date.now() - oneDayTime || time.getTime() > this.applicationForm.resultAnnounceDate;
+            }else{
+              return time.getTime() < Date.now() - oneDayTime;
+            }
+          }
+        }
+      },
+
+      announcementDatePickerOptions:{
+        disabledDate: (time) => {
+          // 1. If the date range has been set, the deadline and result announcement day should be within it.
+          // 2. If the ddl has been set, the result announcement day should equal to or after it.
+          // 3.  If not, make sure it's a date after today
+          const oneDayTime = 24*3600*1000;
+          if(this.applicationForm.time){
+            if(this.applicationForm.deadline){
+              return time.getTime() < this.applicationForm.deadline || time.getTime() > this.applicationForm.time[1];
+            }else{
+              return time.getTime() <  this.applicationForm.time[0] ||time.getTime() >  this.applicationForm.time[1];
+            }
+          }else{
+            if(this.applicationForm.deadline){
+              return time.getTime() < this.applicationForm.deadline ;
+            }else{
+              return time.getTime() < Date.now() - oneDayTime;
+            }
+          }
+        }
+      },
+
       applicationForm: {
         nameAbbreviation: "",
         fullName: "",
         location: "",
         time: "",
         deadline: "",
-        resultAnnounceDate: ""
+        resultAnnounceDate: "",
       },
       rules: {
         nameAbbreviation: [ { required: true, message: "Short name of conference is required", trigger: "blur"},{ validator:isFormReady,trigger: "change" }],
         fullName: [ { required: true, message: "Full name of conference is required", trigger: "blur" },{ validator:isFormReady,trigger: "change" }],
         location:[{ required: true, message: "Location of conference is required", trigger: "blur" },{ validator:isFormReady,trigger: "change" }],
-        time: [{required: true, message: "Start and end dates of conference are required", trigger: "blur" },{validator:isFormReady,trigger: "change" }],
+        time: [{required: true, message: "Start and end dates of conference are required", trigger: "blur" }, {validator:containDDLAndAnnounceDate,trigger:"blur"}],
         deadline: [{required: true, message: "Submission deadline is required", trigger: "blur" },{ validator:isFormReady,trigger: "change" }],
         resultAnnounceDate:[{ required: true, message: "Result announcement date is required", trigger: "blur" },{ validator:isFormReady,trigger: "change" }]
       },
@@ -145,37 +234,44 @@ export default {
     };
   },
   methods: {
-    apply() {
-      this.loading = true;
-      this.$axios
-        .post("/ConferenceApplication", {
-          nameAbbreviation: this.applicationForm.nameAbbreviation,
-          fullName: this.applicationForm.fullName,
-          time: this.applicationForm.time,
-          location: this.applicationForm.location,
-          deadline: this.applicationForm.deadline,
-          resultAnnounceDate: this.applicationForm.resultAnnounceDate
-        })
-        .then(resp => {
-          // 根据后端的返回数据修改
-          if (resp.status === 200 && resp.data.hasOwnProperty("id")) {
-            this.loading = false;
-            this.$message.success("The admin will take care of your application.")
-            this.$router.replace("/index");
+    apply(formName) {
+      //In case of some bug, still validate before submit
+      this.$refs[formName].validate((valid)=> {
+          if (valid) {
+            this.loading = true;
+            this.$axios
+              .post("/ConferenceApplication", {
+                nameAbbreviation: this.applicationForm.nameAbbreviation,
+                fullName: this.applicationForm.fullName,
+                time: this.applicationForm.time,
+                location: this.applicationForm.location,
+                deadline: this.applicationForm.deadline,
+                resultAnnounceDate: this.applicationForm.resultAnnounceDate
+              })
+              .then(resp => {
+                // 根据后端的返回数据修改
+                if (resp.status === 200 && resp.data.hasOwnProperty("id")) {
+                  this.loading = false;
+                  this.$message.success("Your application has been recorded, the admin will audit it.Please wait in patient.")
+                  this.$router.replace("/");
+                } else {
+                  this.$message.error("Application failed. Please sign in first")
+                }
+              })
+              .catch(error => {
+                this.loading = false;
+                console.log(error);
+                this.$message.error("Application failed")
+              });
           } else {
-            this.$message.error("Application failed. Please sign in first")
+            this.$message.error("Wrong submit! Please check the form.")
           }
-        })
-        .catch(error => {
-          console.log(error);
-          this.$message.error("Application failed")
-        });
-    },
-
+      });
+      },
     changeDisabled(){
       this.isDisabled =(this.applicationForm.nameAbbreviation ==="")||
         (this.applicationForm.fullName ==="")||
-        (this.applicationForm.time ==="")||
+        (!this.isTimeValid)||
         (this.applicationForm.location ==="")||
         (this.applicationForm.deadline ==="") ||
         (this.applicationForm.resultAnnounceDate ==="");

@@ -134,7 +134,6 @@
               </div>
             </el-form>
 
-            
           </div>
         </div>
       </div>
@@ -223,7 +222,6 @@ export default {
       isEmailValid: false,
       isOrganizationValid: false,
       isRegionValid: false,
-
       registerForm: {
         username: "",
         password: "",
@@ -257,9 +255,9 @@ export default {
         .then(resp => {
           // 根据后端的返回数据修改
           if (resp.status === 200 && resp.data.hasOwnProperty("id")) {
+            this.$message.success("Register successfully! You can sign in now.")
             // 跳转到login
             this.$router.replace("/login");
-            this.$message.success("Register successfully! You can sign in now.")
           } else {
             this.errorNotification();
             this.loading=false;
