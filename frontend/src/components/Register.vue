@@ -71,6 +71,7 @@
                 >
                   <div style="font-size:small">
                     <p>* Contain <strong>at least two types</strong> of <strong>numbers</strong>, <strong>letters</strong>, and the two characters <strong>-</strong> and <strong>_</strong></p>
+                    <p>* Should't contain username.</p>
                     <p>* <strong>6</strong> - <strong>32</strong> characters in length</p>
                   </div>
                   <el-input
