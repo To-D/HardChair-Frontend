@@ -170,7 +170,9 @@ export default {
         let pattern = /(?!^(\d+|[a-zA-Z]+|[-_]+)$)^[\w-]{6,32}$/;
         if (!pattern.test(value )) {
           callback(new Error('Invalid Password'));
-        }else {
+        }else if(value.indexOf(this.registerForm.username)!==-1) {
+          callback(new Error('password cannot contain the username'));
+        }else{
           this.isPasswordValid = true;
         }
       }
