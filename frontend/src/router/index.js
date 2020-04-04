@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import Login from '@/components/Login'
 import Register from '@/components/Register'
 import ConferenceApplication from '@/components/ConferenceApplication'
+import ConferenceVerification from '@/components/ConferenceVerification'
 import Index from '@/components/Index'
 
 import store from '../store'
@@ -35,7 +36,12 @@ export const router = new Router({
       path: '/',
       name: 'Index',
       component: Index
-    }
+    },
+    {
+      path: '/verification',
+      name: 'ConferenceVerification',
+      component: ConferenceVerification
+    },
   ]
 })
 
