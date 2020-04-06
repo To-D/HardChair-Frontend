@@ -16,7 +16,7 @@
     <section>
       <div class="container">
         <div class="row">
-          <div class="col-xl-6 col-lg-8">
+          <div class="col-xl-8 col-lg-8">
             <el-collapse v-model="activeNames" @change="handleChange">
               <el-collapse-item title="Short name" name="1">
                 <div>LSOT2020</div>

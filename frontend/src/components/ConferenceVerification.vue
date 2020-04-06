@@ -18,22 +18,35 @@
     <section>
       <div class="container">
         <div class="row">
-          <div class="col-xl-6 col-lg-8">
-            <div v-for="o in 4" :key="o" class="text item">
-              <el-card class="box-card" style="margin-top: 1em">
-                {{'Conference ' + o }} -
-                <router-link to>Verify this application.</router-link>
+          <div class="col-xl-8 col-lg-12">
+            <div class="text item">
+              <el-card shadow="hover" class="box-card" style="margin-top: 1em">
+                <div slot="header" class="clearfix">
+                  <span>Name of the Conference</span>
+                  <el-button
+                    style="float: right; padding: 3px 0"
+                    type="text"
+                  >Verify this application.</el-button>
+                </div>
+                <div>
+                  <div>Application by: Summer Shen</div>
+                  <div>Short name: LSOT2020</div>
+                  <div>Full name: Lungmen Summit of Originum Technology 2020</div>
+                  <div>Location: Tomorrow Hall, Lungmen University</div>
+                  <div>Starts at: 2020-04-14</div>
+                  <div>Ends at: 2020-05-10</div>
+                  <div>Submission deadline: 2020-05-01</div>
+                  <div>Result announcement at: 2020-05-09</div>
+                </div>
               </el-card>
             </div>
           </div>
         </div>
-      </div>
-    </section>
-
-    <section>
-      <div class="container">
+        <br />
         <div class="row">
-          <div class="col-xl-6 col-lg-8"></div>
+          <div class="col-xl-6 col-lg-12">
+            <el-pagination layout="prev, pager, next" :total="50"></el-pagination>
+          </div>
         </div>
       </div>
     </section>

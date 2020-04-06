@@ -15,12 +15,6 @@
                     <router-link to="conference-application">Conference Application</router-link>
                   </a>
                 </li>
-                <li class="nav-item">
-                  <a class="nav-link">News</a>
-                </li>
-                <li>
-                  <a class="nav-link">FAQ</a>
-                </li>
                 <li class="nav-item" v-if="loginSeen">
                   <loginbtn></loginbtn>
                 </li>
