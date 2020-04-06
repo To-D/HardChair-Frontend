@@ -12,7 +12,7 @@
               <ul class="navbar-nav">
                 <li class="nav-item">
                   <a class="nav-link">
-                    <router-link to="ConferenceApplication">Conference Application</router-link>
+                    <router-link to="conference-application">Conference Application</router-link>
                   </a>
                 </li>
                 <li class="nav-item">
@@ -21,7 +21,7 @@
                 <li>
                   <a class="nav-link">FAQ</a>
                 </li>
-                <li class="nav-item" v-if ="loginSeen" >
+                <li class="nav-item" v-if="loginSeen">
                   <loginbtn></loginbtn>
                 </li>
                 <li class="nav-item" v-if="registerSeen">
@@ -46,24 +46,23 @@ import signoutbtn from "./SignoutBtn";
 
 export default {
   name: "navbar",
-  components: {loginbtn, registerbtn, signoutbtn},
-  data(){
-    return{
-      loginSeen:false,
-      registerSeen:false,
-      signOutSeen:false
-    }
+  components: { loginbtn, registerbtn, signoutbtn },
+  data() {
+    return {
+      loginSeen: false,
+      registerSeen: false,
+      signOutSeen: false
+    };
   },
   created() {
-    if(this.$store.state.token){
+    if (this.$store.state.token) {
       this.signOutSeen = true;
-    }else {
+    } else {
       this.loginSeen = true;
-      this.registerSeen = true
+      this.registerSeen = true;
     }
   }
-
-}
+};
 </script>
 
 <style scoped>

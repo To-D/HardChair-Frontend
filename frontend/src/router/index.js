@@ -5,6 +5,8 @@ import Login from '@/components/Login'
 import Register from '@/components/Register'
 import ConferenceApplication from '@/components/ConferenceApplication'
 import ConferenceVerification from '@/components/ConferenceVerification'
+import ConferenceHome from '@/components/ConferenceHome'
+import ConferenceDetail from '@/components/ConferenceDetail'
 import Index from '@/components/Index'
 
 import store from '../store'
@@ -25,7 +27,7 @@ export const router = new Router({
       component: Register
     },
     {
-      path: '/ConferenceApplication',
+      path: '/conference-application',
       name: 'ConferenceApplication',
       component: ConferenceApplication,
       meta: {
@@ -41,6 +43,16 @@ export const router = new Router({
       path: '/verification',
       name: 'ConferenceVerification',
       component: ConferenceVerification
+    },
+    {
+      path: '/conference-home',
+      name: 'ConferenceHome',
+      component: ConferenceHome
+    },
+    {
+      path: '/conference-detail',
+      name: 'ConferenceDetail',
+      component: ConferenceDetail
     },
   ]
 })
