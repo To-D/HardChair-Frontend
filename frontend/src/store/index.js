@@ -3,25 +3,24 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  state: {
-    token: localStorage.getItem('token') || null,
-    userDetails: localStorage.getItem('userDetails') || null
-  },
-  mutations: {
-    login(state, data){
-      localStorage.setItem('token', data.token)
-      localStorage.setItem('userDetails', data.userDetails)
-      state.user = data.userDetails
-      state.token = data.token
+    state: {
+        token: localStorage.getItem('token') || null,
+        userType: localStorage.getItem('userType') || null
     },
-    logout(state) {
-      // 移除token
-      localStorage.removeItem('token')
-      localStorage.removeItem('userDetails')
-      state.userDetails = null
-      state.token = null
-    }
-  },
-  actions: {
-  }
+    mutations: {
+        login(state, data) {
+            localStorage.setItem('token', data[1].token)
+            localStorage.setItem('userType', data[0][0].authority)
+            state.userType = data[0][0].authority;
+            state.token = data[1].token
+        },
+        logout(state) {
+            // 移除token
+            localStorage.removeItem('token')
+            localStorage.removeItem('userType')
+            state.userType = null
+            state.token = null
+        }
+    },
+    actions: {}
 })

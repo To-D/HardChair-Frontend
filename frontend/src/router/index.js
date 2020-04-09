@@ -14,61 +14,61 @@ import store from '../store'
 Vue.use(Router)
 
 export const router = new Router({
-  mode: 'history',
-  routes: [
-    {
-      path: '/login',
-      name: 'Login',
-      component: Login
-    },
-    {
-      path: '/register',
-      name: 'Register',
-      component: Register
-    },
-    {
-      path: '/conference-application',
-      name: 'ConferenceApplication',
-      component: ConferenceApplication,
-      meta: {
-        requireAuth: true // 需要登录权限
-      }
-    },
-    {
-      path: '/',
-      name: 'Index',
-      component: Index
-    },
-    {
-      path: '/verification',
-      name: 'ConferenceVerification',
-      component: ConferenceVerification
-    },
-    {
-      path: '/conference-home',
-      name: 'ConferenceHome',
-      component: ConferenceHome
-    },
-    {
-      path: '/conference-detail',
-      name: 'ConferenceDetail',
-      component: ConferenceDetail
-    },
-  ]
+    mode: 'history',
+    routes: [{
+            path: '/login',
+            name: 'Login',
+            component: Login
+        },
+        {
+            path: '/register',
+            name: 'Register',
+            component: Register
+        },
+        {
+            path: '/conference-application',
+            name: 'ConferenceApplication',
+            component: ConferenceApplication,
+            meta: {
+                requireAuth: true // 需要登录权限
+            }
+        },
+        {
+            path: '/',
+            name: 'Index',
+            component: Index
+        },
+        {
+            path: '/verification',
+            name: 'ConferenceVerification',
+            component: ConferenceVerification
+        },
+        {
+            path: '/conference-home',
+            name: 'ConferenceHome',
+            component: ConferenceHome
+        },
+        {
+            path: '/conference-detail',
+            name: 'ConferenceDetail',
+            component: ConferenceDetail
+        },
+    ]
 })
 
 // 前端登录拦截
-router.beforeEach(function (to, from ,next) {
-  if (to.matched.some(record => record.meta.requireAuth)) {
-    if (store.state.token) {
-      next()
+router.beforeEach(function(to, from, next) {
+    if (to.matched.some(record => record.meta.requireAuth)) {
+        // 如果需要登录
+        if (store.state.token) {
+            next()
+        } else {
+            next({
+                path: '/login',
+                query: { redirect: to.fullPath } // 登录成功之后重新跳转到该路由
+            })
+        }
     } else {
-      next({
-        path: '/login',
-        query: {redirect: to.fullPath} // 登录成功之后重新跳转到该路由
-      })
+        next()
     }
-  } else {
-    next()
-  }
 })

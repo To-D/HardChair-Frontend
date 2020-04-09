@@ -142,13 +142,13 @@
             password: this.loginForm.password
           })
           .then(resp => {
-            if (resp.status === 200 && resp.data.hasOwnProperty("token")) {
+            if (resp.status === 200 && resp.data[1].hasOwnProperty("token")) {
               //Save token
               this.$store.commit("login", resp.data);
               this.successNotification();
               this.$router.replace({ path: "/" });
             } else {
-              this.errorNotice();
+              this.errorNotification();
               this.loading = false;
             }
           })
