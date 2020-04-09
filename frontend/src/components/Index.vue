@@ -9,7 +9,7 @@
           <div class="col-lg-9 col-xl-8">
             <h1 class="display-1">ArkChair</h1>
             <p class="lead mb-4">The conference hosting site for tomorrow's pioneers.</p>
-            <router-link to="ConferenceApplication">
+            <router-link to="conference-application">
               <a class="btn btn-primary btn-lg">Apply now</a>
             </router-link>
             

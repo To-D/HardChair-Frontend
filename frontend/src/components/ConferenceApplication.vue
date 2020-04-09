@@ -256,7 +256,7 @@ export default {
                       type:'success',
                       center:true,
                       dangerouslyUseHTMLString: true,
-                      message:"<strong style='color:teal'>After submission, your application will be reviewed by an admin. Thank you for your patience.</strong>"
+                      message:"<strong style='color:teal'>Your application will be reviewed by an admin. Thank you for your patience.</strong>"
                     });
                     this.$router.replace("/");
                 } else {
