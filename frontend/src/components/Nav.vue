@@ -6,7 +6,7 @@
           <a class="navbar-brand fade-page">
             <router-link to="/">ArkChair</router-link>
           </a>
-          <el-menu mode="horizontal" @select="handleSelect">
+          <el-menu mode="horizontal" @select="handleSelect" style="border-bottom:0;">
             <el-submenu index="1">
               <template slot="title">Conferences</template>
               <router-link to="conference-home"><el-menu-item>Browsing</el-menu-item></router-link>
@@ -73,6 +73,6 @@ export default {
 }
 mark, .mark {
     padding: 0;
-    background-color: #ffffff;
+    background-color: transparent;
 }
 </style>
