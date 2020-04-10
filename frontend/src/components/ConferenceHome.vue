@@ -22,7 +22,7 @@
             <div v-for="o in 4" :key="o" class="text item">
               <el-card class="box-card" style="margin-top: 1em">
                 {{'Conference ' + o }} -
-                <router-link to>View details.</router-link>
+                <router-link to = "/conference-detail/conference.id">View details.</router-link>
               </el-card>
             </div>
           </div>
@@ -51,17 +51,15 @@ export default {
   components: { navbar, footerbar },
   data() {
     return{}
-    //Validators
   },
   methods: {},
   created(){
+    // 获取会议列表
     this.$axios
     .get('/ShowConferences',{})
     .then(resp => {
-      alert("收到返回值");
       // 根据后端的返回数据修改
       if (resp.status === 200) {
-        alert("返回值正确");
         console.log(resp.data);
       } else {
         this.$message.error("Request Error.")

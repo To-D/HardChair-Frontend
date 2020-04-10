@@ -67,13 +67,32 @@ export default {
   components: { navbar, footerbar },
   data() {
     return {
-      activeNames: ['1']
+      activeNames: ['1'],
+      authority:[],
+      conference:null
     };
   },
   methods: {
     handleChange(val) {
       console.log(val);
     }
+  },
+  created(){
+    //获取会议信息
+    this.$axios
+    .post('/ConferenceDetails',{
+      id: this.$route.params.conferenceID
+      })
+    .then(resp =>{
+      if(resp.data.status == 200){
+        console.log(resp.data);
+        this.authority = resp.data[0];
+        this.conferences = resp.data[1];
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    })
   }
 };
 </script>

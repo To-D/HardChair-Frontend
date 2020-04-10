@@ -101,7 +101,7 @@ export default {
     },
     // 审核
     verify(conference,isAllowed){
-      this.$axios.get('/Verify',{
+      this.$axios.post('/Verify',{
         id:conference.id,
         isAllowed:isAllowed
       })

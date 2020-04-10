@@ -32,7 +32,7 @@ export const router = new Router({
             component: ConferenceApplication,
             meta: {
                 requireAuth: true, // 需要登录权限
-                authRole: 'USER'
+                authRole: 'USER' // 管理员不能访问
             }
         },
         {
@@ -55,11 +55,10 @@ export const router = new Router({
             component: ConferenceHome,
             meta: {
                 requireAuth: true,
-                authRole: 'USER'
             }
         },
         {
-            path: '/conference-detail',
+            path: '/conference-detail/:conferenceID',
             name: 'ConferenceDetail',
             component: ConferenceDetail,
             meta: {
