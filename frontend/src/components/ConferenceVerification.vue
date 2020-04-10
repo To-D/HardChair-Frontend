@@ -20,32 +20,44 @@
         <div class="row">
           <div class="col-xl-8 col-lg-12">
             <div class="text item">
-              <el-card shadow="hover" class="box-card" style="margin-top: 1em">
+
+              <el-card shadow="hover" class="box-card" style="margin-top: 1em"
+              v-for ="conference in conferences.slice((currentPage- 1)*pageSize,currentPage*pageSize)" :key="conference.id">
                 <div slot="header" class="clearfix">
-                  <span>Name of the Conference</span>
+                  <span>{{conference.fullName}}</span>
                   <el-button
                     style="float: right; padding: 3px 0"
-                    type="text"
+                    type="text" @click = "verify"
                   >Verify this application.</el-button>
                 </div>
                 <div>
-                  <div>Application by: Summer Shen</div>
-                  <div>Short name: LSOT2020</div>
-                  <div>Full name: Lungmen Summit of Originum Technology 2020</div>
-                  <div>Location: Tomorrow Hall, Lungmen University</div>
-                  <div>Starts at: 2020-04-14</div>
-                  <div>Ends at: 2020-05-10</div>
-                  <div>Submission deadline: 2020-05-01</div>
-                  <div>Result announcement at: 2020-05-09</div>
+                  <div>Application by: {{conference.owner}}</div>
+                  <div>Short name: {{conference.nameAbbreviation}}</div>
+                  <div>Full name:{{conference.fullName}}</div>
+                  <div>Location: {{conference.location}}</div>
+                  <div>Starts at: {{conference.startTime}}</div>
+                  <div>Ends at: {{conference.endTime}}</div>
+                  <div>Submission deadline: {{conference.deadline}}</div>
+                  <div>Result announcement at: {{conference.resultAnnounceDate}}</div>
                 </div>
               </el-card>
+
             </div>
           </div>
         </div>
         <br />
+
         <div class="row">
           <div class="col-xl-6 col-lg-12">
-            <el-pagination layout="prev, pager, next" :total="50"></el-pagination>
+            <el-pagination
+            layout="prev, pager, next"
+            :page-size = "pageSize" 
+            @current-change="pageChange" 
+            :current-page.sync="currentPage"
+            :total="conferences.length"> 
+           >
+           </el-pagination>
+
           </div>
         </div>
       </div>
@@ -63,27 +75,38 @@ export default {
   name: "ConferenceVerification",
   components: { navbar, footerbar },
   data() {
-    return{}
-    //Validators
+    return{
+      //(id,nameAbbreviation,fullName,startName,endTime,location,deadline,resultAnnounceDate,status,owner)
+      conferences:[],
+      pageSize:6,
+      currentPage:1
+    }
   },
-  methods: {},
+  methods: {
+    pageChange(){
+      this.currentPage = currentPage
+    },
+    verify(){
+      this.$axios.get()
+    }
+  },
   created(){
     // 请求数据操作
-    /*alert("开始");
     this.$axios
-    .post('/verification',{})
+    .get('/Verification',{})
     .then(resp => {
-      alert("收到返回值");
-      // 根据后端的返回数据修改
       if (resp.status === 200) {
-        alert("返回值正确");
-        console.log(resp.data);
+        this.conferences = resp.data;
       } else {
         this.$message.error("Request Error.")
       }
-    });*/
+    })
+    .catch(error => {
+      console.log(error);
+      this.$message.error("Request Error.")
+    })
   }
-  };
+};
 </script>
 
 <style scoped>

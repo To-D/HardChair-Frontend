@@ -79,7 +79,7 @@ router.beforeEach(function(to, from, next) {
                 if (store.state.userType == to.meta.authRole) {
                     next()
                 } else {
-                    next(false);
+                    next('/');
                     Message.warning({
                         type: 'warning',
                         center: true,
