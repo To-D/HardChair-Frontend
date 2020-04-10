@@ -84,8 +84,8 @@ export default {
       id: this.$route.params.conferenceID
       })
     .then(resp =>{
-      if(resp.data.status == 200){
-        console.log(resp.data);
+      if(resp.status === 200){
+        //console.log(resp.data);
         this.authority = resp.data[0];
         this.conferences = resp.data[1];
       }
