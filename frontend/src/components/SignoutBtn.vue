@@ -1,5 +1,5 @@
 <template>
-  <div class="nav-link">
+  <div>
     <router-link to="/"  @click.native = "signOut">Sign out</router-link>
   </div>
 </template>
