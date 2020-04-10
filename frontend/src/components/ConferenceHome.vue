@@ -15,7 +15,67 @@
       </div>
     </section>
 
+    <p v-if = "noMeeting">No conference now！</p>
+    
+    <!-- Just for logic development -->
     <section>
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-8 col-lg-12">
+            <div class="text item">
+
+              <el-card shadow="hover" class="box-card" style="margin-top: 1em"
+              v-for ="conference in conferences.slice((currentPage- 1)*pageSize,currentPage*pageSize)" :key="conference.id">
+                <div slot="header" class="clearfix">
+                  <span>{{conference.fullName}}</span>
+              
+                  <el-button
+                    style="float: right; padding: 3px 0"
+                    type="text" @click = "verify(conference,'false')"
+                  >Reject</el-button>
+                  <el-button
+                    style="float: right; padding: 3px 0"
+                    type="text" @click = "verify(conference,'true')"
+                  >Pass</el-button>
+
+                </div>
+                <div>
+                  <div>Application by: {{conference.owner}}</div>
+                  <div>Short name: {{conference.nameAbbreviation}}</div>
+                  <div>Full name:{{conference.fullName}}</div>
+                  <div>Location: {{conference.location}}</div>
+                  <div>Starts at: {{conference.startTime}}</div>
+                  <div>Ends at: {{conference.endTime}}</div>
+                  <div>Submission deadline: {{conference.deadline}}</div>
+                  <div>Result announcement at: {{conference.resultAnnounceDate}}</div>
+                </div>
+              </el-card>
+
+            </div>
+          </div>
+        </div>
+        <br />
+
+        <div class="row">
+          <div class="col-xl-6 col-lg-12">
+            <el-pagination
+            hide-on-single-page
+            layout="prev, pager, next"
+            :page-size = "pageSize" 
+            @current-change="pageChange" 
+            :current-page.sync="currentPage"
+            :total="conferences.length"> 
+           >
+           </el-pagination>
+
+          </div>
+        </div>
+      </div>
+    </section>
+     <!--Just for logic development -->
+
+    <!-- Oringin code -->
+    <!--<section>
       <div class="container">
         <div class="row">
           <div class="col-xl-6 col-lg-8">
@@ -36,8 +96,8 @@
           <div class="col-xl-6 col-lg-8"></div>
         </div>
       </div>
-    </section>
-
+    </section>-->
+    
     <footerbar></footerbar>
   </div>
 </template>
@@ -50,20 +110,49 @@ export default {
   name: "ConferenceHome",
   components: { navbar, footerbar },
   data() {
-    return{}
+    return{
+      conferences:[],
+      pageSize:6,
+      currentPage:1,
+      noMeeting: false
+    }
   },
-  methods: {},
+  methods: {
+     pageChange(){
+      this.currentPage = currentPage
+    },
+  },
   created(){
     // 获取会议列表
     this.$axios
     .get('/ShowConferences',{})
     .then(resp => {
-      // 根据后端的返回数据修改
       if (resp.status === 200) {
-        console.log(resp.data);
+        let checked = resp.data[0];
+        let submitAllowed = resp.data[1];
+        //返回数据为空，提示无会议进行中
+        if(checked === undefined && submitAllowed === undefined){
+          this.noMeeting = true;
+        }else if(checked === undefined && submitAllowed !== undefined){
+          this.conferences = submitAllowed
+        }else if(checked !==undefined && submitAllowed === undefined ){
+          this.conferences = checked;
+        }else{
+        //合并两个数组: 用大的去包含小的，减少运算量
+        if(checked.length > submitAllowed.length){
+          checked.push.apply(checked,submitAllowed);
+          this.conferences = checked;
+        }else{
+          submitAllowed.push.apply(submitAllowed,checked);
+          this.conferences = submitAllowed;
+        }
+        }      
       } else {
         this.$message.error("Request Error.")
       }
+    })
+    .catch(error =>{
+      console.log(error);
     })
   }
 };

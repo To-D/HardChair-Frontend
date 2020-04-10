@@ -173,7 +173,7 @@ export default {
         disabledDate: (time) => {
           // 1. If the announcement date has been set, the deadline should before it.
           // 2. If the date range has been set, the deadline should be within it.
-          // 3.  If not, make sure it's a date after today
+          // 3. If not, make sure it's a date after today
           const oneDayTime = 24*3600*1000;
           if(this.applicationForm.time){
             if(this.applicationForm.resultAnnounceDate){

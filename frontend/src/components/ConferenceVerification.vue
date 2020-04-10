@@ -25,8 +25,7 @@
               v-for ="conference in conferences.slice((currentPage- 1)*pageSize,currentPage*pageSize)" :key="conference.id">
                 <div slot="header" class="clearfix">
                   <span>{{conference.fullName}}</span>
-
-                  <div v-if = "beforeVerify">
+              
                   <el-button
                     style="float: right; padding: 3px 0"
                     type="text" @click = "verify(conference,'false')"
@@ -35,11 +34,6 @@
                     style="float: right; padding: 3px 0"
                     type="text" @click = "verify(conference,'true')"
                   >Pass</el-button>
-                  </div>
-
-                  <div v-if = "afterVerify">
-                    <p>Handled</p>
-                  </div>
 
                 </div>
                 <div>
@@ -86,13 +80,12 @@ import footerbar from "./Footer";
 export default {
   name: "ConferenceVerification",
   components: { navbar, footerbar },
+  inject:['reload'],
   data() {
     return{
       conferences:[],
       pageSize:6,
       currentPage:1,
-      beforeVerify:true,
-      afterVerify:false
     }
   },
   methods: {
@@ -106,9 +99,9 @@ export default {
         isAllowed:isAllowed
       })
       .then(resp =>{
-        if(resp.data.status == 200){
-          this.beforeVerify = false;
-          this.afterVerify = true;
+        if(resp.status === 200){
+          //审核成功刷新页面
+          this.reload();
         }
       })
       .catch(error=>{
