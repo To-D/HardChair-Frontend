@@ -1,5 +1,5 @@
 <template>
-  <div class="nav-link">
+  <div>
     <router-link to="register">Register</router-link>
   </div>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <div class="nav-link">
+  <div>
     <router-link to="login">Sign in</router-link>
   </div>
 </template>
