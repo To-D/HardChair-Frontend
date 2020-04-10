@@ -25,10 +25,22 @@
               v-for ="conference in conferences.slice((currentPage- 1)*pageSize,currentPage*pageSize)" :key="conference.id">
                 <div slot="header" class="clearfix">
                   <span>{{conference.fullName}}</span>
+
+                  <div v-if = "beforeVerify">
                   <el-button
                     style="float: right; padding: 3px 0"
-                    type="text" @click = "verify"
-                  >Verify this application.</el-button>
+                    type="text" @click = "verify(conference,'false')"
+                  >Reject</el-button>
+                  <el-button
+                    style="float: right; padding: 3px 0"
+                    type="text" @click = "verify(conference,'true')"
+                  >Pass</el-button>
+                  </div>
+
+                  <div v-if = "afterVerify">
+                    <p>Handled</p>
+                  </div>
+
                 </div>
                 <div>
                   <div>Application by: {{conference.owner}}</div>
@@ -76,18 +88,32 @@ export default {
   components: { navbar, footerbar },
   data() {
     return{
-      //(id,nameAbbreviation,fullName,startName,endTime,location,deadline,resultAnnounceDate,status,owner)
       conferences:[],
       pageSize:6,
-      currentPage:1
+      currentPage:1,
+      beforeVerify:true,
+      afterVerify:false
     }
   },
   methods: {
     pageChange(){
       this.currentPage = currentPage
     },
-    verify(){
-      this.$axios.get()
+    // 审核
+    verify(conference,isAllowed){
+      this.$axios.get('/Verify',{
+        id:conference.id,
+        isAllowed:isAllowed
+      })
+      .then(resp =>{
+        if(resp.data.status == 200){
+          this.beforeVerify = false;
+          this.afterVerify = true;
+        }
+      })
+      .catch(error=>{
+        console.log(error);
+      })
     }
   },
   created(){
