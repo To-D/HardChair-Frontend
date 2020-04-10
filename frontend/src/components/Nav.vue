@@ -6,43 +6,27 @@
           <a class="navbar-brand fade-page">
             <router-link to="/">ArkChair</router-link>
           </a>
-          <el-menu mode="horizontal" @select="handleSelect">
-            <el-submenu index="2">
+          <el-menu mode="horizontal" @select="handleSelect" style="border-bottom:0;">
+            <el-submenu index="1">
               <template slot="title">Conferences</template>
-              <el-menu-item index="2-1">Browsing</el-menu-item>
-              <el-menu-item index="2-2">Verification</el-menu-item>
+              <router-link to="conference-home"><el-menu-item>Browsing</el-menu-item></router-link>
+              <router-link to="conference-application"><el-menu-item>Application</el-menu-item></router-link>
+              
             </el-submenu>
-            <el-menu-item index="3">My ArkChair</el-menu-item>
+            <el-submenu index="2" v-if="signOutSeen">
+              <template slot="title">My ArkChair<el-badge is-dot class="mark" /></template>
+              <router-link to=""><el-menu-item>My Conference</el-menu-item></router-link>
+              <router-link to="verification"><el-menu-item>Verification<el-badge is-dot class="mark" /></el-menu-item></router-link>
+              <router-link to=""><el-menu-item>Message<el-badge is-dot class="mark" /></el-menu-item></router-link>
+              <signoutbtn></signoutbtn>
+            </el-submenu>
             <el-menu-item v-if="loginSeen">
               <loginbtn></loginbtn>
             </el-menu-item>
             <el-menu-item v-if="registerSeen">
               <registerbtn></registerbtn>
             </el-menu-item>
-            <el-menu-item v-if="signOutSeen">
-              <signoutbtn></signoutbtn>
-            </el-menu-item>
           </el-menu>
-          <!-- <div class="collapse navbar-collapse justify-content-end">
-            <div class="py-2 py-lg-0">
-              <ul class="navbar-nav">
-                <li class="nav-item">
-                  <a class="nav-link">
-                    <router-link to="conference-application">Conference Application</router-link>
-                  </a>
-                </li>
-                <li class="nav-item" v-if="loginSeen">
-                  <loginbtn></loginbtn>
-                </li>
-                <li class="nav-item" v-if="registerSeen">
-                  <registerbtn></registerbtn>
-                </li>
-                <li class="nav-item" v-if="signOutSeen">
-                  <signoutbtn></signoutbtn>
-                </li>
-              </ul>
-            </div>
-          </div>-->
         </div>
       </nav>
     </div>
@@ -86,5 +70,9 @@ export default {
 .navbar {
   border-bottom: 0;
   padding: 0;
+}
+mark, .mark {
+    padding: 0;
+    background-color: transparent;
 }
 </style>

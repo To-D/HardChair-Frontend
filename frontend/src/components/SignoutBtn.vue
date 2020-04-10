@@ -1,6 +1,6 @@
 <template>
   <div>
-    <router-link to="/"  @click.native = "signOut">Sign out</router-link>
+    <router-link to="/"  @click.native = "signOut"><el-menu-item>Sign out</el-menu-item></router-link>
   </div>
 </template>
 
