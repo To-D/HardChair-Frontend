@@ -91,7 +91,17 @@
                   type="email"
                   v-model="registerForm.email"
                   auto-complete="off"
-                  placeholder="E-mail"
+                  placeholder="Your e-mail"
+                ></el-input>
+              </el-form-item>
+
+              <!-- fullname -->
+              <el-form-item prop="fullname" size="medium">
+                <el-input size="medium"
+                  type="fullname"
+                  v-model="registerForm.fullname"
+                  auto-complete="off"
+                  placeholder="Your real name"
                 ></el-input>
               </el-form-item>
 
@@ -101,7 +111,7 @@
                   type="organization"
                   v-model="registerForm.organization"
                   auto-complete="off"
-                  placeholder="Organization"
+                  placeholder="Your organization"
                 ></el-input>
               </el-form-item>
 
@@ -111,7 +121,7 @@
                   type="region"
                   v-model="registerForm.region"
                   auto-complete="off"
-                  placeholder="Region"
+                  placeholder="Your region"
                 ></el-input>
               </el-form-item>
 
@@ -197,6 +207,17 @@ export default {
       this.changeDisabled();
     }
 
+    const validateFullname = (rule, value, callback)=>{
+      this.isFullnameValid = false;
+      if (value === ''||!value) {
+        callback(new Error('Real name is required'));
+      }else{
+        this.isFullnameValid = true;
+      }
+      callback();
+      this.changeDisabled();
+    }
+
     const validateOrganization = (rule, value, callback)=>{
       this.isOrganizationValid = false;
       if (value === ''||!value) {
@@ -224,12 +245,14 @@ export default {
       isUsernameValid: false,
       isPasswordValid: false,
       isEmailValid: false,
+      isFullnameValid: false,
       isOrganizationValid: false,
       isRegionValid: false,
       registerForm: {
         username: "",
         password: "",
         email: "",
+        fullname: "",
         organization: "",
         region:""
       },
@@ -238,6 +261,7 @@ export default {
         username: [{ validator: validateUsername, trigger: "change" }],
         password: [{ validator: validatePassword, trigger: "change" }],
         email: [{ validator: validateEmail, trigger: "change" }],
+        fullname: [{ validator: validateFullname, trigger: "change" }],
         organization: [{ validator: validateOrganization, trigger: "change" }],
         region: [{ validator: validateRegion, trigger: "change" }]
       },
@@ -253,6 +277,7 @@ export default {
           username: this.registerForm.username,
           password: this.registerForm.password,
           email:this.registerForm.email,
+          fullname: this.registerForm.fullname,
           organization:this.registerForm.organization,
           region:this.registerForm.region
         })
@@ -276,7 +301,7 @@ export default {
 
     //Control the "disable" attribution of the "register" button
     changeDisabled(){
-      this.isDisabled = (!this.isUsernameValid)||(!this.isPasswordValid)||(!this.isEmailValid)||(!this.isOrganizationValid)||(!this.isRegionValid);
+      this.isDisabled = (!this.isUsernameValid)||(!this.isPasswordValid)||(!this.isEmailValid)||(!this.isFullnameValid)||(!this.isOrganizationValid)||(!this.isRegionValid);
     },
     successNotification(){
       this.$message({
