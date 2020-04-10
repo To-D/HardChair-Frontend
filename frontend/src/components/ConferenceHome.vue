@@ -50,9 +50,24 @@ export default {
   name: "ConferenceHome",
   components: { navbar, footerbar },
   data() {
+    return{}
     //Validators
   },
-  methods: {}
+  methods: {},
+  created(){
+    this.$axios
+    .get('/ShowConferences',{})
+    .then(resp => {
+      alert("收到返回值");
+      // 根据后端的返回数据修改
+      if (resp.status === 200) {
+        alert("返回值正确");
+        console.log(resp.data);
+      } else {
+        this.$message.error("Request Error.")
+      }
+    })
+  }
 };
 </script>
 

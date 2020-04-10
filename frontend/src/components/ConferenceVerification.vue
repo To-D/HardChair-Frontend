@@ -63,13 +63,27 @@ export default {
   name: "ConferenceVerification",
   components: { navbar, footerbar },
   data() {
+    return{}
     //Validators
   },
   methods: {},
   created(){
-    //this.$axios;
+    // 请求数据操作
+    /*alert("开始");
+    this.$axios
+    .post('/verification',{})
+    .then(resp => {
+      alert("收到返回值");
+      // 根据后端的返回数据修改
+      if (resp.status === 200) {
+        alert("返回值正确");
+        console.log(resp.data);
+      } else {
+        this.$message.error("Request Error.")
+      }
+    });*/
   }
-};
+  };
 </script>
 
 <style scoped>

@@ -1,6 +1,6 @@
 <template>
   <div class="nav-link">
-    <router-link to="/" @click.native = "signOut">Sign out</router-link>
+    <router-link to="/"  @click.native = "signOut">Sign out</router-link>
   </div>
 </template>
 

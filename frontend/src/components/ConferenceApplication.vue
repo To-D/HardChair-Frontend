@@ -121,7 +121,7 @@ import footerbar from "./Footer";
 export default {
   name: "ConferenceApplication",
   components: { navbar, footerbar },
-  data() {
+  data: function(){
     //Validators
 
     //Judgement whether the submit button can work when the from changes

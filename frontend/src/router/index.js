@@ -54,7 +54,8 @@ export const router = new Router({
             name: 'ConferenceHome',
             component: ConferenceHome,
             meta: {
-                requireAuth: true
+                requireAuth: true,
+                authRole: 'USER'
             }
         },
         {
@@ -78,9 +79,7 @@ router.beforeEach(function(to, from, next) {
                 if (store.state.userType == to.meta.authRole) {
                     next()
                 } else {
-                    next({
-                        path: '/', // 没有权限强制返回主页
-                    })
+                    next(false);
                     Message.warning({
                         type: 'warning',
                         center: true,
