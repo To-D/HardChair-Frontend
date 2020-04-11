@@ -6,8 +6,8 @@
       <div class="container py-0 layer-2">
         <div class="row my-4 my-md-6 text-light">
           <div class="col-lg-9 col-xl-6">
-            <h1 class="display-4">Lungmen Summit of Originum Technology 2020</h1>
-            <p class="lead mb-0">Lorem ipsum dolor sit, amet consectetur adipisicing elit.</p>
+            <h1 class="display-4">{{conference.nameAbbreviation}}</h1>
+            <p class="lead mb-0">{{conference.fullName}}</p>
           </div>
         </div>
       </div>
@@ -37,20 +37,61 @@
               <el-collapse-item title="Result announcement date" name="6">
                 <div>{{conference.resultAnnounceDate}}</div>
               </el-collapse-item>
-              
+
               <el-collapse-item title="Status" name="7">
                 <div>{{conference.status}}</div>
               </el-collapse-item>
-              
+
               <el-collapse-item title="Owner" name="8">
                 <div>{{conference.owner}}</div>
+              </el-collapse-item>
+              <el-collapse-item title="Submit your paper" name="8">
+                <el-form
+                  @submit.native.prevent
+                  status-icon
+                  :model="loginForm"
+                  :rules="rules"
+                  class="login_container"
+                  label-position="left"
+                  label-width="0px"
+                  v-loading="loading"
+                >
+                  <!-- <el-form-item prop="username" size="medium">
+                    <el-input
+                      size="medium"
+                      type="text"
+                      v-model="loginForm.username"
+                      auto-complete="off"
+                      placeholder="Username"
+                    ></el-input>
+                  </el-form-item>
+
+                  <el-form-item prop="password" size="medium">
+                    <el-input
+                      size="medium"
+                      type="password"
+                      v-model="loginForm.password"
+                      auto-complete="off"
+                      placeholder="Password"
+                    ></el-input>
+                  </el-form-item>
+
+                  <el-form-item size="medium">
+                    <el-button
+                      native-type="submit"
+                      :disabled="isDisabled"
+                      size="medium"
+                      type="primary"
+                      style="width:100% "
+                      v-on:click="login"
+                    >Submit</el-button>
+                  </el-form-item> -->
+                </el-form>
               </el-collapse-item>
             </el-collapse>
           </div>
         </div>
-        <div class="row">
-          
-        </div>
+        <div class="row"></div>
       </div>
     </section>
 
@@ -75,9 +116,9 @@ export default {
   components: { navbar, footerbar },
   data() {
     return {
-      activeNames: ['1'],
-      authority:[],
-      conference:null
+      activeNames: ["1", "2", "3", "4", "5", "6", "7", "8"],
+      authority: [],
+      conference: null
     };
   },
   methods: {
@@ -85,22 +126,22 @@ export default {
       console.log(val);
     }
   },
-  created(){
+  created() {
     //获取会议信息
     this.$axios
-    .post('/ConferenceDetails',{
-      id: this.$route.params.conferenceID
+      .post("/ConferenceDetails", {
+        id: this.$route.params.conferenceID
       })
-    .then(resp =>{
-      if(resp.status === 200){
-        console.log(resp.data);
-        this.authority = resp.data[0];
-        this.conference = resp.data[1];
-      }
-    })
-    .catch(error => {
-      console.log(error);
-    })
+      .then(resp => {
+        if (resp.status === 200) {
+          console.log(resp.data);
+          this.authority = resp.data[0];
+          this.conference = resp.data[1];
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 };
 </script>

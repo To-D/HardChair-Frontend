@@ -14,12 +14,12 @@
               <template slot="title">
                 <i class="el-icon-collection"></i>Conferences
               </template>
-              <router-link to="conference-home">
+              <router-link to="/conference-home">
                 <el-menu-item>
                   <i class="el-icon-menu"></i>Browsing
                 </el-menu-item>
               </router-link>
-              <router-link to="conference-application" v-if="isNormalUser">
+              <router-link to="/conference-application" v-if="isNormalUser">
                 <el-menu-item>
                   <i class="el-icon-edit-outline"></i>Application
                 </el-menu-item>
@@ -37,21 +37,21 @@
             <!-- Personal info -->
             <el-submenu index="2" v-if="afterLogin">
               <template slot="title">
-                <i class="el-icon-user-solid"></i> ArkChair
+                <i class="el-icon-user-solid"></i>My ArkChair
                 <el-badge :is-dot="isUpdated" class="mark" />
               </template>
-              <router-link to="my-ark-chair" v-if="isNormalUser">
+              <router-link to="/my-ark-chair" v-if="isNormalUser">
                 <el-menu-item>
                   <i class="el-icon-s-order"></i>My Conferences
                 </el-menu-item>
               </router-link>
-              <router-link to="verification" v-if="isADMIN">
+              <router-link to="/verification" v-if="isADMIN">
                 <el-menu-item>
                   <i class="el-icon-s-claim"></i>Verification
                   <el-badge :is-dot="isUpdated" class="mark" />
                 </el-menu-item>
               </router-link>
-              <router-link to="message-inbox" v-if="isNormalUser">
+              <router-link to="/message-inbox" v-if="isNormalUser">
                 <el-menu-item>
                   <i class="el-icon-message"></i>Messages
                   <el-badge :is-dot="isUpdated" class="mark" />
