@@ -123,39 +123,19 @@ export default {
     },
   },
   created(){
-    // // 获取会议列表
-    // this.$axios
-    // .get('/ShowConferences',{})
-    // .then(resp => {
-    //   if (resp.status === 200) {
-    //     let checked = resp.data.CHECKED;
-    //     let submitAllowed = resp.data.SUBMIT_ALLOWED;
-    //     //返回数据为空，提示无会议进行中
-    //     if(checked === undefined && submitAllowed === undefined){
-    //       this.noMeeting = true;
-    //     }else if(checked === undefined && submitAllowed !== undefined){
-    //       this.conferences = submitAllowed
-    //     }else if(checked !==undefined && submitAllowed === undefined ){
-    //       this.conferences = checked;
-    //     }else{
-    //       submitAllowed.push.apply(submitAllowed,checked);
-    //       this.conferences = submitAllowed;
-    //     /*//合并两个数组: 用大的去包含小的，减少运算量
-    //     if(checked.length > submitAllowed.length){
-    //       checked.push.apply(checked,submitAllowed);
-    //       this.conferences = checked;
-    //     }else{
-    //       submitAllowed.push.apply(submitAllowed,checked);
-    //       this.conferences = submitAllowed;
-    //     }*/
-    //     }      
-    //   } else {
-    //     this.$message.error("Request Error.")
-    //   }
-    // })
-    // .catch(error =>{
-    //   console.log(error);
-    // })
+     // Get information of conferences that relate to the present user 
+     this.$axios
+     .post('/Profile',{})
+     .then(resp => {
+       if (resp.status === 200) {
+         console.log(resp.data);
+       } else {
+         this.$message.error("Request Error.")
+       }
+    })
+     .catch(error =>{
+       console.log(error);
+     })
   }
 };
 </script>

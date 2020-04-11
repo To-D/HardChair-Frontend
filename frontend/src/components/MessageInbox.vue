@@ -1,12 +1,12 @@
 <template>
-  <div id="base_verification" v-title data-title="ArkChair - Conference Verification">
+  <div id="base_verification" v-title data-title="ArkChair - Message Inbox">
     <navbar></navbar>
 
     <section class="bg-primary header-inner p-0 jarallax position-relative o-hidden" data-overlay>
       <div class="container py-0 layer-2">
         <div class="row my-4 my-md-6 text-light">
           <div class="col-lg-9 col-xl-6">
-            <h1 class="display-4">Conference Verification</h1>
+            <h1 class="display-4">Message Inbox</h1>
             <!-- <p
               class="lead mb-0"
             ></p> -->
@@ -15,7 +15,7 @@
       </div>
     </section>
 
-    <p v-if = "noMeeting">No conference now！</p>
+    <div v-if = "noMessage"><el-card shadow="hover">No conference now!</el-card></div>
     <section v-else>
       <div class="container">
         <div class="row">
@@ -25,73 +25,51 @@
                 shadow="hover"
                 class="box-card"
                 style="margin-top: 1em;"
-                v-for="conference in conferences.slice((currentPage- 1)*pageSize,currentPage*pageSize)"
-                :key="conference.id"
+                v-for="message in messages.slice((currentPage- 1)*pageSize,currentPage*pageSize)"
+                :key="message.messageId"
               >
                 <div slot="header" class="clearfix">
-                  <span style="font-weight: bold">{{conference.nameAbbreviation}}</span>
+                  <span style="font-weight: bold">{{message.type}}</span>
 
                   <el-button
+                  v-if = "isInvitation(message.type)"
                     style="float: right; padding: 3px 0"
                     type="text"
-                    @click="verify(conference,'false')"
-                  >Reject</el-button>
+                    @click="verify(message.id,'false')"
+                  >REJECT</el-button>
                   <span style="float: right; padding: 3px 0">&nbsp;&nbsp;</span>
                   <el-button
+                  v-if= "isInvitation(message.type)"
                     style="float: right; padding: 3px 0"
                     type="text"
-                    @click="verify(conference,'true')"
-                  >Pass</el-button>
+                    @click="verify(message.id,'true')"
+                  >AGREE</el-button>
                   <span style="float: right; padding: 3px 0">&nbsp;&nbsp;</span>
                 </div>
                 <div>
                   <div>
                     <span class="itemlabel">
-                      <i class="el-icon-user-solid"></i> Application by:
+                      <i class="el-icon-user-solid"></i> Content：
                     </span>
-                    {{conference.owner}}
+                    {{message.content}}
+                  </div> 
+                  <div>
+                    <span class="itemlabel">
+                      <i class="el-icon-chat-dot-round"></i> Sent Time:
+                    </span>
+                    {{message.sentTime.substring(0,10)}}
                   </div>
                   <div>
                     <span class="itemlabel">
-                      <i class="el-icon-chat-dot-round"></i> Short name:
+                      <i class="el-icon-chat-line-round"></i> Status:
                     </span>
-                    {{conference.nameAbbreviation}}
+                    {{parseStatus(message.status)}}
                   </div>
                   <div>
                     <span class="itemlabel">
-                      <i class="el-icon-chat-line-round"></i> Full name:
+                      <i class="el-icon-location"></i> Type:
                     </span>
-                    {{conference.fullName}}
-                  </div>
-                  <div>
-                    <span class="itemlabel">
-                      <i class="el-icon-location"></i> Location:
-                    </span>
-                    {{conference.location}}
-                  </div>
-                  <div>
-                    <span class="itemlabel">
-                      <i class="el-icon-video-play"></i> Starts at:
-                    </span>
-                    {{conference.startTime.substring(0,10)}}
-                  </div>
-                  <div>
-                    <span class="itemlabel">
-                      <i class="el-icon-video-pause"></i> Ends at:
-                    </span>
-                    {{conference.endTime.substring(0,10)}}
-                  </div>
-                  <div>
-                    <span class="itemlabel">
-                      <i class="el-icon-date"></i> Submission deadline:
-                    </span>
-                    {{conference.deadline.substring(0,10)}}
-                  </div>
-                  <div>
-                    <span class="itemlabel">
-                      <i class="el-icon-medal-1"></i> Result announcement at:
-                    </span>
-                    {{conference.resultAnnounceDate.substring(0,10)}}
+                    {{message.type}}
                   </div>
                 </div>
               </el-card>
@@ -108,7 +86,7 @@
             :page-size = "pageSize" 
             @current-change="pageChange" 
             :current-page.sync="currentPage"
-            :total="conferences.length"> 
+            :total="messages.length"> 
            >
            </el-pagination>
 
@@ -131,23 +109,37 @@ export default {
   inject: ["reload"],
   data() {
     return{
-      conferences:[],
+      messages:[],
       pageSize:6,
       currentPage:1,
-      noMeeting: false
+      noMessage: false
     }
   },
   methods: {
-    // pageChange() {
-    //   this.currentPage = currentPage;
-    // },
-    // // Verify the conference
-    // verify(conference,isAllowed){
-    //   this.$axios.post('/Verify',{
-    //     id:conference.id,
-    //     isAllowed:isAllowed
-    //   })
-    //   .then(resp =>{
+     pageChange() {
+       this.currentPage = currentPage;
+     },
+     parseStatus(status){
+       if(status == 0){
+         return "Has Read";
+       }else{
+         return "Hasn't Read";
+       }
+     },
+     isInvitaion(type){
+       if(type = "CONFERENCE_CHECKED"){
+         return false;
+       }else{
+         return true;
+       }
+     },
+     // Agree the invitation
+     //agree(id,isAllowed){
+       //this.$axios.post('/Verify',{
+         //id:conference.id,
+         //isAllowed:isAllowed
+       //})
+       //.then(resp =>{
     //     if(resp.status === 200){
     //       //审核成功刷新页面
     //       this.reload(); 
@@ -156,27 +148,27 @@ export default {
     //   .catch(error=>{
     //     console.log(error);
     //   })
-    // }
+     //}
   },
   created(){
-    // // Apply for all unchecked conference information
-    // this.$axios
-    // .get('/Message',{})
-    // .then(resp => {
-    //   if (resp.status === 200) {
-    //     if(resp.data.length == 0){
-    //       this.noMeeting = true;
-    //     }else{
-    //     this.conferences = resp.data;
-    //     }
-    //   } else {
-    //     this.$message.error("Request Error.")
-    //   }
-    // })
-    // .catch(error => {
-    //   console.log(error);
-    //   this.$message.error("Request Error.")
-    // })
+     // Apply for message information
+     this.$axios
+     .get('/Message',{})
+     .then(resp => {
+        if (resp.status === 200) {
+          if(resp.data.length == 0){
+            this.noMessage = true;
+          }else{
+          this.messages = resp.data;
+         }
+        } else {
+          this.$message.error("Request Error.")
+        }
+     })
+     .catch(error => {
+       console.log(error);
+       this.$message.error("Request Error.")
+     })
   }
 };
 </script>
