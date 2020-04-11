@@ -48,6 +48,7 @@
                   <div>Ends at: {{conference.endTime}}</div>
                   <div>Submission deadline: {{conference.deadline}}</div>
                   <div>Result announcement at: {{conference.resultAnnounceDate}}</div>
+                  <div>Status: {{conference.status}}</div>
                 </div>
               </el-card>
 

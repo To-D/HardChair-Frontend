@@ -28,8 +28,8 @@
             <el-submenu index="2" v-if = "afterLogin">
               <template slot="title">My ArkChair<el-badge is-dot class="mark" /></template>
               <router-link to="" v-if = "isNormalUser"><el-menu-item>My Conference</el-menu-item></router-link>
-              <router-link to="verification" v-else><el-menu-item>Verification<el-badge is-dot class="mark" /></el-menu-item></router-link>
-              <router-link to=""><el-menu-item>Message<el-badge is-dot class="mark" /></el-menu-item></router-link>              
+              <router-link to="verification" v-if = "isADMIN"><el-menu-item>Verification<el-badge is-dot class="mark" /></el-menu-item></router-link>
+              <router-link to=""  v-if = "isNormalUser"><el-menu-item>Message<el-badge is-dot class="mark" /></el-menu-item></router-link>              
               <signoutbtn></signoutbtn>
             </el-submenu>
           </el-menu>
@@ -52,6 +52,7 @@ export default {
       beforeLogin: true,
       afterLogin: false,
       isNormalUser:true,
+      isADMIN:false,
       activeIndex: "1",
       activeIndex2: "1"
     };
@@ -64,6 +65,7 @@ export default {
       // Present user is an admin
       if(this.$store.state.userType === 'ADMIN'){
         this.isNormalUser = false; 
+        this.isADMIN = true;
       }
     }
   },
