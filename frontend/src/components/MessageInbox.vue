@@ -32,17 +32,17 @@
                   <span style="font-weight: bold">{{message.type}}</span>
 
                   <el-button
-                  v-if = "isInvitation(message.type)"
+                  
                     style="float: right; padding: 3px 0"
                     type="text"
-                    @click="verify(message.id,'false')"
+                    @click="reject(message.id,'reject')"
                   >REJECT</el-button>
                   <span style="float: right; padding: 3px 0">&nbsp;&nbsp;</span>
                   <el-button
-                  v-if= "isInvitation(message.type)"
+                  
                     style="float: right; padding: 3px 0"
                     type="text"
-                    @click="verify(message.id,'true')"
+                    @click="agree(message.id,'agree')"
                   >AGREE</el-button>
                   <span style="float: right; padding: 3px 0">&nbsp;&nbsp;</span>
                 </div>
@@ -121,9 +121,9 @@ export default {
      },
      parseStatus(status){
        if(status == 0){
-         return "Has Read";
-       }else{
          return "Hasn't Read";
+       }else{
+         return "Has Read";
        }
      },
      isInvitaion(type){
@@ -134,21 +134,24 @@ export default {
        }
      },
      // Agree the invitation
-     //agree(id,isAllowed){
-       //this.$axios.post('/Verify',{
-         //id:conference.id,
-         //isAllowed:isAllowed
-       //})
-       //.then(resp =>{
-    //     if(resp.status === 200){
-    //       //审核成功刷新页面
-    //       this.reload(); 
-    //     }
-    //   })
-    //   .catch(error=>{
-    //     console.log(error);
-    //   })
-     //}
+     agree(conferenceId,isAllowed){
+      /* this.$axios.post('/AuthorityAcceptedOrRejected',{
+         conferenceId:conferenceId,
+         acceptOrRejected:''
+       })
+       .then(resp =>{
+         if(resp.status === 200){
+           //审核成功刷新页面
+           this.reload(); 
+         }
+       })
+      .catch(error=>{
+         console.log(error);
+       })*/
+    },
+    reject(conferenceId,isAllowed){
+
+    }
   },
   created(){
      // Apply for message information

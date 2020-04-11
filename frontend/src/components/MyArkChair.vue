@@ -125,10 +125,10 @@ export default {
   created(){
      // Get information of conferences that relate to the present user 
      this.$axios
-     .post('/Profile',{})
+     .get('/Profile',{})
      .then(resp => {
        if (resp.status === 200) {
-         console.log(resp.data);
+         console.log(resp.data);    
        } else {
          this.$message.error("Request Error.")
        }

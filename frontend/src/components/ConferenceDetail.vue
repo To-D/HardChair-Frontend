@@ -6,8 +6,8 @@
       <div class="container py-0 layer-2">
         <div class="row my-4 my-md-6 text-light">
           <div class="col-lg-9 col-xl-6">
-            <h1 class="display-4">{{conference.title}}</h1>
-            <p class="lead mb-0">{{conference.summary}}</p>
+            <h1 class="display-4">{{conference.nameAbbreviation}}</h1>
+            <p class="lead mb-0">{{conference.fullName}}</p>
           </div>
         </div>
       </div>
@@ -31,13 +31,13 @@
                 <span class="itemlabel">
                   <i class="el-icon-chat-dot-round"></i> Short name:
                 </span>
-                {{conference.title}}
+                {{conference.nameAbbreviation}}
               </div>
               <div class="infoitem">
                 <span class="itemlabel">
                   <i class="el-icon-chat-line-round"></i> Full name:
                 </span>
-                {{conference.summary}}
+                {{conference.fullName}}
               </div>
               <div class="infoitem">
                 <span class="itemlabel">
@@ -155,30 +155,8 @@ import footerbar from "./Footer";
 export default {
   name: "ConferenceDetail",
   components: { navbar, footerbar },
+  
   data() {
-    return {
-      authority: [],
-      conference: null
-    };
-  },
-  created() {
-    //获取会议信息
-    this.$axios
-      .post("/ConferenceDetails", {
-        id: this.$route.params.conferenceID
-      })
-      .then(resp => {
-        if (resp.status === 200) {
-          console.log(resp.data);
-          this.authority = resp.data[0];
-          this.conference = resp.data[1];
-        }
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  },
-  data: function() {
     //Validators
 
     //Judgement whether the submit button can work when the from changes
@@ -189,6 +167,8 @@ export default {
 
     return {
       isDisabled: true, //Control the function of the submit button
+      authority: [],
+      conference: null,
 
       paperForm: {
         title: "",
@@ -280,6 +260,24 @@ export default {
     //     return timestamp.substring(0, 10);
     //   }
     // },
+  },
+  created() {
+    //获取会议信息
+    this.$axios
+      .post("/ConferenceDetails", {
+        id: this.$route.params.conferenceID
+      })
+      .then(resp => {
+        if (resp.status === 200) {
+          console.log(this.$route.params.conferenceID);
+          console.log(resp.data);
+          this.authority = resp.data[0];
+          this.conference = resp.data[1];
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 };
 </script>
