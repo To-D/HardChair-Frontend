@@ -104,8 +104,6 @@ export default {
         this.$axios.get('/VerifyUpdate',{})
         .then(resp => {
           if(resp.data === true){
-            console.log('ADMIN');
-            console.log(resp.data);
             this.isUpdated = true;
           }
         })
@@ -117,8 +115,6 @@ export default {
         this.$axios.get('/MessageUpdate',{})
         .then(resp => {
           if(resp.data === true){
-            console.log('USER');
-            console.log(resp.data);
             this.isUpdated = true;
           }
         })
