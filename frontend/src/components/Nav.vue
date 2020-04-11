@@ -42,7 +42,7 @@
               </template>
               <router-link to="/my-ark-chair" v-if="isNormalUser">
                 <el-menu-item>
-                  <i class="el-icon-s-order"></i>My Conferences
+                  <i class="el-icon-s-order"></i>My ArkChair Center
                 </el-menu-item>
               </router-link>
               <router-link to="/verification" v-if="isADMIN">
