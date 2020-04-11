@@ -26,18 +26,10 @@
 
               <el-card shadow="hover" class="box-card" style="margin-top: 1em"
               v-for ="conference in conferences.slice((currentPage- 1)*pageSize,currentPage*pageSize)" :key="conference.id">
+
                 <div slot="header" class="clearfix">
                   <span>{{conference.fullName}}</span>
-              
-                  <el-button
-                    style="float: right; padding: 3px 0"
-                    type="text" @click = "verify(conference,'false')"
-                  >Reject</el-button>
-                  <el-button
-                    style="float: right; padding: 3px 0"
-                    type="text" @click = "verify(conference,'true')"
-                  >Pass</el-button>
-
+                  <router-link :to="'conference-detail/'+conference.id" >View details.</router-link>
                 </div>
                 <div>
                   <div>Application by: {{conference.owner}}</div>
@@ -50,6 +42,7 @@
                   <div>Result announcement at: {{conference.resultAnnounceDate}}</div>
                   <div>Status: {{conference.status}}</div>
                 </div>
+
               </el-card>
 
             </div>
@@ -129,14 +122,15 @@ export default {
     .get('/ShowConferences',{})
     .then(resp => {
       if (resp.status === 200) {
+        console.log(resp.data);
         let checked = resp.data.CHECKED;
         let submitAllowed = resp.data.SUBMIT_ALLOWED;
         //返回数据为空，提示无会议进行中
-        if(checked === undefined && submitAllowed === undefined){
+        if(checked.length == 0 && submitAllowed == 0){
           this.noMeeting = true;
-        }else if(checked === undefined && submitAllowed !== undefined){
+        }else if(checked ==0 && submitAllowed !== 0){
           this.conferences = submitAllowed
-        }else if(checked !==undefined && submitAllowed === undefined ){
+        }else if(checked !== 0 && submitAllowed == 0){
           this.conferences = checked;
         }else{
           submitAllowed.push.apply(submitAllowed,checked);
