@@ -3,29 +3,35 @@
     <div class="navbar-container">
       <nav class="navbar navbar-expand-lg bg-white navbar-light" data-sticky="top">
         <div class="container">
+          <!--logo -->
           <a class="navbar-brand fade-page">
             <router-link to="/">ArkChair</router-link>
           </a>
+          
           <el-menu mode="horizontal" @select="handleSelect" style="border-bottom:0;">
+            <!-- Conference opration -->
             <el-submenu index="1">
               <template slot="title">Conferences</template>
               <router-link to="conference-home"><el-menu-item>Browsing</el-menu-item></router-link>
-              <router-link to="conference-application"><el-menu-item>Application</el-menu-item></router-link>
-              
+              <router-link to="conference-application" v-if = "isNormalUser"><el-menu-item>Application</el-menu-item></router-link>
             </el-submenu>
-            <el-submenu index="2" v-if="signOutSeen">
-              <template slot="title">My ArkChair<el-badge is-dot class="mark" /></template>
-              <router-link to=""><el-menu-item>My Conference</el-menu-item></router-link>
-              <router-link to="verification"><el-menu-item>Verification<el-badge is-dot class="mark" /></el-menu-item></router-link>
-              <router-link to=""><el-menu-item>Message<el-badge is-dot class="mark" /></el-menu-item></router-link>
-              <signoutbtn></signoutbtn>
-            </el-submenu>
-            <el-menu-item v-if="loginSeen">
+
+             <!-- login and register button -->            
+            <el-menu-item v-if = "beforeLogin">
               <loginbtn></loginbtn>
             </el-menu-item>
-            <el-menu-item v-if="registerSeen">
+            <el-menu-item v-if = "beforeLogin">
               <registerbtn></registerbtn>
             </el-menu-item>
+
+            <!-- Personal info -->            
+            <el-submenu index="2" v-if = "afterLogin">
+              <template slot="title">My ArkChair<el-badge is-dot class="mark" /></template>
+              <router-link to="" v-if = "isNormalUser"><el-menu-item>My Conference</el-menu-item></router-link>
+              <router-link to="verification" v-else><el-menu-item>Verification<el-badge is-dot class="mark" /></el-menu-item></router-link>
+              <router-link to=""><el-menu-item>Message<el-badge is-dot class="mark" /></el-menu-item></router-link>              
+              <signoutbtn></signoutbtn>
+            </el-submenu>
           </el-menu>
         </div>
       </nav>
@@ -43,19 +49,22 @@ export default {
   components: { loginbtn, registerbtn, signoutbtn },
   data() {
     return {
-      loginSeen: false,
-      registerSeen: false,
-      signOutSeen: false,
+      beforeLogin: true,
+      afterLogin: false,
+      isNormalUser:true,
       activeIndex: "1",
       activeIndex2: "1"
     };
   },
   created() {
+    // User has login
     if (this.$store.state.token) {
-      this.signOutSeen = true;
-    } else {
-      this.loginSeen = true;
-      this.registerSeen = true;
+      this.beforeLogin = false;
+      this.afterLogin = true;
+      // Present user is an admin
+      if(this.$store.state.userType === 'ADMIN'){
+        this.isNormalUser = false; 
+      }
     }
   },
   methods: {
