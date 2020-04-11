@@ -271,7 +271,7 @@ export default {
       }
     },
     handleChange(val) {
-      console.log(val);
+      // console.log(val);
     }
     // parseDate(timestamp) {
     //   if (timestamp = "") {
