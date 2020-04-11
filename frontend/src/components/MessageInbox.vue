@@ -29,6 +29,7 @@
                 :key="message.messageId"
               >
                 <div slot="header" class="clearfix">
+                  <span v-if="message.status" style="font-weight: bold">{{message.type}}</span>
                   <span style="font-weight: bold">{{message.type}}</span>
 
                   <el-button
@@ -36,26 +37,26 @@
                     style="float: right; padding: 3px 0"
                     type="text"
                     @click="reject(message.id,'reject')"
-                  >REJECT</el-button>
+                  >Reject</el-button>
                   <span style="float: right; padding: 3px 0">&nbsp;&nbsp;</span>
                   <el-button
                   
                     style="float: right; padding: 3px 0"
                     type="text"
                     @click="agree(message.id,'agree')"
-                  >AGREE</el-button>
+                  >Agree</el-button>
                   <span style="float: right; padding: 3px 0">&nbsp;&nbsp;</span>
                 </div>
                 <div>
                   <div>
                     <span class="itemlabel">
-                      <i class="el-icon-user-solid"></i> Content：
+                      <i class="el-icon-chat-line-round"></i> Content：
                     </span>
                     {{message.content}}
                   </div> 
                   <div>
                     <span class="itemlabel">
-                      <i class="el-icon-chat-dot-round"></i> Sent Time:
+                      <i class="el-icon-time"></i> Sent Time:
                     </span>
                     {{message.sentTime.substring(0,10)}}
                   </div>
@@ -64,12 +65,6 @@
                       <i class="el-icon-chat-line-round"></i> Status:
                     </span>
                     {{parseStatus(message.status)}}
-                  </div>
-                  <div>
-                    <span class="itemlabel">
-                      <i class="el-icon-location"></i> Type:
-                    </span>
-                    {{message.type}}
                   </div>
                 </div>
               </el-card>

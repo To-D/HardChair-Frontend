@@ -30,7 +30,7 @@
               >
                 <div slot="header" class="clearfix">
                   <span style="font-weight: bold">{{conference.nameAbbreviation}}</span>
-                  <router-link :to="'conference-detail/'+conference.id" style="float: right; padding: 3px 0" >View details.</router-link>
+                  <router-link :to="'conference-detail/'+conference.id" style="float: right; padding: 3px 0" >View details</router-link>
                 </div>
                 <div>
                   <div>
