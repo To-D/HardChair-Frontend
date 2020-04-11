@@ -21,7 +21,7 @@
         <div class="row">
           <div class="col-xl-8 col-lg-12">
             <div class="text item">
-              <p v-if = "noMeeting"><el-tag>No conference now!</el-tag></p>
+              <div v-if = "noMeeting"><el-card shadow="hover">No conference now!</el-card></div>
               <el-card v-else
                 shadow="hover"
                 class="box-card"

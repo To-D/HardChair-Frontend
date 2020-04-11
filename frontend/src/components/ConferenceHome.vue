@@ -15,13 +15,12 @@
       </div>
     </section>
 
-
     <section>
       <div class="container">
         <div class="row">
           <div class="col-xl-8 col-lg-12">
             <div class="text item">
-              <p v-if = "noMeeting">No conference now！</p>
+              <div v-if = "noMeeting"><el-card shadow="hover">No conference now!</el-card></div>
               <el-card v-else
                 shadow="hover"
                 class="box-card"
@@ -42,9 +41,9 @@
                   </div>
                   <div>
                     <span class="itemlabel">
-                      <i class="el-icon-chat-line-round"></i> Status:
+                      <i class="el-icon-s-flag"></i> Status:
                     </span>
-                    {{conference.status}}
+                    {{parseStatus(conference.status)}}
                   </div>
                 </div>
               </el-card>
@@ -69,82 +68,6 @@
         </div>
       </div>
     </section>
-
-    <!-- <p v-if = "noMeeting">No conference now！</p>
-    
-    <section v-else>
-      <div class="container">
-        <div class="row">
-          <div class="col-xl-8 col-lg-12">
-            <div class="text item">
-
-              <el-card shadow="hover" class="box-card" style="margin-top: 1em"
-              v-for ="conference in conferences.slice((currentPage- 1)*pageSize,currentPage*pageSize)" :key="conference.id">
-
-                <div slot="header" class="clearfix">
-                  <span>{{conference.fullName}}</span>
-                  <router-link :to="'conference-detail/'+conference.id" >View details.</router-link>
-                </div>
-                <div>
-                  <div>Application by: {{conference.owner}}</div>
-                  <div>Short name: {{conference.nameAbbreviation}}</div>
-                  <div>Full name:{{conference.fullName}}</div>
-                  <div>Location: {{conference.location}}</div>
-                  <div>Starts at: {{conference.startTime}}</div>
-                  <div>Ends at: {{conference.endTime}}</div>
-                  <div>Submission deadline: {{conference.deadline}}</div>
-                  <div>Result announcement at: {{conference.resultAnnounceDate}}</div>
-                  <div>Status: {{conference.status}}</div>
-                </div>
-
-              </el-card>
-
-            </div>
-          </div>
-        </div>
-        <br /> --> 
-
-        <!-- <div class="row">
-          <div class="col-xl-6 col-lg-12">
-            <el-pagination
-            hide-on-single-page
-            layout="prev, pager, next"
-            :page-size = "pageSize" 
-            @current-change="pageChange" 
-            :current-page.sync="currentPage"
-            :total="conferences.length"> 
-           >
-           </el-pagination>
-
-          </div>
-        </div>
-      </div>
-    </section> -->
-     <!--Just for logic development -->
-
-    <!-- Oringin code -->
-    <!--<section>
-      <div class="container">
-        <div class="row">
-          <div class="col-xl-6 col-lg-8">
-            <div v-for="o in 4" :key="o" class="text item">
-              <el-card class="box-card" style="margin-top: 1em">
-                {{'Conference ' + o }} -
-                <router-link to = "/conference-detail/conference.id">View details.</router-link>
-              </el-card>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <div class="container">
-        <div class="row">
-          <div class="col-xl-6 col-lg-8"></div>
-        </div>
-      </div>
-    </section>-->
     
     <footerbar></footerbar>
   </div>
@@ -166,9 +89,22 @@ export default {
     }
   },
   methods: {
-     pageChange(){
+    pageChange(){
       this.currentPage = currentPage
     },
+    parseStatus(status){
+      switch (status) {
+        case "CHECKED":
+          return "Approved by admin"
+          break;
+        case "SUBMIT_ALLOWED":
+          return "Accepting papers"
+          break;
+        default:
+          return "Currently unknown"
+          break;
+      }
+    }
   },
   created(){
     // 获取会议列表
