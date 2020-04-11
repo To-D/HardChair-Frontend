@@ -1,5 +1,6 @@
 <template>
   <div>
+    <i class="el-icon-connection"></i>
     <router-link to="register">Register</router-link>
   </div>
 </template>
