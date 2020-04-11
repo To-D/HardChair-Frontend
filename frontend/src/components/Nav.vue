@@ -27,9 +27,9 @@
             <!-- Personal info -->            
             <el-submenu index="2" v-if = "afterLogin">
               <template slot="title">My ArkChair<el-badge is-dot class="mark" /></template>
-              <router-link to="" v-if = "isNormalUser"><el-menu-item>My Conference</el-menu-item></router-link>
+              <router-link to="my-ark-chair" v-if = "isNormalUser"><el-menu-item>My Conference</el-menu-item></router-link>
               <router-link to="verification" v-else><el-menu-item>Verification<el-badge is-dot class="mark" /></el-menu-item></router-link>
-              <router-link to=""><el-menu-item>Message<el-badge is-dot class="mark" /></el-menu-item></router-link>              
+              <router-link to="message-inbox"><el-menu-item>Message<el-badge is-dot class="mark" /></el-menu-item></router-link>              
               <signoutbtn></signoutbtn>
             </el-submenu>
           </el-menu>

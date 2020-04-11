@@ -9,6 +9,8 @@ import ConferenceVerification from '@/components/ConferenceVerification'
 import ConferenceHome from '@/components/ConferenceHome'
 import ConferenceDetail from '@/components/ConferenceDetail'
 import Index from '@/components/Index'
+import MessageInbox from '@/components/MessageInbox'
+import MyArkChair from '@/components/MyArkChair'
 
 import store from '../store'
 
@@ -63,6 +65,22 @@ export const router = new Router({
             component: ConferenceDetail,
             meta: {
                 requireAuth: true
+            }
+        },
+        {
+            path: '/message-inbox',
+            name: 'MessageInbox',
+            component: MessageInbox,
+            meta: {
+                requireAuth: true,
+            }
+        },
+        {
+            path: '/my-ark-chair',
+            name: 'MyArkChair',
+            component: MyArkChair,
+            meta: {
+                requireAuth: true,
             }
         },
     ]
