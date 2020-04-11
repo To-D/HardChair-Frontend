@@ -19,23 +19,31 @@
           <div class="col-xl-8 col-lg-8">
             <el-collapse v-model="activeNames" @change="handleChange">
               <el-collapse-item title="Short name" name="1">
-                <div>LSOT2020</div>
+                <div>{{conference.nameAbbreviation}}</div>
               </el-collapse-item>
               <el-collapse-item title="Full name" name="2">
-                <div>Lungmen Summit of Originum Technology 2020</div>
+                <div>{{conference.fullName}}</div>
               </el-collapse-item>
               <el-collapse-item title="Location" name="3">
-                <div>Tomorrow Hall, Lungmen University</div>
+                <div>{{conference.location}}</div>
               </el-collapse-item>
               <el-collapse-item title="Start and end dates" name="4">
-                <div>Starts at 2020-04-14</div>
-                <div>Ends at 2020-05-10</div>
+                <div>{{conference.startTime}}</div>
+                <div>{{conference.endTime}}</div>
               </el-collapse-item>
               <el-collapse-item title="Submission deadline" name="5">
-                <div>2020-05-01</div>
+                <div>{{conference.deadline}}</div>
               </el-collapse-item>
               <el-collapse-item title="Result announcement date" name="6">
-                <div>2020-05-09</div>
+                <div>{{conference.resultAnnounceDate}}</div>
+              </el-collapse-item>
+              
+              <el-collapse-item title="Status" name="7">
+                <div>{{conference.status}}</div>
+              </el-collapse-item>
+              
+              <el-collapse-item title="Owner" name="8">
+                <div>{{conference.owner}}</div>
               </el-collapse-item>
             </el-collapse>
           </div>
@@ -84,12 +92,10 @@ export default {
       id: this.$route.params.conferenceID
       })
     .then(resp =>{
-      console.log("success");
       if(resp.status === 200){
         console.log(resp.data);
-
-        //this.authority = resp.data[0];
-        //this.conferences = resp.data[1];
+        this.authority = resp.data[0];
+        this.conference = resp.data[1];
       }
     })
     .catch(error => {
