@@ -18,7 +18,7 @@
     <p v-if = "noMeeting">No conference now！</p>
     
     <!-- Just for logic development -->
-    <section>
+    <section v-else>
       <div class="container">
         <div class="row">
           <div class="col-xl-8 col-lg-12">
@@ -128,8 +128,8 @@ export default {
     .get('/ShowConferences',{})
     .then(resp => {
       if (resp.status === 200) {
-        let checked = resp.data[0];
-        let submitAllowed = resp.data[1];
+        let checked = resp.data.CHECKED;
+        let submitAllowed = resp.data.SUBMIT_ALLOWED;
         //返回数据为空，提示无会议进行中
         if(checked === undefined && submitAllowed === undefined){
           this.noMeeting = true;
@@ -138,14 +138,16 @@ export default {
         }else if(checked !==undefined && submitAllowed === undefined ){
           this.conferences = checked;
         }else{
-        //合并两个数组: 用大的去包含小的，减少运算量
+          submitAllowed.push.apply(submitAllowed,checked);
+          this.conferences = submitAllowed;
+        /*//合并两个数组: 用大的去包含小的，减少运算量
         if(checked.length > submitAllowed.length){
           checked.push.apply(checked,submitAllowed);
           this.conferences = checked;
         }else{
           submitAllowed.push.apply(submitAllowed,checked);
           this.conferences = submitAllowed;
-        }
+        }*/
         }      
       } else {
         this.$message.error("Request Error.")

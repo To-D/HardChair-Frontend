@@ -15,7 +15,8 @@
       </div>
     </section>
 
-    <section>
+    <p v-if = "noMeeting">No conference now！</p>
+    <section v-else>
       <div class="container">
         <div class="row">
           <div class="col-xl-8 col-lg-12">
@@ -102,12 +103,15 @@
         <div class="row">
           <div class="col-xl-6 col-lg-12">
             <el-pagination
-              layout="prev, pager, next"
-              :page-size="pageSize"
-              @current-change="pageChange"
-              :current-page.sync="currentPage"
-              :total="conferences.length"
-            >></el-pagination>
+            hide-on-single-page
+            layout="prev, pager, next"
+            :page-size = "pageSize" 
+            @current-change="pageChange" 
+            :current-page.sync="currentPage"
+            :total="conferences.length"> 
+           >
+           </el-pagination>
+
           </div>
         </div>
       </div>
@@ -126,49 +130,53 @@ export default {
   components: { navbar, footerbar },
   inject: ["reload"],
   data() {
-    return {
-      conferences: [],
-      pageSize: 6,
-      currentPage: 1
-    };
+    return{
+      conferences:[],
+      pageSize:6,
+      currentPage:1,
+      noMeeting: false
+    }
   },
   methods: {
     pageChange() {
       this.currentPage = currentPage;
     },
-    // 审核
-    verify(conference, isAllowed) {
-      this.$axios
-        .post("/Verify", {
-          id: conference.id,
-          isAllowed: isAllowed
-        })
-        .then(resp => {
-          if (resp.status === 200) {
-            //审核成功刷新页面
-            this.reload();
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    }
-  },
-  created() {
-    // 请求数据操作
-    this.$axios
-      .get("/Verification", {})
-      .then(resp => {
-        if (resp.status === 200) {
-          this.conferences = resp.data;
-        } else {
-          this.$message.error("Request Error.");
+    // Verify the conference
+    verify(conference,isAllowed){
+      this.$axios.post('/Verify',{
+        id:conference.id,
+        isAllowed:isAllowed
+      })
+      .then(resp =>{
+        if(resp.status === 200){
+          //审核成功刷新页面
+          this.reload(); 
         }
       })
-      .catch(error => {
+      .catch(error=>{
         console.log(error);
-        this.$message.error("Request Error.");
-      });
+      })
+    }
+  },
+  created(){
+    // Apply for all unchecked conference information
+    this.$axios
+    .get('/Verification',{})
+    .then(resp => {
+      if (resp.status === 200) {
+        if(resp.data.length == 0){
+          this.noMeeting = true;
+        }else{
+        this.conferences = resp.data;
+        }
+      } else {
+        this.$message.error("Request Error.")
+      }
+    })
+    .catch(error => {
+      console.log(error);
+      this.$message.error("Request Error.")
+    })
   }
 };
 </script>
