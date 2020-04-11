@@ -60,6 +60,60 @@
       </div>
     </section>
 
+     <section>
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-8 col-lg-12">
+            <div class="text item">
+              <div v-if = "noMeeting"><el-card shadow="hover">No related conference now!</el-card></div>
+              <el-card v-else
+                shadow="hover"
+                class="box-card"
+                style="margin-top: 1em;"
+                v-for="conference in conferences.slice((currentPage- 1)*pageSize,currentPage*pageSize)"
+                :key="conference.id"
+              >
+                <div slot="header" class="clearfix">
+                  <span style="font-weight: bold">{{conference.nameAbbreviation}}</span>
+                  <router-link :to="'conference-detail/'+conference.id" style="float: right; padding: 3px 0" >View details.</router-link>
+                </div>
+                <div>
+                  <div>
+                    <span class="itemlabel">
+                      <i class="el-icon-chat-line-round"></i> Full name:
+                    </span>
+                    {{conference.fullName}}
+                  </div>
+                  <div>
+                    <span class="itemlabel">
+                      <i class="el-icon-s-flag"></i> Status:
+                    </span>
+                    {{conference.status}}
+                  </div>
+                </div>
+              </el-card>
+            </div>
+          </div>
+        </div>
+        <br />
+
+        <div class="row">
+          <div class="col-xl-6 col-lg-12">
+            <el-pagination
+            hide-on-single-page
+            layout="prev, pager, next"
+            :page-size = "pageSize" 
+            @current-change="pageChange" 
+            :current-page.sync="currentPage"
+            :total="conferences.length"> 
+           >
+           </el-pagination>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
     <footerbar></footerbar>
   </div>
 </template>
@@ -91,7 +145,9 @@ export default {
      .get('/Profile',{})
      .then(resp => {
        if (resp.status === 200) {
-         console.log(resp.data);    
+         console.log(resp.data);   
+         this.user = resp.data[1];
+         this.conferences = resp.data[0];
        } else {
          this.$message.error("Request Error.")
        }
