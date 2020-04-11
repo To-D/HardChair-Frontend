@@ -15,13 +15,14 @@
       </div>
     </section>
 
-    <p v-if = "noMeeting">No conference now！</p>
-    <section v-else>
+    
+    <section>
       <div class="container">
         <div class="row">
           <div class="col-xl-8 col-lg-12">
             <div class="text item">
-              <el-card
+              <p v-if = "noMeeting"><el-tag>No conference now!</el-tag></p>
+              <el-card v-else
                 shadow="hover"
                 class="box-card"
                 style="margin-top: 1em;"

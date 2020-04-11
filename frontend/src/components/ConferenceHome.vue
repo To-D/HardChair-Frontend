@@ -15,9 +15,63 @@
       </div>
     </section>
 
-    <p v-if = "noMeeting">No conference now！</p>
+
+    <section>
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-8 col-lg-12">
+            <div class="text item">
+              <p v-if = "noMeeting">No conference now！</p>
+              <el-card v-else
+                shadow="hover"
+                class="box-card"
+                style="margin-top: 1em;"
+                v-for="conference in conferences.slice((currentPage- 1)*pageSize,currentPage*pageSize)"
+                :key="conference.id"
+              >
+                <div slot="header" class="clearfix">
+                  <span style="font-weight: bold">{{conference.nameAbbreviation}}</span>
+                  <router-link :to="'conference-detail/'+conference.id" style="float: right; padding: 3px 0" >View details.</router-link>
+                </div>
+                <div>
+                  <div>
+                    <span class="itemlabel">
+                      <i class="el-icon-chat-line-round"></i> Full name:
+                    </span>
+                    {{conference.fullName}}
+                  </div>
+                  <div>
+                    <span class="itemlabel">
+                      <i class="el-icon-chat-line-round"></i> Status:
+                    </span>
+                    {{conference.status}}
+                  </div>
+                </div>
+              </el-card>
+            </div>
+          </div>
+        </div>
+        <br />
+
+        <div class="row">
+          <div class="col-xl-6 col-lg-12">
+            <el-pagination
+            hide-on-single-page
+            layout="prev, pager, next"
+            :page-size = "pageSize" 
+            @current-change="pageChange" 
+            :current-page.sync="currentPage"
+            :total="conferences.length"> 
+           >
+           </el-pagination>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- <p v-if = "noMeeting">No conference now！</p>
     
-    <!-- Just for logic development -->
     <section v-else>
       <div class="container">
         <div class="row">
@@ -48,9 +102,9 @@
             </div>
           </div>
         </div>
-        <br />
+        <br /> --> 
 
-        <div class="row">
+        <!-- <div class="row">
           <div class="col-xl-6 col-lg-12">
             <el-pagination
             hide-on-single-page
@@ -65,7 +119,7 @@
           </div>
         </div>
       </div>
-    </section>
+    </section> -->
      <!--Just for logic development -->
 
     <!-- Oringin code -->
@@ -158,5 +212,12 @@ export default {
 <style scoped>
 section {
   padding: 2em;
+}
+.itemlabel {
+  /* background-color: #3755be; */
+  color: #3755be;
+  font-weight: bold;
+  /* padding: 0.1em 0.3em;
+  margin-right: 0.3em; */
 }
 </style>
