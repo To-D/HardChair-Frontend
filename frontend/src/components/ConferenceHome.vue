@@ -122,7 +122,6 @@ export default {
     .get('/ShowConferences',{})
     .then(resp => {
       if (resp.status === 200) {
-        console.log(resp.data);
         let checked = resp.data.CHECKED;
         let submitAllowed = resp.data.SUBMIT_ALLOWED;
         //返回数据为空，提示无会议进行中

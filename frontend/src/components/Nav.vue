@@ -38,7 +38,7 @@
             <el-submenu index="2" v-if="afterLogin">
               <template slot="title">
                 <i class="el-icon-user-solid"></i> ArkChair
-                <el-badge is-dot class="mark" />
+                <el-badge :is-dot="isUpdated" class="mark" />
               </template>
               <router-link to="my-ark-chair" v-if="isNormalUser">
                 <el-menu-item>
@@ -48,13 +48,13 @@
               <router-link to="verification" v-if="isADMIN">
                 <el-menu-item>
                   <i class="el-icon-s-claim"></i>Verification
-                  <el-badge is-dot class="mark" />
+                  <el-badge :is-dot="isUpdated" class="mark" />
                 </el-menu-item>
               </router-link>
               <router-link to="message-inbox" v-if="isNormalUser">
                 <el-menu-item>
                   <i class="el-icon-message"></i>Messages
-                  <el-badge is-dot class="mark" />
+                  <el-badge :is-dot="isUpdated" class="mark" />
                 </el-menu-item>
               </router-link>
               <signoutbtn></signoutbtn>
@@ -80,12 +80,13 @@ export default {
       afterLogin: false,
       isNormalUser: true,
       isADMIN: false,
+      isUpdated:false,
       activeIndex: "1",
       activeIndex2: "1"
     };
   },
   created() {
-    // User has login
+    // Control the display of different interface
     if (this.$store.state.token) {
       this.beforeLogin = false;
       this.afterLogin = true;
@@ -95,6 +96,38 @@ export default {
         this.isADMIN = true;
       }
     }
+
+    // Control the display of red dot
+    if(this.$store.state.token){
+      // ADMIN
+      if(this.$store.state.userType == 'ADMIN'){
+        this.$axios.get('/VerifyUpdate',{})
+        .then(resp => {
+          if(resp.data === true){
+            console.log('ADMIN');
+            console.log(resp.data);
+            this.isUpdated = true;
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        })
+      }else{
+        // USER
+        this.$axios.get('/MessageUpdate',{})
+        .then(resp => {
+          if(resp.data === true){
+            console.log('USER');
+            console.log(resp.data);
+            this.isUpdated = true;
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        })
+      }
+    }
+    
   },
   methods: {
     handleSelect(key, keyPath) {
