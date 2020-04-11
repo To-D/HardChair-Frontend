@@ -20,34 +20,80 @@
         <div class="row">
           <div class="col-xl-8 col-lg-12">
             <div class="text item">
-
-              <el-card shadow="hover" class="box-card" style="margin-top: 1em"
-              v-for ="conference in conferences.slice((currentPage- 1)*pageSize,currentPage*pageSize)" :key="conference.id">
+              <el-card
+                shadow="hover"
+                class="box-card"
+                style="margin-top: 1em;"
+                v-for="conference in conferences.slice((currentPage- 1)*pageSize,currentPage*pageSize)"
+                :key="conference.id"
+              >
                 <div slot="header" class="clearfix">
                   <span>{{conference.fullName}}</span>
-              
-                  <el-button
-                    style="float: right; padding: 3px 0"
-                    type="text" @click = "verify(conference,'false')"
-                  >Reject</el-button>
-                  <el-button
-                    style="float: right; padding: 3px 0"
-                    type="text" @click = "verify(conference,'true')"
-                  >Pass</el-button>
 
+                  <el-button
+                    style="float: right; padding: 3px 0"
+                    type="text"
+                    @click="verify(conference,'false')"
+                  >Reject</el-button>
+                  <span style="float: right; padding: 3px 0">&nbsp;&nbsp;</span>
+                  <el-button
+                    style="float: right; padding: 3px 0"
+                    type="text"
+                    @click="verify(conference,'true')"
+                  >Pass</el-button>
+                  <span style="float: right; padding: 3px 0">&nbsp;&nbsp;</span>
                 </div>
                 <div>
-                  <div>Application by: {{conference.owner}}</div>
-                  <div>Short name: {{conference.nameAbbreviation}}</div>
-                  <div>Full name:{{conference.fullName}}</div>
-                  <div>Location: {{conference.location}}</div>
-                  <div>Starts at: {{conference.startTime}}</div>
-                  <div>Ends at: {{conference.endTime}}</div>
-                  <div>Submission deadline: {{conference.deadline}}</div>
-                  <div>Result announcement at: {{conference.resultAnnounceDate}}</div>
+                  <div>
+                    <span class="itemlabel">
+                      <i class="el-icon-user-solid"></i> Application by:
+                    </span>
+                    {{conference.owner}}
+                  </div>
+                  <div>
+                    <span class="itemlabel">
+                      <i class="el-icon-chat-dot-round"></i> Short name:
+                    </span>
+                    {{conference.nameAbbreviation}}
+                  </div>
+                  <div>
+                    <span class="itemlabel">
+                      <i class="el-icon-chat-line-round"></i> Full name:
+                    </span>
+                    {{conference.fullName}}
+                  </div>
+                  <div>
+                    <span class="itemlabel">
+                      <i class="el-icon-location"></i> Location:
+                    </span>
+                    {{conference.location}}
+                  </div>
+                  <div>
+                    <span class="itemlabel">
+                      <i class="el-icon-video-play"></i> Starts at:
+                    </span>
+                    {{conference.startTime.substring(0,10)}}
+                  </div>
+                  <div>
+                    <span class="itemlabel">
+                      <i class="el-icon-video-pause"></i> Ends at:
+                    </span>
+                    {{conference.endTime.substring(0,10)}}
+                  </div>
+                  <div>
+                    <span class="itemlabel">
+                      <i class="el-icon-date"></i> Submission deadline:
+                    </span>
+                    {{conference.deadline.substring(0,10)}}
+                  </div>
+                  <div>
+                    <span class="itemlabel">
+                      <i class="el-icon-medal-1"></i> Result announcement at:
+                    </span>
+                    {{conference.resultAnnounceDate.substring(0,10)}}
+                  </div>
                 </div>
               </el-card>
-
             </div>
           </div>
         </div>
@@ -56,14 +102,12 @@
         <div class="row">
           <div class="col-xl-6 col-lg-12">
             <el-pagination
-            layout="prev, pager, next"
-            :page-size = "pageSize" 
-            @current-change="pageChange" 
-            :current-page.sync="currentPage"
-            :total="conferences.length"> 
-           >
-           </el-pagination>
-
+              layout="prev, pager, next"
+              :page-size="pageSize"
+              @current-change="pageChange"
+              :current-page.sync="currentPage"
+              :total="conferences.length"
+            >></el-pagination>
           </div>
         </div>
       </div>
@@ -80,50 +124,51 @@ import footerbar from "./Footer";
 export default {
   name: "ConferenceVerification",
   components: { navbar, footerbar },
-  inject:['reload'],
+  inject: ["reload"],
   data() {
-    return{
-      conferences:[],
-      pageSize:6,
-      currentPage:1,
-    }
+    return {
+      conferences: [],
+      pageSize: 6,
+      currentPage: 1
+    };
   },
   methods: {
-    pageChange(){
-      this.currentPage = currentPage
+    pageChange() {
+      this.currentPage = currentPage;
     },
     // 审核
-    verify(conference,isAllowed){
-      this.$axios.post('/Verify',{
-        id:conference.id,
-        isAllowed:isAllowed
-      })
-      .then(resp =>{
-        if(resp.status === 200){
-          //审核成功刷新页面
-          this.reload();
-        }
-      })
-      .catch(error=>{
-        console.log(error);
-      })
+    verify(conference, isAllowed) {
+      this.$axios
+        .post("/Verify", {
+          id: conference.id,
+          isAllowed: isAllowed
+        })
+        .then(resp => {
+          if (resp.status === 200) {
+            //审核成功刷新页面
+            this.reload();
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   },
-  created(){
+  created() {
     // 请求数据操作
     this.$axios
-    .get('/Verification',{})
-    .then(resp => {
-      if (resp.status === 200) {
-        this.conferences = resp.data;
-      } else {
-        this.$message.error("Request Error.")
-      }
-    })
-    .catch(error => {
-      console.log(error);
-      this.$message.error("Request Error.")
-    })
+      .get("/Verification", {})
+      .then(resp => {
+        if (resp.status === 200) {
+          this.conferences = resp.data;
+        } else {
+          this.$message.error("Request Error.");
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        this.$message.error("Request Error.");
+      });
   }
 };
 </script>
@@ -131,5 +176,11 @@ export default {
 <style scoped>
 section {
   padding: 2em;
+}
+.itemlabel {
+  background-color: #3755be;
+  color: white;
+  padding: 0.1em 0.3em;
+  margin-right: 0.3em;
 }
 </style>
