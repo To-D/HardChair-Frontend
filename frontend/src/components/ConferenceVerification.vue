@@ -7,9 +7,9 @@
         <div class="row my-4 my-md-6 text-light">
           <div class="col-lg-9 col-xl-6">
             <h1 class="display-4">Conference Verification</h1>
-            <p
+            <!-- <p
               class="lead mb-0"
-            >After submission, your application will be reviewed by an admin. Thank you for your patience.</p>
+            ></p> -->
           </div>
         </div>
       </div>
@@ -28,7 +28,7 @@
                 :key="conference.id"
               >
                 <div slot="header" class="clearfix">
-                  <span>{{conference.fullName}}</span>
+                  <span style="font-weight: bold">{{conference.nameAbbreviation}}</span>
 
                   <el-button
                     style="float: right; padding: 3px 0"
@@ -178,9 +178,10 @@ section {
   padding: 2em;
 }
 .itemlabel {
-  background-color: #3755be;
-  color: white;
-  padding: 0.1em 0.3em;
-  margin-right: 0.3em;
+  /* background-color: #3755be; */
+  color: #3755be;
+  font-weight: bold;
+  /* padding: 0.1em 0.3em;
+  margin-right: 0.3em; */
 }
 </style>
