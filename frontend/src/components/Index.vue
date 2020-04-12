@@ -12,6 +12,9 @@
             <router-link to="conference-application">
               <a class="btn btn-primary btn-lg">Apply now</a>
             </router-link>
+            <router-link to="conference-home">
+              <a class="btn btn-primary btn-lg">See all conferences</a>
+            </router-link>
             
           </div>
         </div>
