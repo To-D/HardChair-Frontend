@@ -191,8 +191,7 @@
                 :model="paperForm"
                 :rules="rules"
                 label-position="top"
-                v-loading="loading"
-                :ref="paperForm"
+                ref="paperForm"
               >
                 <!-- short name -->
                 <el-form-item prop="title" label="Title">
@@ -216,18 +215,34 @@
                     placeholder="Summary of your paper"
                   ></el-input>
                 </el-form-item>
-
+                <el-form-item prop="file" label="Upload File">
+                  <el-upload
+                    ref = "upload"
+                    drag
+                    action=""
+                    :auto-upload="false"
+                    :limit = "1"
+                    :http-request="upload"
+                    accept="application/pdf"
+                    :before-upload="onBeforeUpload"
+                    :on-exceed="handleExceed"
+                    :file-list="files"                    
+                    >
+                    <i class="el-icon-upload"></i>
+                    <div class="el-upload__text">Drag file here to upload，or <em>click here</em></div>
+                    <div class="el-upload__tip" slot="tip">Only ""pdf" file admitted，please upload only 1 file</div>
+                  </el-upload>
+                </el-form-item>
                 <br />
 
                 <!-- submit button -->
                 <el-form-item style="width: 100%">
                   <el-button
                     native-type="submit"
-                    :disabled="isDisabled"
                     type="primary"
                     style="width: 100%"
-                    v-on:click="apply(paperForm)"
-                  >Submit paper</el-button>
+                    v-on:click="Submit('paperForm')"
+                  >Upload</el-button>
                 </el-form-item>
               </el-form>
               </div>
@@ -253,20 +268,12 @@ export default {
   
   data() {
     //Validators
-
-    //Judgement whether the submit button can work when the from changes
-    const isFormReady = (rule, value, callback) => {
-      this.changeDisabled();
-      callback();
-    };
-
     const isInviteFormReady = (rule, value, callback) => {
       this.isSearchDisabled = this.inviteForm.fullName == "";
       callback();
     };
 
     return {
-      isDisabled: true, //Control the function of the submit button
       isSearchDisabled:true,
 
       papers:[],
@@ -306,70 +313,24 @@ export default {
       // paper form
       paperForm: {
         title: "",
-        summary: ""
+        summary: "",
       },
       rules: {
         title: [
-          {
-            required: true,
-            message: "Title of paper is required",
-            trigger: "blur"
-          },
-          { validator: isFormReady, trigger: "change" }
+          {required: true, message: "Title of paper is required",trigger: "blur"},
+          {max:50,message:"Title can't be more than 50 characters",trigger: "change"}
         ],
         summary: [
-          {
-            required: true,
-            message: "Summary of paper is required",
-            trigger: "blur"
-          },
-          { validator: isFormReady, trigger: "change" }
-        ]
+          {required: true,message: "Summary of paper is required",trigger: "blur"},
+          {max:800,message:"Summary can't be more than 800 characters",trigger: "change"}
+        ],
       },
-      loading: false
+      loading: false,
+      files:[],
     };
   },
   methods: {
-    apply(formName) {
-      //In case of some bug, still validate before submit
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          this.loading = true;
-          this.$axios
-            .post("/SubmitPaper", {
-              title: this.paperForm.title,
-              summary: this.paperForm.summary,
-            })
-            .then(resp => {
-              // 根据后端的返回数据修改
-              if (resp.status === 200 && resp.data.hasOwnProperty("id")) {
-                this.loading = false;
-                this.$message({
-                  type: "success",
-                  center: true,
-                  dangerouslyUseHTMLString: true,
-                  message:
-                    "<strong style='color:teal'>Submission successful!</strong>"
-                });
-              } else {
-                this.$message.error("Submission failed. Please sign in first");
-              }
-            })
-            .catch(error => {
-              this.loading = false;
-              console.log(error);
-              this.$message.error("Submission failed");
-            });
-        } else {
-          this.$message.error("Wrong submit! Please check the form.");
-        }
-      });
-    },
-    changeDisabled() {
-      this.isDisabled =
-        this.paperForm.title === "" ||
-        this.paperForm.summary === "";
-    },
+
     parseStatus(status) {
       switch (status) {
         case "CHECKED":
@@ -471,8 +432,60 @@ export default {
         this.$message("Request Error!");
         console.log(error);
       })
-    }
+    },
+    onBeforeUpload(file){
+      const isPDF = file.type === 'application/pdf';
+      if (!isPDF) {
+        this.$message.error('Please upload a pdf file!');
+      }
+      return isPDF;
+    },
+
+    upload(params){
+        var data = new FormData(); //创建form对象
+        data.append('title',this.paperForm.title);
+        data.append('summary',this.paperForm.summary);
+        data.append('conferenceId',this.conference.id);
+        data.append('file',params.file);
+
+        var config = {
+           headers:{'Content-Type':'multipart/form-data'}
+          };  //添加请求头
+
+        this.$axios.post('/SubmitPaper',data,config)
+        .then(response=>{
+          console.log(response.data);
+          if(response.code==1){
+            this.$message({
+              type: "success",
+              center: true,
+              dangerouslyUseHTMLString: true,
+              message:"<strong style='color:teal'>Submission successful!</strong>"
+            });
+          }
+        })
+        .catch(error => {
+          console.log(error);
+         })
+    },
+    handleExceed(){
+      this.$message({
+        type:'warning',
+        message:"Can't upload more than 1 file!"
+        })
+    },
+
+    Submit(formName){
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.$refs['upload'].submit();
+        } else {
+          this.$message.error("Wrong submit! Please check the form.");
+        }
+      })
+    },
   },
+  
   created() {
     //获取会议信息
     this.$axios
