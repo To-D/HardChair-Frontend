@@ -9,19 +9,27 @@
             <h1 class="display-4">Message Inbox</h1>
             <!-- <p
               class="lead mb-0"
-            ></p> -->
+            ></p>-->
           </div>
         </div>
       </div>
     </section>
 
+<<<<<<< HEAD
     <div v-if = "noMessage"><el-card shadow="hover">No Massage now!</el-card></div>
     <section v-else>
+=======
+    <section>
+>>>>>>> 369365c462f6bc0fe1eed84830f95c603b41ceca
       <div class="container">
         <div class="row">
           <div class="col-xl-8 col-lg-12">
             <div class="text item">
+              <div v-if="noMessage">
+                <el-card shadow="hover">No message now!</el-card>
+              </div>
               <el-card
+                v-else
                 shadow="hover"
                 class="box-card"
                 style="margin-top: 1em;"
@@ -29,18 +37,19 @@
                 :key="message.messageId"
               >
                 <div slot="header" class="clearfix">
-                  <span v-if="message.status" style="font-weight: bold">{{message.type}}</span>
-                  <span style="font-weight: bold">{{message.type}}</span>
+                  <span v-if="message.status" >{{parseMessageType(message.type)}}</span>
+                  <span v-else>
+                    <el-badge is-dot class="item"></el-badge><span style="font-weight: bold"> {{parseMessageType(message.type)}}</span>
+                  </span>
+                  
 
                   <el-button
-                  
                     style="float: right; padding: 3px 0"
                     type="text"
                     @click="reject(message.id,'reject')"
                   >Reject</el-button>
                   <span style="float: right; padding: 3px 0">&nbsp;&nbsp;</span>
                   <el-button
-                  
                     style="float: right; padding: 3px 0"
                     type="text"
                     @click="agree(message.id,'agree')"
@@ -53,19 +62,19 @@
                       <i class="el-icon-chat-line-round"></i> Content：
                     </span>
                     {{message.content}}
-                  </div> 
+                  </div>
                   <div>
                     <span class="itemlabel">
                       <i class="el-icon-time"></i> Sent Time:
                     </span>
-                    {{message.sentTime.substring(0,10)}}
+                    {{message.sentTime.substring(0,10)}}&nbsp;{{message.sentTime.substring(11,16)}}
                   </div>
-                  <div>
+                  <!-- <div>
                     <span class="itemlabel">
                       <i class="el-icon-chat-line-round"></i> Status:
                     </span>
                     {{parseStatus(message.status)}}
-                  </div>
+                  </div> -->
                 </div>
               </el-card>
             </div>
@@ -76,15 +85,13 @@
         <div class="row">
           <div class="col-xl-6 col-lg-12">
             <el-pagination
-            hide-on-single-page
-            layout="prev, pager, next"
-            :page-size = "pageSize" 
-            @current-change="pageChange" 
-            :current-page.sync="currentPage"
-            :total="messages.length"> 
-           >
-           </el-pagination>
-
+              hide-on-single-page
+              layout="prev, pager, next"
+              :page-size="pageSize"
+              @current-change="pageChange"
+              :current-page.sync="currentPage"
+              :total="messages.length"
+            >></el-pagination>
           </div>
         </div>
       </div>
@@ -103,33 +110,54 @@ export default {
   components: { navbar, footerbar },
   inject: ["reload"],
   data() {
-    return{
-      messages:[],
-      pageSize:6,
-      currentPage:1,
+    return {
+      messages: [],
+      pageSize: 6,
+      currentPage: 1,
       noMessage: false
-    }
+    };
   },
   methods: {
-     pageChange() {
-       this.currentPage = currentPage;
-     },
-     parseStatus(status){
-       if(status == 0){
-         return "Hasn't Read";
-       }else{
-         return "Has Read";
-       }
-     },
-     isInvitaion(type){
-       if(type = "CONFERENCE_CHECKED"){
-         return false;
-       }else{
-         return true;
-       }
-     },
-     // Agree the invitation
-     agree(conferenceId,isAllowed){
+    pageChange() {
+      this.currentPage = currentPage;
+    },
+    //  parseStatus(status){
+    //    if(status == 0){
+    //      return "Hasn't Read";
+    //    }else{
+    //      return "Has Read";
+    //    }
+    //  },
+    parseMessageType(messageType){
+      switch (messageType) {
+        case "PC_MEMBER_INVITATION":
+          return "You are invited to be a PC member"
+          break;
+        case "CONFERENCE_CHECKED":
+          return "The conference you applied has been approved"
+          break;
+        case "CONFERENCE_ABOLISHED":
+          return "The conference you applied has been rejected"
+          break;
+        case "PC_MEMBER_ACCEPTED":
+          return "Your PC member invitation has been accepted"
+          break;
+        case "PC_MEMBER_REJECTED":
+          return "Your PC member invitation has been rejected"
+          break;
+        default:
+          break;
+      }
+    },
+    isInvitaion(type) {
+      if ((type = "CONFERENCE_CHECKED")) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    // Agree the invitation
+    agree(conferenceId, isAllowed) {
       /* this.$axios.post('/AuthorityAcceptedOrRejected',{
          conferenceId:conferenceId,
          acceptOrRejected:''
@@ -144,29 +172,27 @@ export default {
          console.log(error);
        })*/
     },
-    reject(conferenceId,isAllowed){
-
-    }
+    reject(conferenceId, isAllowed) {}
   },
-  created(){
-     // Apply for message information
-     this.$axios
-     .get('/Message',{})
-     .then(resp => {
+  created() {
+    // Apply for message information
+    this.$axios
+      .get("/Message", {})
+      .then(resp => {
         if (resp.status === 200) {
-          if(resp.data.length == 0){
+          if (resp.data.length == 0) {
             this.noMessage = true;
-          }else{
-          this.messages = resp.data;
-         }
+          } else {
+            this.messages = resp.data;
+          }
         } else {
-          this.$message.error("Request Error.")
+          this.$message.error("Request Error.");
         }
-     })
-     .catch(error => {
-       console.log(error);
-       this.$message.error("Request Error.")
-     })
+      })
+      .catch(error => {
+        console.log(error);
+        this.$message.error("Request Error.");
+      });
   }
 };
 </script>

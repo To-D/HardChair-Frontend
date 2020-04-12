@@ -60,13 +60,19 @@
       </div>
     </section>
 
-     <section>
+    <section>
       <div class="container">
         <div class="row">
           <div class="col-xl-8 col-lg-12">
             <div class="text item">
-              <div v-if = "noMeeting"><el-card shadow="hover">No related conference now!</el-card></div>
-              <el-card v-else
+              <h2>
+                <i class="el-icon-s-management"></i> My Conferences
+              </h2>
+              <div v-if="noMeeting">
+                <el-card shadow="hover">No related conference now!</el-card>
+              </div>
+              <el-card
+                v-else
                 shadow="hover"
                 class="box-card"
                 style="margin-top: 1em;"
@@ -74,21 +80,24 @@
                 :key="conference.id"
               >
                 <div slot="header" class="clearfix">
-                  <span style="font-weight: bold">{{conference.nameAbbreviation}}</span>
-                  <router-link :to="'conference-detail/'+conference.id" style="float: right; padding: 3px 0" >View details.</router-link>
+                  <span style="font-weight: bold">{{conference[0].nameAbbreviation}}</span>
+                  <router-link
+                    :to="'conference-detail/'+conference[0].id"
+                    style="float: right; padding: 3px 0"
+                  >View details</router-link>
                 </div>
                 <div>
                   <div>
                     <span class="itemlabel">
                       <i class="el-icon-chat-line-round"></i> Full name:
                     </span>
-                    {{conference.fullName}}
+                    {{conference[0].fullName}}
                   </div>
                   <div>
                     <span class="itemlabel">
                       <i class="el-icon-s-flag"></i> Status:
                     </span>
-                    {{conference.status}}
+                    {{parseStatus(conference[0].status)}}
                   </div>
                 </div>
               </el-card>
@@ -100,15 +109,13 @@
         <div class="row">
           <div class="col-xl-6 col-lg-12">
             <el-pagination
-            hide-on-single-page
-            layout="prev, pager, next"
-            :page-size = "pageSize" 
-            @current-change="pageChange" 
-            :current-page.sync="currentPage"
-            :total="conferences.length"> 
-           >
-           </el-pagination>
-
+              hide-on-single-page
+              layout="prev, pager, next"
+              :page-size="pageSize"
+              @current-change="pageChange"
+              :current-page.sync="currentPage"
+              :total="conferences.length"
+            >></el-pagination>
           </div>
         </div>
       </div>
@@ -137,27 +144,43 @@ export default {
   methods: {
     pageChange() {
       this.currentPage = currentPage;
+    },
+    parseStatus(status) {
+      switch (status) {
+        case "UNCHECKED":
+          return "Waiting for verification";
+          break;
+        case "CHECKED":
+          return "Approved by admin";
+          break;
+        case "SUBMIT_ALLOWED":
+          return "Accepting papers";
+          break;
+        default:
+          return "Currently unknown";
+          break;
+      }
     }
   },
-  created(){
-     // Get information of conferences that relate to the present user 
-     this.$axios
-     .get('/Profile',{})
-     .then(resp => {
-       if (resp.status === 200) {
-         if(resp.data[0].length == 0){
-           this.noMeeting = true;
-         }else{
-           this.conferences = resp.data[0];
-         }
-         this.user = resp.data[1];
-       } else {
-         this.$message.error("Request Error.")
-       }
-    })
-     .catch(error =>{
-       console.log(error);
-     })
+  created() {
+    // Get information of conferences that relate to the present user
+    this.$axios
+      .get("/Profile", {})
+      .then(resp => {
+        if (resp.status === 200) {
+          if (resp.data[0].length == 0) {
+            this.noMeeting = true;
+          } else {
+            this.conferences = resp.data[1];
+          }
+          this.user = resp.data[0];
+        } else {
+          this.$message.error("Request Error.");
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 };
 </script>
