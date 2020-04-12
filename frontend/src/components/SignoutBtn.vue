@@ -1,6 +1,6 @@
 <template>
   <div>
-    <router-link to="/" @click.native="signOut">
+    <router-link to="" @click.native="signOut">
       <el-menu-item>
         <i class="el-icon-circle-close"></i>Sign out
       </el-menu-item>
@@ -11,7 +11,6 @@
 <script>
 export default {
   name: "signoutbtn",
-  inject: ["reload"],
   data() {
     return {};
   },
@@ -23,7 +22,7 @@ export default {
       })
         .then(() => {
           this.$store.commit("logout");
-          this.reload();
+          this.$router.push('/login');
           this.$message({
             dangerouslyUseHTMLString: true,
             message: '<strong style="color:teal">You have signed out!</strong>',
