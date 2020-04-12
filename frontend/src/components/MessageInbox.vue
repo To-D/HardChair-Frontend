@@ -156,7 +156,7 @@ export default {
     },
     // Agree the invitation
     agree(conferenceId, isAllowed) {
-       this.$axios.post('/AuthorityAcceptedOrRejected',{
+      /* this.$axios.post('/AuthorityAcceptedOrRejected',{
          conferenceId:conferenceId,
          acceptOrRejected:''
        })
