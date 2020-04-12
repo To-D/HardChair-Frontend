@@ -49,19 +49,19 @@
                 <span class="itemlabel">
                   <i class="el-icon-video-play"></i> Starts at:
                 </span>
-                {{conference.startTime.substring(0,10)}}
+                {{ parseDate(conference.startTime) }}
               </div>
               <div class="infoitem">
                 <span class="itemlabel">
                   <i class="el-icon-video-pause"></i> Ends at:
                 </span>
-                {{conference.endTime.substring(0,10)}}
+                {{parseDate(conference.endTime)}}
               </div>
               <div class="infoitem">
                 <span class="itemlabel">
                   <i class="el-icon-date"></i> Submission deadline:
                 </span>
-                {{conference.deadline.substring(0,10)}}
+                {{parseDate(conference.deadline)}}
               </div>
               <div class="infoitem">
                 <span class="itemlabel">
@@ -76,23 +76,37 @@
                 {{parseStatus(conference.status)}}
               </div>
             </div>
-            <br />
-            <div>
-              <el-button>Start accepting papers</el-button>
-            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section>
+
+    <section v-if= "notADMIN">
       <div class="container">
         <div class="row">
           <div class="col-xl-8 col-lg-8">
             <div>
+              
+              <div v-if = "isCHAIR && isCHECKED">
+                <el-button
+                @click = "startContribution()"
+                >Start accepting papers</el-button>
+                <br/>
+                <br/>
+              </div>
+
+              <div v-if = "isCHAIR && (isCHECKED || isSUBMIT_ALLOWED || isFINISHED)">
+                <el-button>Invite PC_MEMBER</el-button>
+                <br/>
+                <br/>
+              </div>
+
+              <div v-if = "!isCHAIR && isSUBMIT_ALLOWED">
               <h2>
                 <i class="el-icon-document"></i> Paper submission
               </h2>
+
               <el-form
                 @submit.native.prevent
                 status-icon
@@ -138,6 +152,8 @@
                   >Submit paper</el-button>
                 </el-form-item>
               </el-form>
+              </div>
+
             </div>
           </div>
         </div>
@@ -155,6 +171,7 @@ import footerbar from "./Footer";
 export default {
   name: "ConferenceDetail",
   components: { navbar, footerbar },
+  inject: ["reload"],
   
   data() {
     //Validators
@@ -167,8 +184,21 @@ export default {
 
     return {
       isDisabled: true, //Control the function of the submit button
-      authority: [],
-      conference: null,
+      papers:[],
+      authorities: [],
+      conference: {},
+
+      // authority
+      notADMIN: true,
+      isCHAIR: false,
+      isPC_MEMBER: false,
+      isAUTHOR: false,
+
+      // conference status
+      isCHECKED:false,
+      isSUBMIT_ALLOWED:false,
+      isFINISHED:false,
+      
 
       paperForm: {
         title: "",
@@ -252,14 +282,31 @@ export default {
     },
     handleChange(val) {
       // console.log(val);
+    },
+     parseDate(timestamp) {
+      if (timestamp == "") {
+         return "N/A";
+       } else {
+         return timestamp.substring(0, 10);
+       }
+     },
+    startContribution(){
+      this.$axios
+      .post('/ConferenceOpenSubmit',{
+        conferenceId:this.conference.id
+      })
+      .then(resp =>{
+        if(resp.status === 200){
+          this.reload();
+          this.$message({
+          dangerouslyUseHTMLString: true,
+          type:'success',
+          message: '<strong style="color:teal">Your conference has started to accept papers!</strong>',
+          center:true
+        });
+        }
+      })
     }
-    // parseDate(timestamp) {
-    //   if (timestamp = "") {
-    //     return "N/A";
-    //   } else {
-    //     return timestamp.substring(0, 10);
-    //   }
-    // },
   },
   created() {
     //获取会议信息
@@ -269,14 +316,52 @@ export default {
       })
       .then(resp => {
         if (resp.status === 200) {
-          console.log(this.$route.params.conferenceID);
           console.log(resp.data);
-          this.authority = resp.data[0];
-          this.conference = resp.data[1];
+          this.papers = resp.data[0];
+          this.authorities = resp.data[1];
+          this.conference = resp.data[2];
+
+          // Authority 
+          //Don't display function part for ADMIN
+          if(this.$store.state.userType == 'ADMIN'){ 
+            this.notADMIN = false;
+          }else{// Normal user
+          let len = this.authorities.length;
+            for(let i = 0; i < len; i++){
+              switch(this.authorities[i].authority){
+                case 'CHAIR':
+                  this.isCHAIR = true;
+                  break;
+                case 'PC_MEMBER':
+                  this.isPC_MEMBER = true;
+                  break;
+                case 'AUTHOR':
+                  this.isAUTHOR = true;
+                  break;
+              }
+            }
+          }
+
+          // Conference Status
+          switch(this.conference.status){
+            case 'CHECKED':
+              this.isCHECKED = true;
+              break;
+            case 'SUBMIT_ALLOWED':
+              this.isSUBMIT_ALLOWED = true;
+              break;
+            case 'FINISHED':
+              this.isFINISHED = true;
+              break;
+          }
+
+        }else{
+          this.$message("Request Error");
         }
       })
       .catch(error => {
         console.log(error);
+        this.$message("Request Error");
       });
   }
 };

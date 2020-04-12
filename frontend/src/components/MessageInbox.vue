@@ -15,7 +15,7 @@
       </div>
     </section>
 
-    <div v-if = "noMessage"><el-card shadow="hover">No conference now!</el-card></div>
+    <div v-if = "noMessage"><el-card shadow="hover">No Massage now!</el-card></div>
     <section v-else>
       <div class="container">
         <div class="row">
