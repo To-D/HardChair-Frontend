@@ -39,12 +39,11 @@
                   </span>
                   
                    <!--PC_MEMBER_ACCEPTED PC_MEMBER_REJECTED-->
-                  <span v-if = "message.type == PC_MEMBER_ACCEPTED || message.type == PC_MEMBER_REJECTED">
-
+                  <span >
                     <el-button
                       style="float: right; padding: 3px 0"
                       type="text"
-                      @click="reject(message.id,'reject')"
+                      @click="response(message.content,message.messageId,'reject')"
                     >Reject</el-button>
 
                     <span style="float: right; padding: 3px 0">&nbsp;&nbsp;</span>
@@ -52,17 +51,17 @@
                     <el-button
                       style="float: right; padding: 3px 0"
                       type="text"
-                      @click="agree(message.id,'agree')"
+                      @click="response(message.content,message.messageId,'accept')"
                     >Agree</el-button>
 
                   </span>
-
+                  
                   <!--PC_MEMBER_INVITATION CONFERENCE_CHECKED CONFERENCE_ABOLISHED-->
                   <el-button
-                    v-else 
+                    
                     style="float: right; padding: 3px 0"
                     type="text"
-                    @click="mark(message.id,'reject')"
+                    @click="mark(message.messageId)"
                   >Mark as read</el-button>
 
                   <span style="float: right; padding: 3px 0">&nbsp;&nbsp;</span>
@@ -108,7 +107,7 @@
         </div>
       </div>
     </section>
-
+    
     <footerbar></footerbar>
   </div>
 </template>
@@ -178,11 +177,34 @@ export default {
           break;
       }
     },
+
+    // Message Operation
+    mark(id){
+      console.log(id);
+      this.$axios.post('/MessageAlreadyRead',{
+        messageId : id
+      })
+      .then(resp=>{
+        if ( resp.status === 200){
+          this.reload();
+        }else{
+          this.$message.error("Request Error!");
+        }
+      })
+      .catch(error =>{
+        this.$message.error("Request Error!");
+        console.log(error);
+      })
+    },
     // Agree the invitation
-    agree(conferenceId, isAllowed) {
-      /* this.$axios.post('/AuthorityAcceptedOrRejected',{
+    response(content,messageId,opinion) {
+      let start = content.lastIndexOf(',')+1;
+      let conferenceId = content.substring(start);
+
+      this.$axios.post('/AuthorityAcceptedOrRejected',{
          conferenceId:conferenceId,
-         acceptOrRejected:''
+         acceptOrRejected:opinion,
+         messageId:messageId
        })
        .then(resp =>{
          if(resp.status === 200){
@@ -192,9 +214,8 @@ export default {
        })
       .catch(error=>{
          console.log(error);
-       })*/
-    },
-    reject(conferenceId, isAllowed) {}
+       })
+    }
   },
   created() {
     // Apply for message information
@@ -215,6 +236,9 @@ export default {
         console.log(error);
         this.$message.error("Request Error.");
       });
+  },
+  mounted(){
+    
   }
 };
 </script>
