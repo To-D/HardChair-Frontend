@@ -376,6 +376,7 @@ export default {
         case "UNCHECKED":
           return "Waiting for verification";
           break;
+        
         default:
           return "Currently unknown";
           break;
@@ -447,10 +448,14 @@ export default {
       this.multipleSelection = val;
     },
     invite() {
+
+      for(let user in this.multipleSelection){
+
+      }
       this.$axios
         .post("/DistributeAuthority", {
           conferenceId: this.conference.id,
-          users: this.multipleSelection
+          users: JSON.stringify(this.multipleSelection)
         })
         .then(resp => {
           if (resp.status === 200) {
@@ -492,9 +497,8 @@ export default {
       }; //添加请求头
       this.$axios
         .post("/SubmitPaper", data, config)
-        .then(response => {
-          console.log(response.data);
-          if (response.code == 1) {
+        .then(resp => {
+          if (resp.status === 200) {
             this.$message({
               type: "success",
               center: true,
