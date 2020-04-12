@@ -187,9 +187,9 @@ caption {
 th {
   text-align: inherit; }
 
-label {
+/* label {
   display: inline-block;
-  margin-bottom: 0.75rem; }
+  margin-bottom: 0.75rem; } */
 
 button {
   border-radius: 0; }

@@ -8,17 +8,12 @@
             <ul class="nav flex-column">
               <li class="nav-item">
                 <a class="nav-link">
-                  <router-link to="ConferenceApplication">Conference Application</router-link>
+                  <router-link to="/conference-application">Conference Application</router-link>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link">
-                  News
-                </a>
-              </li>
-              <li>
-                <a class="nav-link">
-                  FAQ
+                  <router-link to="/conference-home">All Conferences</router-link>
                 </a>
               </li>
             </ul>
