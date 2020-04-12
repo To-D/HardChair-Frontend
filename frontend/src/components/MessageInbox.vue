@@ -39,7 +39,7 @@
                   </span>
                   
                    <!--PC_MEMBER_ACCEPTED PC_MEMBER_REJECTED-->
-                  <span >
+                  <span v-if = "message.type =='PC_MEMBER_ACCEPTED' || message.type == 'PC_MEMBER_REJECTED'">
                     <el-button
                       style="float: right; padding: 3px 0"
                       type="text"
@@ -58,7 +58,7 @@
                   
                   <!--PC_MEMBER_INVITATION CONFERENCE_CHECKED CONFERENCE_ABOLISHED-->
                   <el-button
-                    
+                    v-else
                     style="float: right; padding: 3px 0"
                     type="text"
                     @click="mark(message.messageId)"
