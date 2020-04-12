@@ -31,26 +31,43 @@
                 v-for="message in messages.slice((currentPage- 1)*pageSize,currentPage*pageSize)"
                 :key="message.messageId"
               >
+              <!-- header -->
                 <div slot="header" class="clearfix">
                   <span v-if="message.status" >{{parseMessageType(message.type)}}</span>
                   <span v-else>
                     <el-badge is-dot class="item"></el-badge><span style="font-weight: bold"> {{parseMessageType(message.type)}}</span>
                   </span>
                   
+                   <!--PC_MEMBER_ACCEPTED PC_MEMBER_REJECTED-->
+                  <span v-if = "message.type == PC_MEMBER_ACCEPTED || message.type == PC_MEMBER_REJECTED">
 
+                    <el-button
+                      style="float: right; padding: 3px 0"
+                      type="text"
+                      @click="reject(message.id,'reject')"
+                    >Reject</el-button>
+
+                    <span style="float: right; padding: 3px 0">&nbsp;&nbsp;</span>
+
+                    <el-button
+                      style="float: right; padding: 3px 0"
+                      type="text"
+                      @click="agree(message.id,'agree')"
+                    >Agree</el-button>
+
+                  </span>
+
+                  <!--PC_MEMBER_INVITATION CONFERENCE_CHECKED CONFERENCE_ABOLISHED-->
                   <el-button
+                    v-else 
                     style="float: right; padding: 3px 0"
                     type="text"
-                    @click="reject(message.id,'reject')"
-                  >Reject</el-button>
-                  <span style="float: right; padding: 3px 0">&nbsp;&nbsp;</span>
-                  <el-button
-                    style="float: right; padding: 3px 0"
-                    type="text"
-                    @click="agree(message.id,'agree')"
-                  >Agree</el-button>
+                    @click="mark(message.id,'reject')"
+                  >Marked as read </el-button>
+
                   <span style="float: right; padding: 3px 0">&nbsp;&nbsp;</span>
                 </div>
+
                 <div>
                   <div>
                     <span class="itemlabel">
@@ -109,20 +126,13 @@ export default {
       messages: [],
       pageSize: 6,
       currentPage: 1,
-      noMessage: false
+      noMessage: false,
     };
   },
   methods: {
     pageChange() {
       this.currentPage = currentPage;
     },
-    //  parseStatus(status){
-    //    if(status == 0){
-    //      return "Hasn't Read";
-    //    }else{
-    //      return "Has Read";
-    //    }
-    //  },
     parseMessageType(messageType){
       switch (messageType) {
         case "PC_MEMBER_INVITATION":
@@ -144,16 +154,9 @@ export default {
           break;
       }
     },
-    isInvitaion(type) {
-      if ((type = "CONFERENCE_CHECKED")) {
-        return false;
-      } else {
-        return true;
-      }
-    },
     // Agree the invitation
     agree(conferenceId, isAllowed) {
-      /* this.$axios.post('/AuthorityAcceptedOrRejected',{
+       this.$axios.post('/AuthorityAcceptedOrRejected',{
          conferenceId:conferenceId,
          acceptOrRejected:''
        })
