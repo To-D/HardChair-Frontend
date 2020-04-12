@@ -97,10 +97,88 @@
               </div>
 
               <div v-if = "isCHAIR && (isCHECKED || isSUBMIT_ALLOWED || isFINISHED)">
-                <el-button>Invite PC_MEMBER</el-button>
+                <el-button
+                type="text"
+                @click = "dialogFormVisible = true"
+                >Invite PC_MEMBER</el-button>
                 <br/>
                 <br/>
               </div>
+
+              <!-- dialog -->
+              <el-dialog title="INVITE PC_MEMBERS FOR YOUR CONFERENCE" :visible.sync="dialogFormVisible">
+                <el-form
+                @submit.native.prevent
+                status-icon
+                :model="inviteForm"
+                :rules="inviteRules"
+                label-position="top"
+                v-loading="loading"
+                :ref="inviteForm"
+              >
+                <!-- user full name-->
+                <el-form-item prop="fullName" label="fullName">
+                  <el-input
+                    type="text"
+                    v-model="inviteForm.fullName"
+                    auto-complete="off"
+                    id="fullName"
+                    placeholder="Full name of the user"
+                  ></el-input>
+                </el-form-item>
+
+                <!-- submit button -->
+                <el-form-item style="width: 100%">
+                  <el-button
+                    native-type="submit"
+                    :disabled="isSearchDisabled"
+                    type="primary"
+                    style="width: 100%"
+                    v-on:click="search(inviteForm)"
+                  >Search</el-button>
+                </el-form-item>
+              </el-form>
+
+              <!-- display table -->
+               <el-table
+               @selection-change="handleSelectionChange"
+                :data="users"
+                style="width: 100%"
+                max-height="250">
+                <el-table-column
+                  type="selection"
+                  width="55">
+                </el-table-column>
+                <el-table-column
+                  fixed
+                  prop="fullname"
+                  label="FullName"
+                  width="150">
+                </el-table-column>
+                <el-table-column
+                  prop="email"
+                  label="E-mail"
+                  width="150">
+                </el-table-column>
+                <el-table-column
+                  prop="region"
+                  label="Location"
+                  width="150">
+                </el-table-column>
+                <el-table-column
+                  prop="organization"
+                  label="Organization"
+                  width="150">
+                </el-table-column>
+              </el-table>
+              <el-button v-if = 'searched'
+                @click = "invite()"
+                type="primary"
+                size="small">
+                INVITE
+              </el-button>
+              
+              </el-dialog>
 
               <div v-if = "!isCHAIR && isSUBMIT_ALLOWED">
               <h2>
@@ -178,12 +256,19 @@ export default {
 
     //Judgement whether the submit button can work when the from changes
     const isFormReady = (rule, value, callback) => {
-      callback();
       this.changeDisabled();
+      callback();
+    };
+
+    const isInviteFormReady = (rule, value, callback) => {
+      this.isSearchDisabled = this.inviteForm.fullName == "";
+      callback();
     };
 
     return {
       isDisabled: true, //Control the function of the submit button
+      isSearchDisabled:true,
+
       papers:[],
       authorities: [],
       conference: {},
@@ -198,8 +283,27 @@ export default {
       isCHECKED:false,
       isSUBMIT_ALLOWED:false,
       isFINISHED:false,
-      
 
+      // invite form
+      dialogFormVisible: false,
+      inviteForm:{
+        fullName:""
+      },
+      inviteRules:{
+        fullName: [
+          {
+            required: true,
+            message: "Please Enter the full name",
+            trigger: "blur"
+          },
+          { validator: isInviteFormReady, trigger: "change" }
+        ]
+      },
+      users:[],
+      searched: false,
+      multipleSelection:[],
+
+      // paper form
       paperForm: {
         title: "",
         summary: ""
@@ -247,7 +351,6 @@ export default {
                   message:
                     "<strong style='color:teal'>Submission successful!</strong>"
                 });
-                this.$router.replace("/");
               } else {
                 this.$message.error("Submission failed. Please sign in first");
               }
@@ -290,6 +393,7 @@ export default {
          return timestamp.substring(0, 10);
        }
      },
+
     startContribution(){
       this.$axios
       .post('/ConferenceOpenSubmit',{
@@ -304,7 +408,68 @@ export default {
           message: '<strong style="color:teal">Your conference has started to accept papers!</strong>',
           center:true
         });
+        }else{
+          this.$message("Request Error!");
         }
+      })
+      .catch(error => {
+        this.$message("Request Error!");
+        console.log(error);
+      })
+    },
+
+    search(formName){
+       //In case of some bug, still validate before submit
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.$axios
+            .post("/SearchByFullName", {
+              fullname:this.inviteForm.fullName
+            })
+            .then(resp => {
+              // 根据后端的返回数据修改
+              if (resp.status === 200) {
+                this.users = resp.data;
+                this.searched = true;
+              } else {
+                this.$message.error("Request Error!");
+              }
+            })
+            .catch(error => {
+              console.log(error);
+              this.$message.error("Request Error!");
+            });
+        } else {
+          this.$message.error("Wrong submit! Please check the form.");
+        }
+      });
+    },
+    handleSelectionChange(val) {
+        this.multipleSelection = val;
+    },
+    invite(){
+      this.$axios
+      .post('/DistributeAuthority',{
+        conferenceId:this.conference.id,
+        users:this.multipleSelection
+      })
+      .then(resp =>{
+        if(resp.status === 200){
+          this.inviteForm.fullName = "";
+          this.users = [];
+          this.$message({
+            dangerouslyUseHTMLString: true,
+            type:'success',
+            message: '<strong style="color:teal">Invitation has been sent!</strong>',
+            center:true
+          });
+        }else{
+          this.$message("Request Error!");  
+        }
+      })
+      .catch(error =>{
+        this.$message("Request Error!");
+        console.log(error);
       })
     }
   },
@@ -316,10 +481,9 @@ export default {
       })
       .then(resp => {
         if (resp.status === 200) {
-          console.log(resp.data);
-          this.papers = resp.data[0];
-          this.authorities = resp.data[1];
-          this.conference = resp.data[2];
+          this.papers = resp.data.paper;
+          this.authorities = resp.data.authorities;
+          this.conference = resp.data.conference;
 
           // Authority 
           //Don't display function part for ADMIN
