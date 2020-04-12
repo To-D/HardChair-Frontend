@@ -15,12 +15,7 @@
       </div>
     </section>
 
-<<<<<<< HEAD
-    <div v-if = "noMessage"><el-card shadow="hover">No Massage now!</el-card></div>
-    <section v-else>
-=======
     <section>
->>>>>>> 369365c462f6bc0fe1eed84830f95c603b41ceca
       <div class="container">
         <div class="row">
           <div class="col-xl-8 col-lg-12">
