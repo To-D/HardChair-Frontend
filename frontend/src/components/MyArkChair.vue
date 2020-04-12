@@ -127,7 +127,7 @@ export default {
   components: { navbar, footerbar },
   data() {
     return {
-      user: null,
+      user: {},
       conferences: [],
       pageSize: 6,
       currentPage: 1,
@@ -145,9 +145,12 @@ export default {
      .get('/Profile',{})
      .then(resp => {
        if (resp.status === 200) {
-         console.log(resp.data);   
+         if(resp.data[0].length == 0){
+           this.noMeeting = true;
+         }else{
+           this.conferences = resp.data[0];
+         }
          this.user = resp.data[1];
-         this.conferences = resp.data[0];
        } else {
          this.$message.error("Request Error.")
        }
