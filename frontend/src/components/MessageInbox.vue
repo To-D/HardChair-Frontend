@@ -221,7 +221,6 @@ export default {
     this.$axios
       .get("/Message", {})
       .then(resp => {
-        console.log(resp.data);
         if (resp.status === 200) {
           if (resp.data.length == 0) {
             this.noMessage = true;

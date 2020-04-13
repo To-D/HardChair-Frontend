@@ -55,25 +55,33 @@
                   <span class="itemlabel">
                     <i class="el-icon-video-play"></i> Starts at:
                   </span>
-                  {{ parseDate(conference.startTime) }}
+                  <span v-if = "conference.startTime">
+                  {{conference.startTime.substring(0, 10) }}
+                  </span>
                 </div>
                 <div class="infoitem">
                   <span class="itemlabel">
                     <i class="el-icon-video-pause"></i> Ends at:
                   </span>
-                  {{parseDate(conference.endTime)}}
+                  <span v-if = "conference.endTime">
+                  {{conference.endTime.substring(0, 10)}}
+                  </span>
                 </div>
                 <div class="infoitem">
                   <span class="itemlabel">
                     <i class="el-icon-date"></i> Submission deadline:
                   </span>
-                  {{parseDate(conference.deadline)}}
+                  <span v-if = "conference.deadline">
+                  {{conference.deadline.substring(0, 10)}}
+                  </span>
                 </div>
                 <div class="infoitem">
                   <span class="itemlabel">
                     <i class="el-icon-medal-1"></i> Result announcement at:
                   </span>
+                  <span v-if = "conference.resultAnnounceDate">
                   {{conference.resultAnnounceDate.substring(0,10)}}
+                  </span>
                 </div>
                 <div class="infoitem">
                   <span class="itemlabel">
@@ -91,11 +99,13 @@
         <div class="container">
           <div class="row">
             <div v-if="isCHAIR" class="col-xl-8 col-lg-8">
-              <h2>
+
+              <h2 v-if="isCHECKED || isSUBMIT_ALLOWED || isFINISHED">
                 <i class="el-icon-info"></i> Conference Operations
               </h2>
+
               <div class="row">
-                <div v-if="isCHAIR && isCHECKED">
+                <div v-if="isCHECKED">
                   <el-button
                     class="onPageBtn"
                     type="primary"
@@ -103,7 +113,7 @@
                   >Start accepting papers</el-button>
                 </div>
 
-                <div v-if="isCHAIR && (isCHECKED || isSUBMIT_ALLOWED || isFINISHED)">
+                <div v-if="isCHECKED || isSUBMIT_ALLOWED|| isFINISHED">
                   <el-button
                     class="onPageBtn"
                     type="primary"
@@ -111,7 +121,7 @@
                   >Invite PC member</el-button>
                 </div>
 
-                <div v-if="isCHAIR && (isCHECKED || isSUBMIT_ALLOWED || isFINISHED)">
+                <div v-if="isCHECKED || isSUBMIT_ALLOWED || isFINISHED">
                   <el-button
                     class="onPageBtn"
                     type="primary"
@@ -119,7 +129,7 @@
                   >See current PC members</el-button>
                 </div>
 
-                <!-- dialog -->
+                <!-- Invite dialog -->
                 <el-dialog
                   title="Invite PC members to your conference"
                   :visible.sync="dialogFormVisible"
@@ -133,7 +143,7 @@
                     label-position="left"
                     v-loading="loading"
                     :ref="inviteForm"
-                    hide-required-asterisk="true"
+                    hide-required-asterisk
                   >
                     <!-- user full name-->
                     <el-form-item prop="fullName" label="Search user by their real names:">
@@ -176,7 +186,7 @@
                   </el-table>
                 </el-dialog>
 
-                <!-- dialog -->
+                <!-- Look for current pc_members -->
                 <el-dialog
                   title="See current PC member"
                   :visible.sync="dialogMemberTableVisible"
@@ -193,7 +203,7 @@
                     <el-table-column prop="region" label="Region" width="130"></el-table-column>
                     <el-table-column prop="organization" label="Organization" width="130"></el-table-column>
                     <el-table-column
-                      prop="status"
+                      prop="password"
                       label="Status"
                       width="130"
                       :filters="[{ text: 'UNREAD', value: 'UNREAD' },{ text: 'ACCEPT', value: 'ACCEPT' }, { text: 'REJECT', value: 'REJECT' }]"
@@ -201,8 +211,8 @@
                       filter-placement="bottom-end">
                       <template slot-scope="scope">
                         <el-tag
-                          :type="handleType(scope.row.tag)"
-                          disable-transitions>{{scope.row.tag}}</el-tag>
+                          :type="handleType(scope.row.password)"
+                          disable-transitions>{{scope.row.password}}</el-tag>
                       </template>
                     </el-table-column>
                   </el-table>
@@ -319,7 +329,6 @@
       :label="authority.authority"
       >
       {{authority.authority}}
-      <span v-if = "isPC_MEMBER">Defalut</span>
       </el-radio>
     </el-radio-group>
       <span slot="footer" class="dialog-footer">
@@ -354,7 +363,7 @@ export default {
 
       //Choose Authority
       hasChosen:true,
-      chooseAuthority:'PC_MEMBER',
+      chooseAuthority:'',
       seeChooseAuthority:false,
       seeChangeAuthority:false,
       isSearchDisabled: true,
@@ -456,13 +465,6 @@ export default {
     },
     handleChange(val) {
       // console.log(val);
-    },
-    parseDate(timestamp) {
-      if (timestamp == "") {
-        return "N/A";
-      } else {
-        return timestamp.substring(0, 10);
-      }
     },
 
     startContribution() {
@@ -611,7 +613,7 @@ export default {
       }
       if(val == 'AUTHOR'){
         this.isPC_MEMBER = false;
-        this.isAUTHOR = false;
+        this.isAUTHOR = true;
       }
       this.hasChosen = false;
     },
@@ -623,7 +625,7 @@ export default {
       .then(resp => {
         if(resp.status === 200){
           this.pcMembers = resp.data;
-          console.log(resp.data);
+          console.log(this.pcMembers);
         }else{
           this.$message.error("Request Error");
         }
@@ -646,7 +648,10 @@ export default {
         case 'REJECT':
           return 'danger';
       }
-    }
+    },
+    filterTag(value, row) {
+        return row.password === value;
+      },
   },
 
   created() {
@@ -695,6 +700,11 @@ export default {
               this.isFINISHED = true;
               break;
           }
+          
+        if(this.authorities.length > 1){
+          this.seeChooseAuthority = true;
+          this.seeChangeAuthority = true;
+        }
         } else {
           this.$message("Request Error");
         }
@@ -704,13 +714,6 @@ export default {
         this.$message("Request Error");
       });
   },
-
-  mounted(){
-    if(this.authorities.length > 1){
-      this.seeChooseAuthority = true;
-      this.seeChangeAuthority = true;
-    }
-  }
 };
 </script>
 
