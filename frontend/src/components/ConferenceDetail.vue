@@ -223,7 +223,7 @@
                 label-position="top"
                 ref="paperForm"
               >
-                <!-- short name -->
+                <!-- title -->
                 <el-form-item prop="title" label="Title">
                   <el-input
                     type="text"
@@ -234,7 +234,7 @@
                   ></el-input>
                 </el-form-item>
 
-                <!--full name -->
+                <!-- summary -->
                 <el-form-item prop="summary" label="Summary">
                   <el-input
                     type="textarea"
@@ -280,6 +280,21 @@
                   >Upload</el-button>
                 </el-form-item>
               </el-form>
+
+              <div v-if = "isAUTHOR">
+                <h2>Papers you have contribute</h2>
+                <el-card 
+                shadow="hover"
+                class="box-card"
+                style="margin-top: 1em;"
+                v-for="paper in papers.slice((currentPage- 1)*pageSize,currentPage*pageSize)"
+                :key="paper.id"
+                >
+                <p>{{paper.title}}</p>
+                <p>{{paper.summary}}</p>
+                <p>{{paper.createdTime}}</p>
+                </el-card>                               
+              </div>
             </div>
           </div>
         </div>
@@ -333,6 +348,11 @@ export default {
     };
 
     return {
+      // Paper show
+      pageSize: 6,
+      currentPage: 1,
+
+      //Choose Authority
       hasChosen:true,
       chooseAuthority:'PC_MEMBER',
       seeChooseAuthority:false,
@@ -415,6 +435,9 @@ export default {
     };
   },
   methods: {
+    pageChange() {
+      this.currentPage = currentPage;
+    },
     parseStatus(status) {
       switch (status) {
         case "CHECKED":
@@ -474,7 +497,7 @@ export default {
           this.$axios
             .post("/SearchByFullName", {
               fullname: this.inviteForm.fullName,
-              //conferenceId:this.conference.id
+              conferenceId:this.conference.id
             })
             .then(resp => {
               // 根据后端的返回数据修改
@@ -634,7 +657,7 @@ export default {
       })
       .then(resp => {
         if (resp.status === 200) {
-          this.papers = resp.data.paper;
+          this.papers = resp.data.papers;
           this.authorities = resp.data.authorities;
           this.conference = resp.data.conference;
 
