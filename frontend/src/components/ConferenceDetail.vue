@@ -8,12 +8,14 @@
           <div class="col-lg-9 col-xl-6">
             <h1 class="display-4">{{conference.nameAbbreviation}}</h1>
             <p class="lead mb-0">{{conference.fullName}}</p>
+            <br>
+            <el-button class="lead mb-0" v-if = "seeChangeAuthority" @click="seeChooseAuthority = true">Change Authority</el-button>
           </div>
         </div>
 
-        <div>
+        <!-- <div>
           <el-button type="primary" v-if = "seeChangeAuthority" @click="seeChooseAuthority = true">Change Authority</el-button>   
-        </div>
+        </div> -->
 
       </div>
     </section>
@@ -101,7 +103,7 @@
             <div v-if="isCHAIR" class="col-xl-8 col-lg-8">
 
               <h2 v-if="isCHECKED || isSUBMIT_ALLOWED || isFINISHED">
-                <i class="el-icon-info"></i> Conference Operations
+                <i class="el-icon-magic-stick"></i> Conference Operations
               </h2>
 
               <div class="row">
@@ -222,7 +224,7 @@
 
             <div class="col-xl-6 col-lg-6" v-if="!isCHAIR && isSUBMIT_ALLOWED">
               <h2>
-                <i class="el-icon-document"></i> Paper submission
+                <i class="el-icon-upload2"></i> Paper submission
               </h2>
 
               <el-form
@@ -292,7 +294,7 @@
               </el-form>
 
               <div v-if = "isAUTHOR">
-                <h2>Papers you have contribute</h2>
+                <h2><i class="el-icon-document"></i>Papers you have contributed</h2>
                 <el-card 
                 shadow="hover"
                 class="box-card"
@@ -300,9 +302,18 @@
                 v-for="paper in papers.slice((currentPage- 1)*pageSize,currentPage*pageSize)"
                 :key="paper.id"
                 >
-                <p>{{paper.title}}</p>
-                <p>{{paper.summary}}</p>
-                <p>{{paper.createdTime}}</p>
+                <p>
+                  <span class="itemlabel">
+                    <i class="el-icon-s-opportunity"></i> Title:
+                  </span>{{paper.title}}</p>
+                <p>                  
+                  <span class="itemlabel">
+                    <i class="el-icon-s-fold"></i> Summary:
+                  </span>{{paper.summary}}</p>
+                <p v-if = "paper.createdTime">                  
+                  <span class="itemlabel">
+                    <i class="el-icon-date"></i> Upload date:
+                  </span>{{paper.createdTime.substring(0,10)}}</p>
                 </el-card>                               
               </div>
             </div>

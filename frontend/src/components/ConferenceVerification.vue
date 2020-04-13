@@ -90,7 +90,7 @@
                     <span class="itemlabel">
                       <i class="el-icon-date"></i> Submission deadline:
                     </span>
-                    <span v-if = "conferecne.deadline">
+                    <span v-if = "conference.deadline">
                       {{conference.deadline.substring(0,10)}}
                     </span>
                   </div>
