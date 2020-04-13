@@ -10,6 +10,11 @@
             <p class="lead mb-0">{{conference.fullName}}</p>
           </div>
         </div>
+
+        <div>
+          <el-button type="primary" @click="seeChooseAuthority = true">Change Authority</el-button>   
+        </div>
+
       </div>
     </section>
 
@@ -269,6 +274,32 @@
       </section>
     </div>
 
+    <!-- Choose Authority -->
+    <el-dialog
+      title="Choose Authority"
+      :visible.sync="seeChooseAuthority"
+      width="50%"
+      :show-close="false"
+      :close-on-click-modal = "false"
+      :close-on-press-escape = "false"
+    >
+    <p>You have more than 1 authority in this conference, choose one to enter</p>
+    <el-radio-group v-model="chooseAuthority" @change="changeAuthority">
+      <el-radio 
+      border
+      v-for="authority in authorities"
+      :key="authority.id"
+      :label="authority.authority"
+      >
+      {{authority.authority}}
+      <span v-if = "isPC_MEMBER">Defalut</span>
+      </el-radio>
+    </el-radio-group>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="seeChooseAuthority = false" :disabled = "hasChosen">Enter</el-button>
+      </span>
+    </el-dialog>
+
     <footerbar></footerbar>
   </div>
 </template>
@@ -290,6 +321,10 @@ export default {
     };
 
     return {
+      hasChosen:true,
+      chooseAuthority:'PC_MEMBER',
+      seeChooseAuthority:false,
+      seeChangeAuthority:false,
       isSearchDisabled: true,
 
       //Base Information
@@ -531,6 +566,18 @@ export default {
           this.$message.error("Wrong submit! Please check the form.");
         }
       });
+    },
+
+    changeAuthority(val){
+      if(val == 'PC_MEMBER'){
+        this.isPC_MEMBER = true;
+        this.isAUTHOR = false;
+      }
+      if(val == 'AUTHOR'){
+        this.isPC_MEMBER = false;
+        this.isAUTHOR = false;
+      }
+      this.hasChosen = false;
     }
   },
 
@@ -588,6 +635,13 @@ export default {
         console.log(error);
         this.$message("Request Error");
       });
+  },
+
+  mounted(){
+    if(this.authorities.length > 1){
+      this.seeChooseAuthority = true;
+      this.seeChangeAuthority = true;
+    }
   }
 };
 </script>
