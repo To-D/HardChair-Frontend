@@ -12,7 +12,7 @@
         </div>
 
         <div>
-          <el-button type="primary" @click="seeChooseAuthority = true">Change Authority</el-button>   
+          <el-button type="primary" v-if = "seeChangeAuthority" @click="seeChooseAuthority = true">Change Authority</el-button>   
         </div>
 
       </div>
@@ -115,8 +115,8 @@
                   <el-button
                     class="onPageBtn"
                     type="primary"
-                    @click="dialogMemberTableVisible = true"
-                  >See current PC member</el-button>
+                    @click="updateInvitation()"
+                  >See current PC members</el-button>
                 </div>
 
                 <!-- dialog -->
@@ -184,15 +184,27 @@
                   <!-- display table -->
                   <el-table
                     @selection-change="handleSelectionChange"
-                    :data="users"
+                    :data="pcMembers"
                     style="width: 100%"
                     max-height="250"
                   >
-                    <el-table-column type="selection" width="50"></el-table-column>
-                    <el-table-column fixed prop="fullname" label="Real name" width="150"></el-table-column>
-                    <el-table-column prop="email" label="E-mail" width="150"></el-table-column>
-                    <el-table-column prop="region" label="Region" width="150"></el-table-column>
-                    <el-table-column prop="organization" label="Organization" width="150"></el-table-column>
+                    <el-table-column fixed prop="fullname" label="Real name" width="130"></el-table-column>
+                    <el-table-column prop="email" label="E-mail" width="130"></el-table-column>
+                    <el-table-column prop="region" label="Region" width="130"></el-table-column>
+                    <el-table-column prop="organization" label="Organization" width="130"></el-table-column>
+                    <el-table-column
+                      prop="status"
+                      label="Status"
+                      width="130"
+                      :filters="[{ text: 'UNREAD', value: 'UNREAD' },{ text: 'ACCEPT', value: 'ACCEPT' }, { text: 'REJECT', value: 'REJECT' }]"
+                      :filter-method="filterTag"
+                      filter-placement="bottom-end">
+                      <template slot-scope="scope">
+                        <el-tag
+                          :type="handleType(scope.row.tag)"
+                          disable-transitions>{{scope.row.tag}}</el-tag>
+                      </template>
+                    </el-table-column>
                   </el-table>
                 </el-dialog>
               </div>
@@ -578,6 +590,38 @@ export default {
         this.isAUTHOR = false;
       }
       this.hasChosen = false;
+    },
+
+    updateInvitation(){
+      this.$axios.post('/FindInvitationStatus',{
+        conferenceId:this.conference.id
+      })
+      .then(resp => {
+        if(resp.status === 200){
+          this.pcMembers = resp.data;
+          console.log(resp.data);
+        }else{
+          this.$message.error("Request Error");
+        }
+      })
+      .catch(error =>{
+        this.$message.error("Request Error");
+        console.log(error);
+      })
+      this.dialogMemberTableVisible = true;
+    },
+    // Invitation Status Tag
+    handleType(tag){
+      switch(tag){
+        case 'UNREAD':
+          return 'info';
+          break;
+        case 'ACCEPT':
+          return 'success';
+          break;
+        case 'REJECT':
+          return 'danger';
+      }
     }
   },
 

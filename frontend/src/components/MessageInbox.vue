@@ -38,8 +38,8 @@
                     <el-badge is-dot class="item"></el-badge><span style="font-weight: bold"> {{parseMessageType(message.type)}}</span>
                   </span>
                   
-                   <!--PC_MEMBER_ACCEPTED PC_MEMBER_REJECTED-->
-                  <span v-if = "message.type =='PC_MEMBER_ACCEPTED' || message.type == 'PC_MEMBER_REJECTED'">
+                   <!--PC_MEMBER_INVITATION-->
+                  <span v-if = "message.type == 'PC_MEMBER_INVITATION' && !message.status">
                     <el-button
                       style="float: right; padding: 3px 0"
                       type="text"
@@ -56,9 +56,9 @@
 
                   </span>
                   
-                  <!--PC_MEMBER_INVITATION CONFERENCE_CHECKED CONFERENCE_ABOLISHED-->
+                  <!--CONFERENCE_CHECKED CONFERENCE_ABOLISHED PC_MEMBER_ACCEPTED PC_MEMBER_REJECTED -->
                   <el-button
-                    v-else
+                    v-else-if = "!message.status"
                     style="float: right; padding: 3px 0"
                     type="text"
                     @click="mark(message.messageId)"
