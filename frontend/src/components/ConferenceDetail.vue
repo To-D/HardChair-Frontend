@@ -292,9 +292,11 @@ export default {
     return {
       isSearchDisabled: true,
 
+      //Base Information
       papers: [],
       authorities: [],
       conference: {},
+      pcMembers:[],
 
       // authority
       notADMIN: true,
@@ -325,6 +327,7 @@ export default {
       users: [],
       searched: false,
       multipleSelection: [],
+      inviteUsers:[],
 
       // show member dialog
       dialogMemberTableVisible: false,
@@ -376,7 +379,6 @@ export default {
         case "UNCHECKED":
           return "Waiting for verification";
           break;
-        
         default:
           return "Currently unknown";
           break;
@@ -447,15 +449,16 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
+
     invite() {
-
-      for(let user in this.multipleSelection){
-
+      let len =  this.multipleSelection.length;
+      for(let i = 0; i< len; i++){
+        this.inviteUsers.push(this.multipleSelection[i].id);
       }
       this.$axios
         .post("/DistributeAuthority", {
           conferenceId: this.conference.id,
-          users: JSON.stringify(this.multipleSelection)
+          users: this.inviteUsers
         })
         .then(resp => {
           if (resp.status === 200) {
@@ -499,6 +502,7 @@ export default {
         .post("/SubmitPaper", data, config)
         .then(resp => {
           if (resp.status === 200) {
+            this.reload();
             this.$message({
               type: "success",
               center: true,

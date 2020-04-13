@@ -180,7 +180,6 @@ export default {
 
     // Message Operation
     mark(id){
-      console.log(id);
       this.$axios.post('/MessageAlreadyRead',{
         messageId : id
       })
@@ -222,6 +221,7 @@ export default {
     this.$axios
       .get("/Message", {})
       .then(resp => {
+        console.log(resp.data);
         if (resp.status === 200) {
           if (resp.data.length == 0) {
             this.noMessage = true;
