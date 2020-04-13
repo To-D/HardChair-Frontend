@@ -167,7 +167,7 @@
                       >Search</el-button>
                     </el-form-item>
                     <el-form-item>
-                      <el-button v-if="searched" @click="invite()" type="primary">Invite</el-button>
+                      <el-button v-if="searched"  @click="invite()" type="primary">Invite</el-button>
                     </el-form-item>
                   </el-form>
 
@@ -191,7 +191,7 @@
                   title="See current PC member"
                   :visible.sync="dialogMemberTableVisible"
                 >
-                  <!-- display table -->
+                  <!-- pc_members display table -->
                   <el-table
                     @selection-change="handleSelectionChange"
                     :data="pcMembers"
@@ -353,6 +353,7 @@ export default {
     //Validators
     const isInviteFormReady = (rule, value, callback) => {
       this.isSearchDisabled = this.inviteForm.fullName == "";
+      this.users = [];
       callback();
     };
 
@@ -463,9 +464,6 @@ export default {
           break;
       }
     },
-    handleChange(val) {
-      // console.log(val);
-    },
 
     startContribution() {
       this.$axios
@@ -504,8 +502,12 @@ export default {
             .then(resp => {
               // 根据后端的返回数据修改
               if (resp.status === 200) {
-                this.users = resp.data;
-                this.searched = true;
+                if(resp.data.length != 0){
+                  this.users = resp.data;                
+                  this.searched = true;
+                }else{
+                  this.$message("No result!");  
+                }
               } else {
                 this.$message.error("Request Error!");
               }
@@ -519,40 +521,47 @@ export default {
         }
       });
     },
+
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
 
     invite() {
       let len =  this.multipleSelection.length;
-      for(let i = 0; i< len; i++){
-        this.inviteUsers.push(this.multipleSelection[i].id);
-      }
-      this.$axios
-        .post("/DistributeAuthority", {
-          conferenceId: this.conference.id,
-          users: this.inviteUsers
-        })
-        .then(resp => {
-          if (resp.status === 200) {
-            this.inviteForm.fullName = "";
-            this.users = [];
-            this.$message({
-              dangerouslyUseHTMLString: true,
-              type: "success",
-              message:
-                '<strong style="color:teal">Invitation has been sent!</strong>',
-              center: true
-            });
-          } else {
+      if(len > 0){
+        for(let i = 0; i< len; i++){
+          this.inviteUsers.push(this.multipleSelection[i].id);
+        }
+        this.$axios
+          .post("/DistributeAuthority", {
+            conferenceId: this.conference.id,
+            users: this.inviteUsers
+          })
+          .then(resp => {
+            if (resp.status === 200) {
+              this.searched = false;
+              this.inviteForm.fullName = "";
+              this.users = [];
+              this.$message({
+                dangerouslyUseHTMLString: true,
+                type: "success",
+                message:
+                  '<strong style="color:teal">Invitation has been sent!</strong>',
+                center: true
+              });
+            } else {
+              this.$message("Request Error!");
+            }
+          })
+          .catch(error => {
             this.$message("Request Error!");
-          }
-        })
-        .catch(error => {
-          this.$message("Request Error!");
-          console.log(error);
-        });
+            console.log(error);
+          });
+      }else{
+        this.$message("Please choose at least one user !")
+      }
     },
+
     onBeforeUpload(file) {
       const isPDF = file.type === "application/pdf";
       if (!isPDF) {
@@ -625,7 +634,6 @@ export default {
       .then(resp => {
         if(resp.status === 200){
           this.pcMembers = resp.data;
-          console.log(this.pcMembers);
         }else{
           this.$message.error("Request Error");
         }
