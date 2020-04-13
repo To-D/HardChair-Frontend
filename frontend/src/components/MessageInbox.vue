@@ -158,19 +158,19 @@ export default {
       let contents = messageContent.split(",");
       switch (messageType) {
         case "PC_MEMBER_INVITATION":
-          return contents[0] + " invited you to be the PC MEMBER of the conference "+ contents[1] +", the conference ID is "+ contents[2] +".";
+          return contents[0] + " invited you to be the PC MEMBER of the conference "+ contents[1] +".";
           break;
         case "CONFERENCE_CHECKED":
-          return "The conference " + contents[0] + " which you applied have been approved by administrator, the conference ID is "+ contents[1] +".";
+          return "The conference " + contents[0] + " which you applied have been approved by administrator.";
           break;
         case "CONFERENCE_ABOLISHED":
-          return "The conference " + contents[0] + " which you applied have been rejected by administrator, the conference ID is "+ contents[1] +".";
+          return "The conference " + contents[0] + " which you applied have been rejected by administrator.";
           break;
         case "PC_MEMBER_ACCEPTED":
-          return contents[0] +" have accepted to be the PC MEMBER of your conference " + contents[1] + ", the conference ID is "+ contents[2] +".";
+          return contents[0] +" have accepted to be the PC MEMBER of your conference " + contents[1] + ".";
           break;
         case "PC_MEMBER_REJECTED":
-          return contents[0] +" have rejected to be the PC MEMBER of your conference " + contents[1] + ", the conference ID is "+ contents[2] +".";
+          return contents[0] +" have rejected to be the PC MEMBER of your conference " + contents[1] + ".";
           break;
         default:
           return "N/A. Please contact the admin for details.";
