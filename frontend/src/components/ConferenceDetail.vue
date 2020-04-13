@@ -473,7 +473,8 @@ export default {
         if (valid) {
           this.$axios
             .post("/SearchByFullName", {
-              fullname: this.inviteForm.fullName
+              fullname: this.inviteForm.fullName,
+              //conferenceId:this.conference.id
             })
             .then(resp => {
               // 根据后端的返回数据修改
