@@ -73,6 +73,7 @@ export const router = new Router({
             component: MessageInbox,
             meta: {
                 requireAuth: true,
+                authRole: 'USER'
             }
         },
         {
@@ -81,6 +82,7 @@ export const router = new Router({
             component: MyArkChair,
             meta: {
                 requireAuth: true,
+                authRole: 'USER'
             }
         },
     ]

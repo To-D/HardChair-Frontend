@@ -196,7 +196,7 @@ export default {
         disabledDate: (time) => {
           // 1. If the date range has been set, the deadline and result announcement day should be within it.
           // 2. If the ddl has been set, the result announcement day should equal to or after it.
-          // 3.  If not, make sure it's a date after today
+          // 3. If not, make sure it's a date after today
           const oneDayTime = 24*3600*1000;
           if(this.applicationForm.time){
             if(this.applicationForm.deadline){

@@ -7,9 +7,6 @@
         <div class="row my-4 my-md-6 text-light">
           <div class="col-lg-9 col-xl-6">
             <h1 class="display-4">My ArkChair Center</h1>
-            <!-- <p
-              class="lead mb-0"
-            >Check out ongoing conferences here.</p>-->
           </div>
         </div>
       </div>

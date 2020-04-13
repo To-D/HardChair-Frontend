@@ -7,9 +7,7 @@
         <div class="row my-4 my-md-6 text-light">
           <div class="col-lg-9 col-xl-6">
             <h1 class="display-4">Conference Home</h1>
-            <p
-              class="lead mb-0"
-            >Check out ongoing conferences here.</p>
+            <p class="lead mb-0">Check out ongoing conferences here.</p>
           </div>
         </div>
       </div>
@@ -124,14 +122,6 @@ export default {
         }else{
           submitAllowed.push.apply(submitAllowed,checked);
           this.conferences = submitAllowed;
-        /*//合并两个数组: 用大的去包含小的，减少运算量
-        if(checked.length > submitAllowed.length){
-          checked.push.apply(checked,submitAllowed);
-          this.conferences = checked;
-        }else{
-          submitAllowed.push.apply(submitAllowed,checked);
-          this.conferences = submitAllowed;
-        }*/
         }      
       } else {
         this.$message.error("Request Error.")
@@ -149,10 +139,7 @@ section {
   padding: 2em;
 }
 .itemlabel {
-  /* background-color: #3755be; */
   color: #3755be;
   font-weight: bold;
-  /* padding: 0.1em 0.3em;
-  margin-right: 0.3em; */
 }
 </style>

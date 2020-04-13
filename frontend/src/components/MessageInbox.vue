@@ -7,9 +7,6 @@
         <div class="row my-4 my-md-6 text-light">
           <div class="col-lg-9 col-xl-6">
             <h1 class="display-4">Message Inbox</h1>
-            <!-- <p
-              class="lead mb-0"
-            ></p>-->
           </div>
         </div>
       </div>
@@ -45,15 +42,12 @@
                       type="text"
                       @click="response(message.content,message.messageId,'reject')"
                     >Reject</el-button>
-
                     <span style="float: right; padding: 3px 0">&nbsp;&nbsp;</span>
-
                     <el-button
                       style="float: right; padding: 3px 0"
                       type="text"
                       @click="response(message.content,message.messageId,'accept')"
                     >Agree</el-button>
-
                   </span>
                   
                   <!--CONFERENCE_CHECKED CONFERENCE_ABOLISHED PC_MEMBER_ACCEPTED PC_MEMBER_REJECTED -->
@@ -72,20 +66,18 @@
                     <span class="itemlabel">
                       <i class="el-icon-chat-line-round"></i> Content:
                     </span>
-                    {{parseMessageContent(message.type, message.content)}}
+                    <span v-if="message.content">
+                      {{parseMessageContent(message.type, message.content)}}
+                    </span>
                   </div>
                   <div>
                     <span class="itemlabel">
                       <i class="el-icon-time"></i> Sent Time:
                     </span>
+                    <span v-if="message.sentTime">
                     {{message.sentTime.substring(0,10)}}
-                  </div>
-                  <!-- <div>
-                    <span class="itemlabel">
-                      <i class="el-icon-chat-line-round"></i> Status:
                     </span>
-                    {{parseStatus(message.status)}}
-                  </div> -->
+                  </div>
                 </div>
               </el-card>
             </div>
@@ -207,7 +199,6 @@ export default {
        })
        .then(resp =>{
          if(resp.status === 200){
-           //审核成功刷新页面
            this.reload(); 
          }
        })
@@ -247,10 +238,7 @@ section {
   padding: 2em;
 }
 .itemlabel {
-  /* background-color: #3755be; */
   color: #3755be;
   font-weight: bold;
-  /* padding: 0.1em 0.3em;
-  margin-right: 0.3em; */
 }
 </style>

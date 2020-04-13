@@ -8,7 +8,7 @@
             <router-link to="/">ArkChair</router-link>
           </a>
 
-          <el-menu mode="horizontal" @select="handleSelect" style="border-bottom:0;">
+          <el-menu mode="horizontal"  style="border-bottom:0;">
             <!-- Conference opration -->
             <el-submenu index="1">
               <template slot="title">
@@ -126,9 +126,6 @@ export default {
     
   },
   methods: {
-    handleSelect(key, keyPath) {
-      //console.log(key, keyPath);
-    }
   }
 };
 </script>

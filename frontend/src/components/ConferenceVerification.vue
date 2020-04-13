@@ -74,25 +74,33 @@
                     <span class="itemlabel">
                       <i class="el-icon-video-play"></i> Starts at:
                     </span>
-                    {{conference.startTime.substring(0,10)}}
+                    <span v-if = "conference.startTime">
+                      {{conference.startTime.substring(0,10)}}
+                    </span>
                   </div>
                   <div>
                     <span class="itemlabel">
                       <i class="el-icon-video-pause"></i> Ends at:
                     </span>
-                    {{conference.endTime.substring(0,10)}}
+                    <span v-if = "conference.endTime">
+                      {{conference.endTime.substring(0,10)}}
+                    </span>
                   </div>
                   <div>
                     <span class="itemlabel">
                       <i class="el-icon-date"></i> Submission deadline:
                     </span>
-                    {{conference.deadline.substring(0,10)}}
+                    <span v-if = "conferecne.deadline">
+                      {{conference.deadline.substring(0,10)}}
+                    </span>
                   </div>
                   <div>
                     <span class="itemlabel">
                       <i class="el-icon-medal-1"></i> Result announcement at:
                     </span>
-                    {{conference.resultAnnounceDate.substring(0,10)}}
+                    <span v-if = "conference.resultAnnounceDate">
+                      {{conference.resultAnnounceDate.substring(0,10)}}
+                    </span>
                   </div>
                 </div>
               </el-card>
@@ -187,10 +195,7 @@ section {
   padding: 2em;
 }
 .itemlabel {
-  /* background-color: #3755be; */
   color: #3755be;
   font-weight: bold;
-  /* padding: 0.1em 0.3em;
-  margin-right: 0.3em; */
 }
 </style>
