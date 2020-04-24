@@ -99,7 +99,7 @@
           </div>
         </div>
 
-        <div class="row justify-content-center">
+        <div class="justify-content-center">
           <div class="col col-md-auto text-center">
             <small class="text-muted">
               &copy;2020 Proudly delivered by Xuan and his teammates with
@@ -107,6 +107,13 @@
                 href="https://cn.vuejs.org/"
               >Vue.js</a> and
               <a href="https://spring.io/projects/spring-boot">Spring Boot.</a>
+            </small>
+          </div>
+          <div class="col col-md-auto text-center">  
+            <small class="text-muted">
+              This is a class project of Software Engineering, Fudan University. Pictures on this site are from <a
+                href="http://ak.mooncell.wiki/w/%E9%A6%96%E9%A1%B5"
+              >PRTS</a>.
             </small>
           </div>
         </div>
