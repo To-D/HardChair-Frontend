@@ -131,6 +131,14 @@
                   >See current PC members</el-button>
                 </div>
 
+                <div v-if="isCHECKED || isSUBMIT_ALLOWED || isFINISHED">
+                  <el-button
+                    class="onPageBtn"
+                    type="primary"
+                    
+                  >Start review</el-button>
+                </div>
+
                 <!-- Invite dialog -->
                 <el-dialog
                   title="Invite PC members to your conference"
