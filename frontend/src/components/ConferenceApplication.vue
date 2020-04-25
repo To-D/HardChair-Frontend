@@ -50,6 +50,17 @@
                 ></el-input>
               </el-form-item>
 
+              <!-- topic -->
+              <el-form-item prop="topic" label="Topic">
+                <el-input
+                  type="text"
+                  
+                  auto-complete="off"
+                  id="topic"
+                  placeholder="Enter the topics of your conference"
+                ></el-input>
+              </el-form-item>
+
               <!-- location -->
               <el-form-item prop="location" label="Location">
                 <el-input
