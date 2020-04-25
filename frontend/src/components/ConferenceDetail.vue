@@ -135,7 +135,7 @@
                   <el-button
                     class="onPageBtn"
                     type="primary"
-                    
+                    @click="updateInvitation()"
                   >Start review</el-button>
                 </div>
 
