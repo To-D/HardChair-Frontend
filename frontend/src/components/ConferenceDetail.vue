@@ -45,6 +45,12 @@
                 </div>
                 <div class="infoitem">
                   <span class="itemlabel">
+                    <i class="el-icon-price-tag"></i> Topics:
+                  </span>
+                  {{conference.topics}}
+                </div>
+                <div class="infoitem">
+                  <span class="itemlabel">
                     <i class="el-icon-location"></i> Location:
                   </span>
                   {{conference.location}}
