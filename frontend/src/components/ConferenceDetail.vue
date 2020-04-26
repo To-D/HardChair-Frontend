@@ -13,10 +13,6 @@
           </div>
         </div>
 
-        <!-- <div>
-          <el-button type="primary" v-if = "seeChangeAuthority" @click="seeChooseAuthority = true">Change Authority</el-button>   
-        </div> -->
-
       </div>
     </section>
 
