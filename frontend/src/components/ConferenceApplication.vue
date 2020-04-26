@@ -65,12 +65,12 @@
                 v-if="inputVisible"
                 v-model="inputValue"
                 ref="saveTagInput"
-
+                size="small"
                 @keyup.enter.native="handleInputConfirm"
                 @blur="handleInputConfirm"
                 >
               </el-input>
-              <el-button v-else class="button-new-tag" @click="showInput">+ New Topic</el-button>
+              <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Topic</el-button>
               </el-form-item>
 
               <!-- location -->
@@ -350,12 +350,12 @@ section {
   padding: 2em;
 }
 .el-tag + .el-tag {
-    margin-left: 10px;
+    margin-right: 5px;
   }
 
 .input-new-tag {
     width: 90px;
-    margin-right: 10px;
+    margin-right: 5px;
     vertical-align: bottom;
   }
 </style>
