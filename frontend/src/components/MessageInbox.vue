@@ -70,6 +70,24 @@
                       {{parseMessageContent(message.type, message.content)}}
                     </span>
                   </div>
+
+                  <!-- 待修改 -->
+                  <div v-if = "message.tag">
+                    <span class="itemlabel">
+                      Topic:
+                    </span>
+                    <span>
+                      <el-checkbox-group v-model="chosenTopic">
+                      <el-checkbox
+                      v-for = "(topic,index) in message.tag"
+                      :key = "index"
+                      label="topic"
+                      >
+                      </el-checkbox>
+                      </el-checkbox-group>
+                    </span>
+
+                  </div>
                   <div>
                     <span class="itemlabel">
                       <i class="el-icon-time"></i> Sent Time:
@@ -118,6 +136,8 @@ export default {
       pageSize: 6,
       currentPage: 1,
       noMessage: false,
+      topics:[],
+      chosenTopic:[],
     };
   },
   methods: {
@@ -170,7 +190,8 @@ export default {
       }
     },
 
-    // Message Operation
+    /**  Message Operation **/
+    // Mark as read
     mark(id){
       this.$axios.post('/MessageAlreadyRead',{
         messageId : id
@@ -221,6 +242,7 @@ export default {
         } else {
           this.$message.error("Request Error.");
         }
+
       })
       .catch(error => {
         console.log(error);

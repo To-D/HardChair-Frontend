@@ -284,7 +284,7 @@ export default {
 
      handleInputConfirm() {
       let inputValue = this.inputValue;
-      if (inputValue) {
+      if (inputValue && this.applicationForm.topic.indexOf(inputValue) == -1) {
         this.applicationForm.topic.push(inputValue);
       }
       this.inputVisible = false;
