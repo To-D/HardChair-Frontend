@@ -116,6 +116,11 @@
               >PRTS</a>.
             </small>
           </div>
+          <div class="col col-md-auto text-center">  
+            <small class="text-muted">
+              The administrator account is <code>admin</code>; the password is <code>password</code>.
+            </small>
+          </div>
         </div>
       </div>
     </footer>
