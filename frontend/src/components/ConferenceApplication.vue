@@ -26,7 +26,7 @@
               :rules="rules"
               label-position="top"
               v-loading="loading"
-              :ref="applicationForm"
+              ref="applicationForm"
             >
               <!-- short name -->
               <el-form-item prop="nameAbbreviation" label="Short name">
@@ -50,15 +50,27 @@
                 ></el-input>
               </el-form-item>
 
+              
               <!-- topic -->
               <el-form-item prop="topic" label="Topic">
-                <el-input
-                  type="text"
-                  
-                  auto-complete="off"
-                  id="topic"
-                  placeholder="Enter the topics of your conference"
-                ></el-input>
+                <el-tag
+                :key="topic"
+                v-for="topic in applicationForm.topic"
+                closable
+                @close="handleClose(topic)">
+                {{topic}}
+                </el-tag>
+              <el-input
+                class="input-new-tag"
+                v-if="inputVisible"
+                v-model="inputValue"
+                ref="saveTagInput"
+                size="small"
+                @keyup.enter.native="handleInputConfirm"
+                @blur="handleInputConfirm"
+                >
+              </el-input>
+              <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Topic</el-button>
               </el-form-item>
 
               <!-- location -->
@@ -108,11 +120,10 @@
               <!-- submit button -->
               <el-form-item style="width: 100%">
                 <el-button
-                  native-type="submit"
                   :disabled="isDisabled"
                   type="primary"
                   style="width: 100%"
-                  v-on:click="apply(applicationForm)"
+                  v-on:click="apply()"
                 >Submit application</el-button>
               </el-form-item>
             </el-form>
@@ -137,7 +148,13 @@ export default {
 
     //Judgement whether the submit button can work when the from changes
     const isFormReady=(rule,value,callback)=>{
+      this.changeDisabled();
       callback();
+    }
+    const validateTopic = (rule,value,callback)=>{
+      if(this.applicationForm.topic.length < 1){
+        callback("You should add at least one topic for your conference");
+      }
       this.changeDisabled();
     }
 
@@ -170,6 +187,10 @@ export default {
     return {
       isDisabled: true, //Control the function of the submit button
       isTimeValid: false, //Since date range should also contain ddl and announcement date to be valid, so define a boolean value to judge
+
+      // Topic Tag
+      inputVisible: false,
+      inputValue: '',
 
       //Picker options
       dateRangePickerOptions: {
@@ -228,6 +249,7 @@ export default {
       applicationForm: {
         nameAbbreviation: "",
         fullName: "",
+        topic:[],
         location: "",
         time: "",
         deadline: "",
@@ -236,6 +258,7 @@ export default {
       rules: {
         nameAbbreviation: [ { required: true, message: "Short name of conference is required", trigger: "blur"},{ validator:isFormReady,trigger: "change" }],
         fullName: [ { required: true, message: "Full name of conference is required", trigger: "blur" },{ validator:isFormReady,trigger: "change" }],
+        topic:[{type: "array",required: true,message:"Topics are required",trigger:"blur"},{validator:isFormReady,trigger:"blur"}],
         location:[{ required: true, message: "Location of conference is required", trigger: "blur" },{ validator:isFormReady,trigger: "change" }],
         time: [{required: true, message: "Start and end dates of conference are required", trigger: "blur" }, {validator:containDDLAndAnnounceDate,trigger:"blur"}],
         deadline: [{required: true, message: "Submission deadline is required", trigger: "blur" },{ validator:isFormReady,trigger: "change" }],
@@ -245,15 +268,40 @@ export default {
     };
   },
   methods: {
-    apply(formName) {
+    // manage topic tag
+    handleClose(tag) {
+        this.applicationForm.topic.splice(this.applicationForm.topic.indexOf(tag), 1);
+        this.$refs.applicationForm.validateField('topic');
+        this.changeDisabled();
+      },
+
+    showInput() {
+      this.inputVisible = true;
+      this.$nextTick(_ => {
+      this.$refs.saveTagInput.$refs.input.focus();
+      });
+    },
+
+     handleInputConfirm() {
+      let inputValue = this.inputValue;
+      if (inputValue) {
+        this.applicationForm.topic.push(inputValue);
+      }
+      this.inputVisible = false;
+      this.inputValue = '';
+    },
+    //~ manage topic tag
+
+    apply() {
       //In case of some bug, still validate before submit
-      this.$refs[formName].validate((valid)=> {
+      this.$refs.applicationForm.validate((valid)=> {
           if (valid) {
             this.loading = true;
             this.$axios
               .post("/ConferenceApplication", {
                 nameAbbreviation: this.applicationForm.nameAbbreviation,
                 fullName: this.applicationForm.fullName,
+                topic:this.dynamicTopics,
                 time: this.applicationForm.time,
                 location: this.applicationForm.location,
                 deadline: this.applicationForm.deadline,
@@ -287,6 +335,7 @@ export default {
     changeDisabled(){
       this.isDisabled =(this.applicationForm.nameAbbreviation ==="")||
         (this.applicationForm.fullName ==="")||
+        (this.applicationForm.topic.length < 1)||
         (!this.isTimeValid)||
         (this.applicationForm.location ==="")||
         (this.applicationForm.deadline ==="") ||
@@ -300,4 +349,13 @@ export default {
 section {
   padding: 2em;
 }
+.el-tag + .el-tag {
+    margin-left: 10px;
+  }
+
+.input-new-tag {
+    width: 90px;
+    margin-left: 10px;
+    vertical-align: bottom;
+  }
 </style>
