@@ -227,9 +227,7 @@ export default {
         this.$message.error("Request Error.");
       });
   },
-  mounted(){
-    
-  }
+
 };
 </script>
 

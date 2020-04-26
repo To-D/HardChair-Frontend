@@ -131,11 +131,11 @@
                   >See current PC members</el-button>
                 </div>
 
-                <div v-if="isCHECKED || isSUBMIT_ALLOWED || isFINISHED">
+                <div v-if="isSUBMIT_ALLOWED">
                   <el-button
                     class="onPageBtn"
                     type="primary"
-                    @click="updateInvitation()"
+                    @click="startReview()"
                   >Start review</el-button>
                 </div>
 
@@ -377,35 +377,38 @@ export default {
     };
 
     return {
-      // Paper show
-      pageSize: 6,
-      currentPage: 1,
+      // Conference Information
+      papers: [],
+      authorities: [],
+      conference: {},
+      pcMembers:[],
+      isCHECKED: false,
+      isSUBMIT_ALLOWED: false,
+      isFINISHED: false,
 
-      //Choose Authority
+      // Visitor authority
+      notADMIN: true,
+      isCHAIR: false,
+      isPC_MEMBER: false,
+      isAUTHOR: false,
+
+      // Choose Authority
       hasChosen:true,
       chooseAuthority:'',
       seeChooseAuthority:false,
       seeChangeAuthority:false,
       isSearchDisabled: true,
 
-      //Base Information
-      papers: [],
-      authorities: [],
-      conference: {},
-      pcMembers:[],
+      // Paper paging
+      pageSize: 6,
+      currentPage: 1,
 
-      // authority
-      notADMIN: true,
-      isCHAIR: false,
-      isPC_MEMBER: false,
-      isAUTHOR: false,
+      // show Pc_member dialog
+      dialogMemberTableVisible: false,
 
-      // conference status
-      isCHECKED: false,
-      isSUBMIT_ALLOWED: false,
-      isFINISHED: false,
 
-      // invite form
+      /** Form data **/
+      // 1. Search & invite form
       dialogFormVisible: false,
       inviteForm: {
         fullName: ""
@@ -425,10 +428,7 @@ export default {
       multipleSelection: [],
       inviteUsers:[],
 
-      // show member dialog
-      dialogMemberTableVisible: false,
-
-      // paper form
+      // 2. Paper submit form
       paperForm: {
         title: "",
         summary: ""
@@ -460,13 +460,15 @@ export default {
         ]
       },
       loading: false,
-      files: []
+      files: [],
     };
   },
   methods: {
+    // Show information
     pageChange() {
       this.currentPage = currentPage;
     },
+
     parseStatus(status) {
       switch (status) {
         case "CHECKED":
@@ -484,6 +486,20 @@ export default {
       }
     },
 
+    // 1. Change visitor authority
+    changeAuthority(val){
+      if(val == 'PC_MEMBER'){
+        this.isPC_MEMBER = true;
+        this.isAUTHOR = false;
+      }
+      if(val == 'AUTHOR'){
+        this.isPC_MEMBER = false;
+        this.isAUTHOR = true;
+      }
+      this.hasChosen = false;
+    },
+
+    // 2. Start contribution
     startContribution() {
       this.$axios
         .post("/ConferenceOpenSubmit", {
@@ -509,6 +525,7 @@ export default {
         });
     },
 
+    // 3. Search & Invite PC_MEMBER
     search(formName) {
       //In case of some bug, still validate before submit
       this.$refs[formName].validate(valid => {
@@ -540,11 +557,9 @@ export default {
         }
       });
     },
-
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
-
     invite() {
       let len =  this.multipleSelection.length;
       if(len > 0){
@@ -581,6 +596,7 @@ export default {
       }
     },
 
+    // 4. Upload paper
     onBeforeUpload(file) {
       const isPDF = file.type === "application/pdf";
       if (!isPDF) {
@@ -588,17 +604,16 @@ export default {
       }
       return isPDF;
     },
-
     upload(params) {
       var data = new FormData(); //创建form对象
       data.append("title", this.paperForm.title);
       data.append("summary", this.paperForm.summary);
       data.append("conferenceId", this.conference.id);
       data.append("file", params.file);
-
       var config = {
         headers: { "Content-Type": "multipart/form-data" }
       }; //添加请求头
+
       this.$axios
         .post("/SubmitPaper", data, config)
         .then(resp => {
@@ -623,7 +638,6 @@ export default {
         message: "Can't upload more than 1 file!"
       });
     },
-
     Submit(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
@@ -634,18 +648,7 @@ export default {
       });
     },
 
-    changeAuthority(val){
-      if(val == 'PC_MEMBER'){
-        this.isPC_MEMBER = true;
-        this.isAUTHOR = false;
-      }
-      if(val == 'AUTHOR'){
-        this.isPC_MEMBER = false;
-        this.isAUTHOR = true;
-      }
-      this.hasChosen = false;
-    },
-
+    // 6. See PC_MEMBER 
     updateInvitation(){
       this.$axios.post('/FindInvitationStatus',{
         conferenceId:this.conference.id
@@ -679,6 +682,14 @@ export default {
     filterTag(value, row) {
         return row.password === value;
       },
+    
+    // 7. Start Review
+    startReview(){
+      this.$axios.post('/OpenReview',{
+        conferenceId : this.conference.id,
+        //strategy : this.strategy
+      })
+    }
   },
 
   created() {
