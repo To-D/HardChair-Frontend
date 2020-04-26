@@ -349,9 +349,9 @@ export default {
 section {
   padding: 2em;
 }
-/* .el-tag + .el-tag {
+.el-tag {
     margin-right: 5px;
-  } */
+  }
 
 .input-new-tag {
     width: 103px;
