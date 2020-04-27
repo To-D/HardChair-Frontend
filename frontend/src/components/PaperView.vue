@@ -7,9 +7,7 @@
         <div class="row my-4 my-md-6 text-light">
           <div class="col-lg-9 col-xl-6">
             <h1 class="display-4">Paper Title here</h1>
-            <p
-              class="lead mb-0"
-            >Paper Author names here (optional)</p>
+            <p class="lead mb-0">Paper Author names here (optional)</p>
           </div>
         </div>
       </div>
@@ -39,6 +37,23 @@
               </div>
             </div>
           </div>
+          <pdf :src="pdfUrl"></pdf>
+          <!-- <div class="pdfTitle">
+            <el-button size="small" @click="changePdfPage(0)">上一页</el-button> -->
+            <!--currentPage当前页数 pageCount总页数-->
+
+            <!-- <span>{{currentPage}}/{{pageCount}}</span>
+            <el-button size="small" @click="changePdfPage(1)">下一页</el-button>
+          </div>
+          <pdf
+            :src="pdfUrl"
+            ref="ref"
+            class="pdf"
+            :page="currentPage"
+            @num-pages="pageCount=$event"
+            @page-loaded="currentPage=$event"
+            @loaded="loadPdfHandler"
+          ></pdf> -->
         </div>
       </section>
     </div>
@@ -50,20 +65,52 @@
 <script>
 import navbar from "./Nav";
 import footerbar from "./Footer";
+import pdf from "vue-pdf";
 
 export default {
   name: "PaperView",
-  components: { navbar, footerbar },
+  components: { navbar, footerbar, pdf },
   data() {
     return {
-    //   user: {},
-    //   conferences: [],
-    //   pageSize: 6,
-    //   currentPage: 1,
-    //   noMeeting: false
+      // pdfUrl: "../assets/test.pdf",
+      // currentPage: 1,
+      // pageCount: 0
+
+      //   user: {},
+      //   conferences: [],
+      //   pageSize: 6,
+      //   currentPage: 1,
+      //   noMeeting: false
     };
   },
   methods: {
+    // preview(row) {
+    //   //createLoadingTask方法，参数为pdf的文件地址，此方法可返回pdf文件的一些参数，例如页码总数，等；会返回一个promise对象；
+    //   this.pdfUrl = pdf.createLoadingTask(this.fileUrl + row.magazinePdfPath);
+
+    //   this.pdfUrl
+    //     .then(pdf => {
+    //       //拿到pdf的总页码数
+    //       this.pageCount = pdf.numPages;
+    //     })
+    //     .catch(err => {
+    //       console.log(err);
+    //     });
+    //   this.pdfDialog = true; //弹框开关
+    // },
+    // //加载第一页，参数event必传，不然会报错
+    // loadPdfHandler(e) {
+    //   this.currentPage = 1;
+    // },
+    // changePdfPage(val) {
+    //   if (val == 0 && this.currentPage > 1) {
+    //     this.currentPage--;
+    //   }
+    //   if (val == 1 && this.currentPage < this.pageCount) {
+    //     this.currentPage++;
+    //   }
+    // }
+
     // pageChange() {
     //   this.currentPage = currentPage;
     // },
@@ -85,6 +132,7 @@ export default {
     // }
   },
   created() {
+    this.pdfUrl = pdf.createLoadingTask("www.fdsm.fudan.edu.cn/En/en.pdf");
     // Get information of conferences that relate to the present user
     // this.$axios
     //   .get("/Profile", {})
