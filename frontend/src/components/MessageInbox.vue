@@ -252,7 +252,7 @@ export default {
           } else {
             this.messages = resp.data;
             for(var i=0;i<this.messages.length;i++){ 
-              this.arry[i]=[];
+              this.chosenTopics[i]=[];
             }
           }
         } else {

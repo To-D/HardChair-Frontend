@@ -710,7 +710,6 @@ export default {
           this.papers = resp.data.papers;
           this.authorities = resp.data.authorities;
           this.conference = resp.data.conference;
-          console.log(this.conference);
 
           // Authority
           //Don't display function part for ADMIN
