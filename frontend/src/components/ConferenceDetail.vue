@@ -43,11 +43,16 @@
                   </span>
                   {{conference.fullName}}
                 </div>
-                <div class="infoitem">
+                <div class="infoitem" v-if= "conference.topics">
                   <span class="itemlabel">
                     <i class="el-icon-price-tag"></i> Topics:
                   </span>
-                  {{conference.topics}}
+                  <el-tag
+                  :key="index"
+                  v-for="(topic,index) in conference.topics.split(',')"
+                  >
+                {{topic}}
+                </el-tag>
                 </div>
                 <div class="infoitem">
                   <span class="itemlabel">
@@ -99,7 +104,7 @@
         </div>
       </section>
 
-      <section v-if="notADMIN">
+      <section v-if="!isADMIN">
         <div class="container">
           <div class="row">
             <div v-if="isCHAIR" class="col-xl-8 col-lg-8">
@@ -389,7 +394,7 @@ export default {
       isFINISHED: false,
 
       // Visitor authority
-      notADMIN: true,
+      isADMIN: false,
       isCHAIR: false,
       isPC_MEMBER: false,
       isAUTHOR: false,
@@ -490,13 +495,22 @@ export default {
 
     // 1. Change visitor authority
     changeAuthority(val){
-      if(val == 'PC_MEMBER'){
-        this.isPC_MEMBER = true;
-        this.isAUTHOR = false;
-      }
-      if(val == 'AUTHOR'){
-        this.isPC_MEMBER = false;
-        this.isAUTHOR = true;
+      switch(val){
+        case 'CHAIR':
+          this.isCHAIR = true;
+          this.isPC_MEMBER = false;        
+          this.isAUTHOR = false;
+          break;
+        case 'PC_MEMBER':
+          this.isPC_MEMBER = true;
+          this.isCHAIR = false;        
+          this.isAUTHOR = false;
+          break;
+        case 'AUTHOR':
+          this.isAUTHOR = true;
+          this.isCHAIR = false;
+          this.isPC_MEMBER = false;        
+          break;
       }
       this.hasChosen = false;
     },
@@ -538,7 +552,6 @@ export default {
               conferenceId:this.conference.id
             })
             .then(resp => {
-              // 根据后端的返回数据修改
               if (resp.status === 200) {
                 if(resp.data.length != 0){
                   this.users = resp.data;                
@@ -709,7 +722,7 @@ export default {
           // Authority
           //Don't display function part for ADMIN
           if (this.$store.state.userType == "ADMIN") {
-            this.notADMIN = false;
+            this.isADMIN = true;
           } else {
             // Normal user
             let len = this.authorities.length;
@@ -779,4 +792,7 @@ h2 {
 el-form-item {
   margin-bottom: 0;
 }
+.el-tag {
+    margin-right: 5px;
+  }
 </style>

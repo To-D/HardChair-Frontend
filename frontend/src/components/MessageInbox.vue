@@ -25,8 +25,8 @@
                 shadow="hover"
                 class="box-card"
                 style="margin-top: 1em;"
-                v-for="message in messages.slice((currentPage- 1)*pageSize,currentPage*pageSize)"
-                :key="message.messageId"
+                v-for="(message,index) in messages.slice((currentPage- 1)*pageSize,currentPage*pageSize)"
+                :key="index"
               >
               <!-- header -->
                 <div slot="header" class="clearfix">
@@ -40,14 +40,15 @@
                     <el-button
                       style="float: right; padding: 3px 0"
                       type="text"
-                      @click="response(message.content,message.messageId,'reject')"
+                      @click="response(message.content,message.messageId,'reject',index)"
                     >Reject</el-button>
-                    <span style="float: right; padding: 3px 0">&nbsp;&nbsp;</span>
+
+                    <span style="float: right; padding: 3px 0">&nbsp;&nbsp;</span>                    
                     <el-button
                       style="float: right; padding: 3px 0"
                       type="text"
-                      @click="response(message.content,message.messageId,'accept')"
-                    >Agree</el-button>
+                      @click="response(message.content,message.messageId,'accept',index)"
+                    >Agree</el-button>                                         
                   </span>
                   
                   <!--CONFERENCE_CHECKED CONFERENCE_ABOLISHED PC_MEMBER_ACCEPTED PC_MEMBER_REJECTED -->
@@ -71,17 +72,16 @@
                     </span>
                   </div>
 
-                  <!-- 待修改 -->
-                  <div v-if = "message.tag">
+                  <div v-if = "message.tag && !message.status">
                     <span class="itemlabel">
                       Topic:
                     </span>
                     <span>
-                      <el-checkbox-group v-model="chosenTopic">
+                      <el-checkbox-group v-model="chosenTopics[index]">
                       <el-checkbox
-                      v-for = "(topic,index) in message.tag"
-                      :key = "index"
-                      label="topic"
+                      v-for = "topic in message.tag.split(',')"
+                      :key = "topic"
+                      :label="topic"
                       >
                       </el-checkbox>
                       </el-checkbox-group>
@@ -136,8 +136,7 @@ export default {
       pageSize: 6,
       currentPage: 1,
       noMessage: false,
-      topics:[],
-      chosenTopic:[],
+      chosenTopics:[[]],
     };
   },
   methods: {
@@ -209,14 +208,28 @@ export default {
       })
     },
     // Agree the invitation
-    response(content,messageId,opinion) {
+    response(content,messageId,opinion,index) {
+      if(opinion == "accept" && this.chosenTopics[index].length == 0){
+        this.$message({
+          dangerouslyUseHTMLString: true,
+          type:'warning',
+          message: '<strong style="color:teal">Please choose at least one topic.</strong>',
+          center:true
+          });
+        return;  
+      }
+
+      if(opinion == 'reject'){
+        this.chosenTopics[index]=[];
+      }
+
       let start = content.lastIndexOf(',')+1;
       let conferenceId = content.substring(start);
-
       this.$axios.post('/AuthorityAcceptedOrRejected',{
          conferenceId:conferenceId,
          acceptOrRejected:opinion,
-         messageId:messageId
+         messageId:messageId,
+         topics:this.chosenTopics[index]
        })
        .then(resp =>{
          if(resp.status === 200){
@@ -238,6 +251,9 @@ export default {
             this.noMessage = true;
           } else {
             this.messages = resp.data;
+            for(var i=0;i<this.messages.length;i++){ 
+              this.chosenTopics[i]=[];
+            }
           }
         } else {
           this.$message.error("Request Error.");

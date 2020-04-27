@@ -65,6 +65,17 @@
                     {{conference.fullName}}
                   </div>
                   <div>
+                  <span class="itemlabel">
+                  <i class="el-icon-price-tag"></i> Topics:
+                  </span>
+                  <el-tag
+                  :key="index"
+                  v-for="(topic,index) in conference.topics.split(',')"
+                  >
+                  {{topic}}
+                  </el-tag>
+                  </div>
+                  <div>
                     <span class="itemlabel">
                       <i class="el-icon-location"></i> Location:
                     </span>
@@ -198,4 +209,7 @@ section {
   color: #3755be;
   font-weight: bold;
 }
+.el-tag {
+    margin-right: 5px;
+  }
 </style>
