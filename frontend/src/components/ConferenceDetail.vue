@@ -47,7 +47,12 @@
                   <span class="itemlabel">
                     <i class="el-icon-price-tag"></i> Topics:
                   </span>
-                  {{conference.topics}}
+                  <el-tag
+                  :key="index"
+                  v-for="(topic,index) in conference.topics.split(',')"
+                  >
+                {{topic}}
+                </el-tag>
                 </div>
                 <div class="infoitem">
                   <span class="itemlabel">
@@ -705,6 +710,7 @@ export default {
           this.papers = resp.data.papers;
           this.authorities = resp.data.authorities;
           this.conference = resp.data.conference;
+          console.log(this.conference);
 
           // Authority
           //Don't display function part for ADMIN
@@ -779,4 +785,7 @@ h2 {
 el-form-item {
   margin-bottom: 0;
 }
+.el-tag {
+    margin-right: 5px;
+  }
 </style>
