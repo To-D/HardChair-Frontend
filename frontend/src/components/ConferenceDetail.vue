@@ -43,7 +43,7 @@
                   </span>
                   {{conference.fullName}}
                 </div>
-                <div class="infoitem">
+                <div class="infoitem" v-if="conference.topics">
                   <span class="itemlabel">
                     <i class="el-icon-price-tag"></i> Topics:
                   </span>

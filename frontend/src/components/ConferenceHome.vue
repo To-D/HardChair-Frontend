@@ -122,7 +122,8 @@ export default {
         }else{
           submitAllowed.push.apply(submitAllowed,checked);
           this.conferences = submitAllowed;
-        }      
+        }
+        console.log(this.conferences);
       } else {
         this.$message.error("Request Error.")
       }
