@@ -8,6 +8,7 @@ import ConferenceApplication from '@/components/ConferenceApplication'
 import ConferenceVerification from '@/components/ConferenceVerification'
 import ConferenceHome from '@/components/ConferenceHome'
 import ConferenceDetail from '@/components/ConferenceDetail'
+import PaperView from '@/components/PaperView'
 import Index from '@/components/Index'
 import MessageInbox from '@/components/MessageInbox'
 import MyArkChair from '@/components/MyArkChair'
@@ -84,6 +85,15 @@ export const router = new Router({
                 requireAuth: true,
                 authRole: 'USER'
             }
+        },
+        {
+            path: '/paper-view',
+            name: 'PaperView',
+            component: PaperView,
+            // meta: {
+            //     requireAuth: true,
+            //     authRole: 'USER'
+            // }
         },
     ]
 })
