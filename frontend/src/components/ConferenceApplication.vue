@@ -301,7 +301,7 @@ export default {
               .post("/ConferenceApplication", {
                 nameAbbreviation: this.applicationForm.nameAbbreviation,
                 fullName: this.applicationForm.fullName,
-                topic:this.dynamicTopics,
+                topic:this.applicationForm.topic,
                 time: this.applicationForm.time,
                 location: this.applicationForm.location,
                 deadline: this.applicationForm.deadline,
