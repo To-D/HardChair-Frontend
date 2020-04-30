@@ -1,5 +1,5 @@
 <template>
-  <div id="base_verification" v-title data-title="ArkChair - Paper View">
+  <div id="base_paperview" v-title data-title="ArkChair - Paper View">
     <navbar></navbar>
 
     <section class="bg-primary header-inner p-0 jarallax position-relative o-hidden" data-overlay>
@@ -32,28 +32,33 @@
                   <span class="itemlabel">
                     <i class="el-icon-s-custom"></i> Summary:
                   </span>
-                  This is the summary of the paper
+                  This is the summary of the paper. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
                 </div>
               </div>
             </div>
           </div>
-          <pdf :src="pdfUrl"></pdf>
-          <!-- <div class="pdfTitle">
-            <el-button size="small" @click="changePdfPage(0)">上一页</el-button> -->
-            <!--currentPage当前页数 pageCount总页数-->
+        </div>
+      </section>
 
-            <!-- <span>{{currentPage}}/{{pageCount}}</span>
-            <el-button size="small" @click="changePdfPage(1)">下一页</el-button>
+      <section>
+        <div class="container">
+          <div class="row">
+            <div class="col-xl-8 col-lg-8">
+              <h2>
+                <i class="el-icon-magic-stick"></i> This Paper in PDF
+              </h2>
+
+              <div class="row">
+                <div>
+                  <el-button class="onPageBtn" type="primary">View PDF</el-button>
+                </div>
+
+                <div>
+                  <el-button class="onPageBtn" type="primary">Download PDF</el-button>
+                </div>
+              </div>
+            </div>
           </div>
-          <pdf
-            :src="pdfUrl"
-            ref="ref"
-            class="pdf"
-            :page="currentPage"
-            @num-pages="pageCount=$event"
-            @page-loaded="currentPage=$event"
-            @loaded="loadPdfHandler"
-          ></pdf> -->
         </div>
       </section>
     </div>
@@ -65,52 +70,20 @@
 <script>
 import navbar from "./Nav";
 import footerbar from "./Footer";
-import pdf from "vue-pdf";
 
 export default {
   name: "PaperView",
-  components: { navbar, footerbar, pdf },
+  components: { navbar, footerbar },
   data() {
     return {
-      // pdfUrl: "../assets/test.pdf",
+      // user: {},
+      // conferences: [],
+      // pageSize: 6,
       // currentPage: 1,
-      // pageCount: 0
-
-      //   user: {},
-      //   conferences: [],
-      //   pageSize: 6,
-      //   currentPage: 1,
-      //   noMeeting: false
+      // noMeeting: false
     };
   },
   methods: {
-    // preview(row) {
-    //   //createLoadingTask方法，参数为pdf的文件地址，此方法可返回pdf文件的一些参数，例如页码总数，等；会返回一个promise对象；
-    //   this.pdfUrl = pdf.createLoadingTask(this.fileUrl + row.magazinePdfPath);
-
-    //   this.pdfUrl
-    //     .then(pdf => {
-    //       //拿到pdf的总页码数
-    //       this.pageCount = pdf.numPages;
-    //     })
-    //     .catch(err => {
-    //       console.log(err);
-    //     });
-    //   this.pdfDialog = true; //弹框开关
-    // },
-    // //加载第一页，参数event必传，不然会报错
-    // loadPdfHandler(e) {
-    //   this.currentPage = 1;
-    // },
-    // changePdfPage(val) {
-    //   if (val == 0 && this.currentPage > 1) {
-    //     this.currentPage--;
-    //   }
-    //   if (val == 1 && this.currentPage < this.pageCount) {
-    //     this.currentPage++;
-    //   }
-    // }
-
     // pageChange() {
     //   this.currentPage = currentPage;
     // },
@@ -132,7 +105,6 @@ export default {
     // }
   },
   created() {
-    this.pdfUrl = pdf.createLoadingTask("www.fdsm.fudan.edu.cn/En/en.pdf");
     // Get information of conferences that relate to the present user
     // this.$axios
     //   .get("/Profile", {})
