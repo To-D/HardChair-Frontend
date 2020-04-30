@@ -24,15 +24,21 @@
                 </h2>
                 <div class="infoitem">
                   <span class="itemlabel">
-                    <i class="el-icon-user"></i> Title:
+                    <i class="el-icon-s-opportunity"></i> Title:
                   </span>
                   This is the title of the paper
                 </div>
                 <div class="infoitem">
                   <span class="itemlabel">
-                    <i class="el-icon-s-custom"></i> Summary:
+                    <i class="el-icon-s-fold"></i> Summary:
                   </span>
                   This is the summary of the paper. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </div>
+                <div class="infoitem">
+                  <span class="itemlabel">
+                    <i class="el-icon-s-flag"></i> Status:
+                  </span>
+                  STATUS
                 </div>
               </div>
             </div>
@@ -61,6 +67,7 @@
           </div>
         </div>
       </section>
+
     </div>
 
     <footerbar></footerbar>
