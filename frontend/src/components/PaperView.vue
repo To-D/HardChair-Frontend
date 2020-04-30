@@ -68,6 +68,66 @@
         </div>
       </section>
 
+      <section>
+        <div class="col-xl-6 col-lg-6" >
+          <h2>
+            <i class="el-icon-upload2"></i> Paper submission
+          </h2>
+
+          <el-form
+            @submit.native.prevent
+            status-icon
+            :model="reviewForm"
+            :rules="rules"
+            label-position="top"
+            ref="reviewForm"
+          >
+            <!-- score -->
+            <el-form-item prop="score" label="Score">
+              <el-rate 
+                v-model="reviewForm.score" 
+                show-text 
+                id="score"
+                max=4
+                :texts="texts"
+              ></el-rate>
+            </el-form-item>
+
+            <!-- comment -->
+            <el-form-item prop="comment" label="Comment">
+              <el-input
+                type="textarea"
+                autosize
+                v-model="reviewForm.comment"
+                auto-complete="off"
+                id="comment"
+                placeholder="Your comment on this paper"
+              ></el-input>
+            </el-form-item>
+
+            <!-- confidence -->
+            <el-form-item prop="confidence" label="Confidence">
+              <el-radio-group v-model="reviewForm.confidence">
+                <el-radio-button label="Very low"></el-radio-button>
+                <el-radio-button label="Low"></el-radio-button>
+                <el-radio-button label="High"></el-radio-button>
+                <el-radio-button label="Very High"></el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+
+            <br />
+
+            <!-- submit button -->
+            <el-form-item>
+              <el-button
+                native-type="submit"
+                type="primary"
+                v-on:click="Submit('reviewForm')"
+              >Submit Review Results</el-button>
+            </el-form-item>
+          </el-form>
+        </div>
+      </section>
     </div>
 
     <footerbar></footerbar>
@@ -88,6 +148,43 @@ export default {
       // pageSize: 6,
       // currentPage: 1,
       // noMeeting: false
+      
+      // 2. Paper review submit form
+      paperForm: {
+        score: null,
+        comment: "",
+        confidence: "",
+        texts: ['-2: Reject', '-1: Weak reject', '1: Weak accept', '2: Accept']
+      },
+      rules: {
+        score: [
+          {
+            required: true,
+            message: "Your score of this paper is required",
+            trigger: "blur"
+          }
+        ],
+        comment: [
+          {
+            required: true,
+            message: "Your comment on paper is required",
+            trigger: "blur"
+          },
+          {
+            max: 800,
+            message: "Your comment can't be more than 800 characters",
+            trigger: "change"
+          }
+        ],
+        confidence: [
+          {
+            required: true,
+            message: "Your confidence of this paper is required",
+            trigger: "blur"
+          }
+        ],
+      },
+      loading: false
     };
   },
   methods: {
