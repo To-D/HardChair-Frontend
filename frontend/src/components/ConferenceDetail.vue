@@ -272,6 +272,21 @@
                     placeholder="Summary of your paper"
                   ></el-input>
                 </el-form-item>
+                
+                <el-form-item prop="topic" label="Topic">
+                 <el-checkbox-group 
+                 v-model="paperForm.topics" 
+                 v-if = "conference.topics"
+                 >
+                    <el-checkbox
+                    v-for="topic in conference.topics.split(',')"
+                    :key = "topic"
+                    :label="topic"
+                    >
+                    </el-checkbox>
+                  </el-checkbox-group>
+                </el-form-item>
+
                 <el-form-item prop="file" label="Upload File">
                   <el-upload
                     ref="upload"
@@ -296,6 +311,7 @@
                     >Please upload one PDF file only.</div>
                   </el-upload>
                 </el-form-item>
+
                 <br />
 
                 <!-- submit button -->
@@ -329,10 +345,27 @@
                   <span class="itemlabel">
                     <i class="el-icon-date"></i> Upload date:
                   </span>{{paper.createdTime.substring(0,10)}}</p>
-                <p>                  
+                <p> 
+                <!-- paper view -->                 
+                <p>
+                <span class="itemlabel">
+                  <i class="el-icon-s-fold"></i>
+                </span>
+                <router-link :to="'paper-view/'+paper.id" style="float: right; padding: 3px 0" >Edit</router-link>
+                </p>
+                <!-- paper edit -->
+                <p>
+                <span class="itemlabel">
+                  <i class="el-icon-s-fold"></i>
+                </span>
+                <router-link :to="'paper-edit/'+paper.id" style="float: right; padding: 3px 0" >View details</router-link>
+                </p>
+                <!-- paper download -->
+                <p>
                   <span class="itemlabel">
                     <i class="el-icon-s-fold"></i>
-                  </span><a :href ="paper.url">下载</a></p>
+                  </span><a :href ="paper.url">下载</a>
+                </p>
                 </el-card>                               
               </div>
             </div>
@@ -381,11 +414,20 @@ export default {
 
   data() {
     //Validators
+    // invite form
     const isInviteFormReady = (rule, value, callback) => {
       this.isSearchDisabled = this.inviteForm.fullName == "";
       this.users = [];
       callback();
     };
+
+    // paper form
+    const validateTopic = (rule,value,callback) =>{
+      if(this.paperForm.topics.length == 0){
+        callback(new Error("Please choose at least one topic."));
+      }
+      callback();
+    }
 
     return {
       // Conference Information
@@ -444,7 +486,8 @@ export default {
       // 2. Paper submit form
       paperForm: {
         title: "",
-        summary: ""
+        summary: "",
+        topics:[]
       },
       rules: {
         title: [
@@ -470,10 +513,17 @@ export default {
             message: "Summary can't be more than 800 characters",
             trigger: "change"
           }
+        ],
+        topic:[
+          {
+            validator:validateTopic,
+            trigger:"change"
+          }
         ]
       },
       loading: false,
       files: [],
+      
     };
   },
   methods: {
@@ -629,8 +679,10 @@ export default {
       var data = new FormData(); //创建form对象
       data.append("title", this.paperForm.title);
       data.append("summary", this.paperForm.summary);
+      data.append("topic", this.paperForm.topics);
       data.append("conferenceId", this.conference.id);
       data.append("file", params.file);
+      
       var config = {
         headers: { "Content-Type": "multipart/form-data" }
       }; //添加请求头
