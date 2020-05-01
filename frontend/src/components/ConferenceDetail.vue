@@ -114,7 +114,7 @@
               </h2>
 
               <div class="row">
-                <div v-if="isCHECKED">
+                <div v-if="isCHECKED && notStart">
                   <el-button
                     class="onPageBtn"
                     type="primary"
@@ -329,6 +329,10 @@
                   <span class="itemlabel">
                     <i class="el-icon-date"></i> Upload date:
                   </span>{{paper.createdTime.substring(0,10)}}</p>
+                <p>                  
+                  <span class="itemlabel">
+                    <i class="el-icon-s-fold"></i>
+                  </span><a>{{paper.url}}</a></p>
                 </el-card>                               
               </div>
             </div>
@@ -392,12 +396,14 @@ export default {
       isCHECKED: false,
       isSUBMIT_ALLOWED: false,
       isFINISHED: false,
+      notStart:true,
 
       // Visitor authority
       isADMIN: false,
       isCHAIR: false,
       isPC_MEMBER: false,
       isAUTHOR: false,
+      
 
       // Choose Authority
       hasChosen:true,
@@ -523,7 +529,7 @@ export default {
         })
         .then(resp => {
           if (resp.status === 200) {
-            this.reload();
+            this.notStart = false;
             this.$message({
               dangerouslyUseHTMLString: true,
               type: "success",
