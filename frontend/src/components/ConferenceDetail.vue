@@ -329,10 +329,27 @@
                   <span class="itemlabel">
                     <i class="el-icon-date"></i> Upload date:
                   </span>{{paper.createdTime.substring(0,10)}}</p>
-                <p>                  
+                <p> 
+                <!-- paper view -->                 
+                <p>
+                <span class="itemlabel">
+                  <i class="el-icon-s-fold"></i>
+                </span>
+                <router-link :to="'paper-view/'+paper.id" style="float: right; padding: 3px 0" >Edit</router-link>
+                </p>
+                <!-- paper edit -->
+                <p>
+                <span class="itemlabel">
+                  <i class="el-icon-s-fold"></i>
+                </span>
+                <router-link :to="'paper-edit/'+paper.id" style="float: right; padding: 3px 0" >View details</router-link>
+                </p>
+                <!-- paper download -->
+                <p>
                   <span class="itemlabel">
                     <i class="el-icon-s-fold"></i>
-                  </span><a :href ="paper.url">下载</a></p>
+                  </span><a :href ="paper.url">下载</a>
+                </p>
                 </el-card>                               
               </div>
             </div>

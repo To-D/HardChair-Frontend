@@ -88,22 +88,22 @@ export const router = new Router({
             }
         },
         {
-            path: '/paper-view',
+            path: '/paper-view/:paperID',
             name: 'PaperView',
             component: PaperView,
-            // meta: {
-            //     requireAuth: true,
-            //     authRole: 'USER'
-            // }
+            meta: {
+                requireAuth: true,
+                authRole: 'USER'
+            }
         },
         {
-            path: '/paper-edit',
+            path: '/paper-edit/:paperID',
             name: 'PaperEdit',
             component: PaperEdit,
-            // meta: {
-            //     requireAuth: true,
-            //     authRole: 'USER'
-            // }
+            meta: {
+                requireAuth: true,
+                authRole: 'USER'
+            }
         },
     ]
 })
