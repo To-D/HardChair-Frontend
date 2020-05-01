@@ -332,7 +332,7 @@
                 <p>                  
                   <span class="itemlabel">
                     <i class="el-icon-s-fold"></i>
-                  </span><a>{{paper.url}}</a></p>
+                  </span><a :href ="paper.url">下载</a></p>
                 </el-card>                               
               </div>
             </div>
