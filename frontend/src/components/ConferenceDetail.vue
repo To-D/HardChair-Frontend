@@ -371,14 +371,14 @@
                 <span class="itemlabel">
                   <i class="el-icon-s-fold"></i>
                 </span>
-                <router-link :to="'paper-view/'+paper.id" style="float: right; padding: 3px 0" >Edit</router-link>
+                <router-link :to="'/paper-edit/'+paper.id" style="float: right; padding: 3px 0" >Edit</router-link>
                 </p>
                 <!-- paper edit -->
                 <p>
                 <span class="itemlabel">
                   <i class="el-icon-s-fold"></i>
                 </span>
-                <router-link :to="'paper-edit/'+paper.id" style="float: right; padding: 3px 0" >View details</router-link>
+                <router-link :to="'/paper-view/'+paper.id" style="float: right; padding: 3px 0" >View details</router-link>
                 </p>
                 <!-- paper download -->
                 <p>
