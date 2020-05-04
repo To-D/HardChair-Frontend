@@ -384,7 +384,7 @@
                 <p>
                   <span class="itemlabel">
                     <i class="el-icon-s-fold"></i>
-                  </span><el-button @click="download(paper.id)">Download</el-button>
+                  </span><el-button @click="download(paper.id,paper.title)">Download</el-button>
                 </p>
                 </el-card>                               
               </div>
@@ -884,7 +884,7 @@ export default {
     },
 
     // 8. operation on papers
-    download(id){
+    download(id,title){
       this.$axios({
         method:'post',
         url:'/DownloadPaper',
@@ -892,9 +892,9 @@ export default {
         responseType: 'blob'
       })
       .then(resp=>{
-        const content = resp;
+        const content = resp.data;
         const blob = new Blob([content]);
-        const fileName = 'test.pdf';
+        const fileName = title+'.pdf';
         if ('download' in document.createElement('a')) { // 非IE下载
           const elink = document.createElement('a');
           elink.download = fileName;
