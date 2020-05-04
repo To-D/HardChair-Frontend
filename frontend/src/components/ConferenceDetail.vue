@@ -383,7 +383,7 @@
                 <p>
                   <span class="itemlabel">
                     <i class="el-icon-s-fold"></i>
-                  </span><a :href ="paper.url">下载</a>
+                  </span><el-button @click="download(paper.id)">Download</el-button>
                 </p>
                 </el-card>                               
               </div>
@@ -772,7 +772,7 @@ export default {
         authors.push(this.paperForm.authors[i].email);
       }
       data.append('authors',authors);
-      console.log(authors);
+      
       var config = {
         headers: { "Content-Type": "multipart/form-data" }
       };
@@ -877,6 +877,33 @@ export default {
       this.$axios.post('/OpenReview',{
         conferenceId : this.conference.id,
         //strategy : this.strategy
+      })
+    },
+
+    // 8. operation on papers
+    download(id){
+      this.$axios.post('/DownloadPaper',{
+        paperId:id
+      })
+      .then(resp=>{
+        const content = resp;
+        const blob = new Blob([content]);
+        const fileName = 'test.pdf'
+        if ('download' in document.createElement('a')) { // 非IE下载
+          const elink = document.createElement('a')
+          elink.download = fileName
+          elink.style.display = 'none'
+          elink.href = URL.createObjectURL(blob)
+          document.body.appendChild(elink)
+          elink.click()
+          URL.revokeObjectURL(elink.href) // 释放URL 对象
+          document.body.removeChild(elink)
+        } else { // IE10+下载
+          navigator.msSaveBlob(blob, fileName)
+        }
+      })
+      .catch(error=>{
+        console.log(error);
       })
     }
   },
