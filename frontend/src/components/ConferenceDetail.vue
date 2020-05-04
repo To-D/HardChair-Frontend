@@ -249,6 +249,7 @@
                 :rules="rules"
                 label-position="top"
                 ref="paperForm"
+                v-loading="loading"
               >
                 <!-- title -->
                 <el-form-item prop="title" label="Title">
@@ -803,9 +804,11 @@ export default {
     Submit(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
+          this.loading = true;
           this.$refs["upload"].submit();
         } else {
           this.$message.error("Wrong submit! Please check the form.");
+          this.loading = false;
         }
       });
     },
@@ -882,24 +885,27 @@ export default {
 
     // 8. operation on papers
     download(id){
-      this.$axios.post('/DownloadPaper',{
-        paperId:id
+      this.$axios({
+        method:'post',
+        url:'/DownloadPaper',
+        data:{paperId:id},
+        responseType: 'blob'
       })
       .then(resp=>{
         const content = resp;
         const blob = new Blob([content]);
-        const fileName = 'test.pdf'
+        const fileName = 'test.pdf';
         if ('download' in document.createElement('a')) { // 非IE下载
-          const elink = document.createElement('a')
-          elink.download = fileName
-          elink.style.display = 'none'
-          elink.href = URL.createObjectURL(blob)
-          document.body.appendChild(elink)
-          elink.click()
-          URL.revokeObjectURL(elink.href) // 释放URL 对象
-          document.body.removeChild(elink)
+          const elink = document.createElement('a');
+          elink.download = fileName;
+          elink.style.display = 'none';
+          elink.href = URL.createObjectURL(blob);
+          document.body.appendChild(elink);
+          elink.click();
+          URL.revokeObjectURL(elink.href); // 释放URL 对象
+          document.body.removeChild(elink);
         } else { // IE10+下载
-          navigator.msSaveBlob(blob, fileName)
+          navigator.msSaveBlob(blob, fileName);
         }
       })
       .catch(error=>{
