@@ -364,28 +364,11 @@
                 <p v-if = "paper.createdTime">                  
                   <span class="itemlabel">
                     <i class="el-icon-date"></i> Upload date:
-                  </span>{{paper.createdTime.substring(0,10)}}</p>
-                <p> 
-                <!-- paper view -->                 
-                <p>
-                <span class="itemlabel">
-                  <i class="el-icon-s-fold"></i>
-                </span>
-                <router-link :to="'/paper-edit/'+paper.id" style="float: right; padding: 3px 0" >Edit</router-link>
-                </p>
-                <!-- paper edit -->
-                <p>
-                <span class="itemlabel">
-                  <i class="el-icon-s-fold"></i>
-                </span>
-                <router-link :to="'/paper-view/'+paper.id" style="float: right; padding: 3px 0" >View details</router-link>
-                </p>
-                <!-- paper download -->
-                <p>
-                  <span class="itemlabel">
-                    <i class="el-icon-s-fold"></i>
-                  </span><el-button @click="download(paper.id,paper.title)">Download</el-button>
-                </p>
+                  </span>{{paper.createdTime.substring(0,10)}}</p>                
+                <!-- paper operation -->
+                <el-button @click="preview(paper.id,'preview')">Preview</el-button>
+                <el-button @click="download(paper.id,paper.title)">Download</el-button>
+                <el-button @click="$router.push({path:'/paper/edit/'+paper.id}) ">Edit</el-button>
                 </el-card>                               
               </div>
             </div>
@@ -451,7 +434,16 @@
         <el-button type="primary" @click="addAuthor" :disabled="addButtonDisable">Add</el-button>
       </div>
     </el-dialog>
+    <div> 
 
+    <!-- paper preview -->
+    <el-dialog title="" :visible.sync="dialogPaperPreviewVisible" width="80%" top="20px">
+      <div class="pdf" style="height: 450px">
+        <iframe :src="pdfUrl" frameborder="0" style="width: 100%; height: 100%"></iframe>
+      </div>
+    </el-dialog>
+
+  </div>
     <footerbar></footerbar>
   </div>
 </template>
@@ -460,14 +452,15 @@
 import navbar from "./Nav";
 import footerbar from "./Footer";
 import draggable from 'vuedraggable';
+import pdf from 'vue-pdf';
 
 export default {
   name: "ConferenceDetail",
-  components: { navbar, footerbar,draggable },
+  components: { navbar, footerbar,draggable,pdf},
   inject: ["reload"],
 
   data() {
-    return {      
+    return {
       // Conference Information
       papers: [],
       authorities: [],
@@ -498,6 +491,10 @@ export default {
 
       // show Pc_member dialog
       dialogMemberTableVisible: false,
+
+      // paper preview
+      pdfUrl:"",
+      dialogPaperPreviewVisible:false,
 
 
       /** Form data **/
@@ -884,6 +881,22 @@ export default {
     },
 
     // 8. operation on papers
+    preview(id){
+      this.$axios({
+        method:'post',
+        url:'/DownloadPaper',
+        data:{paperId:id},
+        responseType: 'blob'
+      })
+      .then(resp=>{
+        this.dialogPaperPreviewVisible = true;
+        let url = URL.createObjectURL(new Blob([resp.data]));
+        this.pdfUrl = "/static/pdf/web/viewer.html?file="+encodeURIComponent(url);
+      })
+      .catch(error =>{
+        console.log(error);
+      })
+    },
     download(id,title){
       this.$axios({
         method:'post',
@@ -892,26 +905,27 @@ export default {
         responseType: 'blob'
       })
       .then(resp=>{
-        const content = resp.data;
-        const blob = new Blob([content]);
+        const blob = new Blob([resp.data]);
         const fileName = title+'.pdf';
-        if ('download' in document.createElement('a')) { // 非IE下载
+        if (typeof navigator.msSaveBlob != "undefined") { // IE10+下载
+          navigator.msSaveBlob(blob, fileName);
+        } else { // 非IE下载
           const elink = document.createElement('a');
+          elink.href = URL.createObjectURL(blob);
           elink.download = fileName;
           elink.style.display = 'none';
-          elink.href = URL.createObjectURL(blob);
+
           document.body.appendChild(elink);
           elink.click();
           URL.revokeObjectURL(elink.href); // 释放URL 对象
           document.body.removeChild(elink);
-        } else { // IE10+下载
-          navigator.msSaveBlob(blob, fileName);
         }
       })
       .catch(error=>{
         console.log(error);
       })
-    }
+    },
+    
   },
 
   created() {

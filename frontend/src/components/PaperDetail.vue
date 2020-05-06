@@ -139,7 +139,7 @@ import navbar from "./Nav";
 import footerbar from "./Footer";
 
 export default {
-  name: "PaperView",
+  name: "PaperDetail",
   components: { navbar, footerbar },
   data() {
     return {

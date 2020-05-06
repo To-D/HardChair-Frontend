@@ -97,6 +97,7 @@
         </div>
       </section>
     </div>
+    
 
     <footerbar></footerbar>
   </div>
@@ -112,6 +113,8 @@ export default {
   inject: ["reload"],
 
   data() {
+    dialogVisible = true;
+    src = "C:\\Users\\12444\\Desktop\\learning materialsliu1588568942119.pdf"
     //Validators
     const isInviteFormReady = (rule, value, callback) => {
       this.isSearchDisabled = this.inviteForm.fullName == "";
@@ -443,11 +446,10 @@ export default {
     }
   },
 
-  created() {
-    //获取会议信息
+  /*created() {
     this.$axios
-      .post("/ConferenceDetails", {
-        id: this.$route.params.conferenceID
+      .post("/RevisePaper", {
+        id: this.$route.params.paperID
       })
       .then(resp => {
         if (resp.status === 200) {
@@ -502,7 +504,7 @@ export default {
         console.log(error);
         this.$message("Request Error");
       });
-  },
+  },*/
 };
 </script>
 
