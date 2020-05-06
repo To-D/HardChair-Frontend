@@ -142,7 +142,7 @@
                   <el-button
                     class="onPageBtn"
                     type="primary"
-                    @click="startReview()"
+                    @click="seeChooseStrategy = true"
                   >Start review</el-button>
                 </div>
 
@@ -366,7 +366,7 @@
                     <i class="el-icon-date"></i> Upload date:
                   </span>{{paper.createdTime.substring(0,10)}}</p>                
                 <!-- paper operation -->
-                <el-button @click="preview(paper.id,'preview')">Preview</el-button>
+                <el-button @click="preview(paper.id)">Preview</el-button>
                 <el-button @click="download(paper.id,paper.title)">Download</el-button>
                 <el-button @click="$router.push({path:'/paper/edit/'+paper.id}) ">Edit</el-button>
                 </el-card>                               
@@ -443,6 +443,23 @@
       </div>
     </el-dialog>
 
+    <!-- chooose review strategy -->
+    <el-dialog
+      title="Choose Distribution Strategy"
+      :visible.sync="seeChooseStrategy"
+      width="50%"
+      :show-close="true"
+      :close-on-click-modal = "true"
+      :close-on-press-escape = "true"
+    >
+    <p>Please choose a strategy to allocate papers contributed to this conference.</p>
+    <p><el-radio v-model="strategy" label="1" border>Based on the correlation degree of topic</el-radio></p>
+    <p><el-radio v-model="strategy" label="2" border>Based on the average burden on reviewing</el-radio></p>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="startReview()">Confirm</el-button>
+      </span>
+    </el-dialog>
+
   </div>
     <footerbar></footerbar>
   </div>
@@ -496,6 +513,9 @@ export default {
       pdfUrl:"",
       dialogPaperPreviewVisible:false,
 
+      // start review
+      seeChooseStrategy:false,
+      strategy:"",
 
       /** Form data **/
       // 1. Search & invite form
@@ -874,10 +894,41 @@ export default {
     
     // 7. Start Review
     startReview(){
-      this.$axios.post('/OpenReview',{
-        conferenceId : this.conference.id,
-        //strategy : this.strategy
-      })
+      this.seeChooseStrategy = true;
+      if(this.strategy !== ""){
+        this.$axios.post('/OpenReview',{
+          conferenceId : this.conference.id,
+          strategy : Number(this.strategy)
+          })
+          .then(resp => {
+            if(resp.status === 200 && resp.message1 == "open success"){
+              this.$message({
+                dangerouslyUseHTMLString: true,
+                type: "success",
+                message:'<strong style="color:teal">PC members will start to review papers!</strong>',
+                center: true
+              })
+            }else{
+              this.$message({
+                dangerouslyUseHTMLString: true,
+                type: "error",
+                message:'<strong style="color:teal">Fail since less than 2 pc members in your conference.</strong>',
+                center: true
+              })
+            }
+          })
+          .catch(error=>{
+            console.log(error);
+          })
+      }else{
+        this.$message({
+          dangerouslyUseHTMLString: true,
+          type:'warning',
+          message:'<strong style="color:teal">Please choose a strategy!</strong>',
+          center:true
+        })
+      }
+      this.strategy = "";
     },
 
     // 8. operation on papers
