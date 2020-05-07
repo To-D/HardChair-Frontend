@@ -6,7 +6,7 @@
       <div class="container py-0 layer-2">
         <div class="row my-4 my-md-6 text-light">
           <div class="col-lg-9 col-xl-6">
-            <h1 class="display-4">Paper Title here</h1>
+            <h1 class="display-4">{{paper.title}}</h1>
             <p class="lead mb-0">Paper Author names here (optional)</p>
           </div>
         </div>
@@ -26,19 +26,19 @@
                   <span class="itemlabel">
                     <i class="el-icon-s-opportunity"></i> Title:
                   </span>
-                  This is the title of the paper
+                  {{paper.title}}
                 </div>
                 <div class="infoitem">
                   <span class="itemlabel">
                     <i class="el-icon-s-fold"></i> Summary:
                   </span>
-                  This is the summary of the paper. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                  {{paper.summary}}
                 </div>
                 <div class="infoitem">
                   <span class="itemlabel">
                     <i class="el-icon-s-flag"></i> Status:
                   </span>
-                  STATUS
+                  {{paper.status}}
                 </div>
               </div>
             </div>
@@ -68,7 +68,7 @@
         </div>
       </section>
 
-      <section>
+      <section v-if="isPC_MEMBER">
         <div class="col-xl-6 col-lg-6" >
           <h2>
             <i class="el-icon-upload2"></i> Paper submission
@@ -128,6 +128,10 @@
           </el-form>
         </div>
       </section>
+
+      <section v-if = "isAUTHOR">
+        <p>Your goal:</p>
+      </section>
     </div>
 
     <footerbar></footerbar>
@@ -152,7 +156,9 @@ export default {
       // paper
       paper:{
         id:12,
-        title:"liu"
+        title:"liu",
+        summary:"laghalkh",
+        status:"hi",
       },
       texts:[" -2 ( reject )"," -1 ( week reject )"," 1 ( weak accept )"," 2 ( accept )"],
       max:4,
@@ -169,25 +175,34 @@ export default {
        }
   },
   created(){
-    /*this.$axios.post('/PaperAuthority',{
+    this.$axios.post('/PaperAuthority',{
       paperId:this.$route.params.paperID
     })
     .then(resp=>{
-      if(resp.status === 200){
-        console.log(reap.data);        
-        /*switch(resp.data){
+      console.log(resp.data);
+      if(resp.status === 200 && !resp.data.hasOwnProperty("message")){
+        this.paper = resp.data.paper;
+        switch(this.paper.url){
           case 'AUTHOR':
             this.isAUTHOR = true;
             break;
           case 'PC_MEMBER':
             this.isPC_MEMBER = true;
-            break;
-        } 
+            break;            
+        }
+      }else{
+        this.$router.go(-1);
+        this.$message({
+          dangerouslyUseHTMLString: true,
+          type: "error",
+          message:'<strong style="color:teal">Sorry! Your don\'t have the authority!</strong>',
+          center: true
+        });
       }
     })
     .catch(error=>{
       console.log(error);
-    })*/
+    })
   }
   
 };

@@ -941,6 +941,7 @@ export default {
       .then(resp => {
         if (resp.status === 200) {
           this.papers = resp.data.papers;
+          console.log(this.papers);
           this.authorities = resp.data.authorities;
           this.conference = resp.data.conference;
 
