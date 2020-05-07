@@ -109,7 +109,6 @@
               hide-on-single-page
               layout="prev, pager, next"
               :page-size="pageSize"
-              @current-change="pageChange"
               :current-page.sync="currentPage"
               :total="messages.length"
             >></el-pagination>
@@ -140,9 +139,6 @@ export default {
     };
   },
   methods: {
-    pageChange() {
-      this.currentPage = currentPage;
-    },
     parseMessageType(messageType){
       switch (messageType) {
         case "PC_MEMBER_INVITATION":

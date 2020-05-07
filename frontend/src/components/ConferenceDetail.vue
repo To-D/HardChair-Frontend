@@ -366,8 +366,8 @@
                     <i class="el-icon-date"></i> Upload date:
                   </span>{{paper.createdTime.substring(0,10)}}</p>                
                 <!-- paper operation -->
-                <el-button @click="preview(paper.id)">Preview</el-button>
-                <el-button @click="download(paper.id,paper.title)">Download</el-button>
+                <preview :id="paper.id">Preview</preview>
+                <download :id="paper.id" :title="paper.title"></download>                
                 <el-button @click="$router.push({path:'/paper/edit/'+paper.id}) ">Edit</el-button>
                 </el-card>
                 <div class="row">
@@ -376,7 +376,6 @@
                     hide-on-single-page
                     layout="prev, pager, next"
                     :page-size="pageSize"
-                    @current-change="pageChange"
                     :current-page.sync="currentPage"
                     :total="papers.length"
                   >></el-pagination>
@@ -448,13 +447,6 @@
     </el-dialog>
     <div> 
 
-    <!-- paper preview -->
-    <el-dialog title="" :visible.sync="dialogPaperPreviewVisible" width="80%" top="20px">
-      <div class="pdf" style="height: 450px">
-        <iframe :src="pdfUrl" frameborder="0" style="width: 100%; height: 100%"></iframe>
-      </div>
-    </el-dialog>
-
     <!-- chooose review strategy -->
     <el-dialog
       title="Choose Distribution Strategy"
@@ -481,11 +473,12 @@
 import navbar from "./Nav";
 import footerbar from "./Footer";
 import draggable from 'vuedraggable';
-import pdf from 'vue-pdf';
+import download from "./DownloadPaper";
+import preview from "./PreviewPaper";
 
 export default {
   name: "ConferenceDetail",
-  components: { navbar, footerbar,draggable,pdf},
+  components: { navbar, footerbar,draggable,download,preview },
   inject: ["reload"],
 
   data() {
@@ -520,10 +513,6 @@ export default {
 
       // show Pc_member dialog
       dialogMemberTableVisible: false,
-
-      // paper preview
-      pdfUrl:"",
-      dialogPaperPreviewVisible:false,
 
       // start review
       seeChooseStrategy:false,
@@ -640,10 +629,6 @@ export default {
   },
   methods: {
     // Show information
-    pageChange() {
-      this.currentPage = currentPage;
-    },
-
     parseStatus(status) {
       switch (status) {
         case "CHECKED":
@@ -943,52 +928,6 @@ export default {
         })
       }
       this.strategy = "";
-    },
-
-    // 8. operation on papers
-    preview(id){
-      this.$axios({
-        method:'post',
-        url:'/DownloadPaper',
-        data:{paperId:id},
-        responseType: 'blob'
-      })
-      .then(resp=>{
-        this.dialogPaperPreviewVisible = true;
-        let url = URL.createObjectURL(new Blob([resp.data]));
-        this.pdfUrl = "/static/pdf/web/viewer.html?file="+encodeURIComponent(url);
-      })
-      .catch(error =>{
-        console.log(error);
-      })
-    },
-    download(id,title){
-      this.$axios({
-        method:'post',
-        url:'/DownloadPaper',
-        data:{paperId:id},
-        responseType: 'blob'
-      })
-      .then(resp=>{
-        const blob = new Blob([resp.data]);
-        const fileName = title+'.pdf';
-        if (typeof navigator.msSaveBlob != "undefined") { // IE10+下载
-          navigator.msSaveBlob(blob, fileName);
-        } else { // 非IE下载
-          const elink = document.createElement('a');
-          elink.href = URL.createObjectURL(blob);
-          elink.download = fileName;
-          elink.style.display = 'none';
-
-          document.body.appendChild(elink);
-          elink.click();
-          URL.revokeObjectURL(elink.href); // 释放URL 对象
-          document.body.removeChild(elink);
-        }
-      })
-      .catch(error=>{
-        console.log(error);
-      })
     },
     
   },

@@ -56,11 +56,11 @@
 
               <div class="row">
                 <div>
-                  <el-button class="onPageBtn" type="primary">View PDF</el-button>
+                  <preview :id="paper.id">Preview</preview>
                 </div>
 
                 <div>
-                  <el-button class="onPageBtn" type="primary">Download PDF</el-button>
+                  <download :id="paper.id" :title="paper.title">Download</download>
                 </div>
               </div>
             </div>
@@ -88,7 +88,7 @@
                 v-model="reviewForm.score" 
                 show-text 
                 id="score"
-                max=4
+                :max="max"
                 :texts="texts"
               ></el-rate>
             </el-form-item>
@@ -137,13 +137,25 @@
 <script>
 import navbar from "./Nav";
 import footerbar from "./Footer";
+import download from "./DownloadPaper";
+import preview from "./PreviewPaper"
 
 export default {
   name: "PaperDetail",
-  components: { navbar, footerbar },
+  components: { navbar, footerbar,download,preview },
   data() {
     return {
-      texts:[],
+      // Authorities
+      isAUTHOR:false,
+      isPC_MEMBER:false,
+
+      // paper
+      paper:{
+        id:12,
+        title:"liu"
+      },
+      texts:[" -2 ( reject )"," -1 ( week reject )"," 1 ( weak accept )"," 2 ( accept )"],
+      max:4,
       reviewForm:{
         value:"",
         comment:"",
@@ -157,10 +169,27 @@ export default {
        }
   },
   created(){
-    this.$axios('',{
-    }
-    )
+    /*this.$axios.post('/PaperAuthority',{
+      paperId:this.$route.params.paperID
+    })
+    .then(resp=>{
+      if(resp.status === 200){
+        console.log(reap.data);        
+        /*switch(resp.data){
+          case 'AUTHOR':
+            this.isAUTHOR = true;
+            break;
+          case 'PC_MEMBER':
+            this.isPC_MEMBER = true;
+            break;
+        } 
+      }
+    })
+    .catch(error=>{
+      console.log(error);
+    })*/
   }
+  
 };
 </script>
 

@@ -9557,8 +9557,8 @@
                         window.addEventListener('wheel', this.mouseWheelBind);
                         window.addEventListener('keydown', this.resetMouseScrollStateBind);
                         window.addEventListener('contextmenu', this.contextMenuBind);
-                        window.addEventListener('touchstart', this.touchSwipeBind, { passive: false });
-                        window.addEventListener('touchmove', this.touchSwipeBind, { passive: false });
+                        window.addEventListener('touchstart', this.touchSwipeBind, { passive: true });
+                        window.addEventListener('touchmove', this.touchSwipeBind, { passive: true });
                         window.addEventListener('touchend', this.touchSwipeBind);
                     }
                 }, {
