@@ -143,90 +143,23 @@ export default {
   components: { navbar, footerbar },
   data() {
     return {
-      // user: {},
-      // conferences: [],
-      // pageSize: 6,
-      // currentPage: 1,
-      // noMeeting: false
-      
-      // 2. Paper review submit form
-      paperForm: {
-        score: null,
-        comment: "",
-        confidence: "",
-        texts: ['-2: Reject', '-1: Weak reject', '1: Weak accept', '2: Accept']
+      texts:[],
+      reviewForm:{
+        value:"",
+        comment:"",
+        score:"",
+        confident:"",
+
       },
-      rules: {
-        score: [
-          {
-            required: true,
-            message: "Your score of this paper is required",
-            trigger: "blur"
-          }
-        ],
-        comment: [
-          {
-            required: true,
-            message: "Your comment on paper is required",
-            trigger: "blur"
-          },
-          {
-            max: 800,
-            message: "Your comment can't be more than 800 characters",
-            trigger: "change"
-          }
-        ],
-        confidence: [
-          {
-            required: true,
-            message: "Your confidence of this paper is required",
-            trigger: "blur"
-          }
-        ],
-      },
-      loading: false
-    };
+      rules:{
+
+      }
+       }
   },
-  methods: {
-    // pageChange() {
-    //   this.currentPage = currentPage;
-    // },
-    // parseStatus(status) {
-    //   switch (status) {
-    //     case "UNCHECKED":
-    //       return "Waiting for verification";
-    //       break;
-    //     case "CHECKED":
-    //       return "Approved by admin";
-    //       break;
-    //     case "SUBMIT_ALLOWED":
-    //       return "Accepting papers";
-    //       break;
-    //     default:
-    //       return "Currently unknown";
-    //       break;
-    //   }
-    // }
-  },
-  created() {
-    // Get information of conferences that relate to the present user
-    // this.$axios
-    //   .get("/Profile", {})
-    //   .then(resp => {
-    //     if (resp.status === 200) {
-    //       if (resp.data[1].length == 0) {
-    //         this.noMeeting = true;
-    //       } else {
-    //         this.conferences = resp.data[1];
-    //       }
-    //       this.user = resp.data[0];
-    //     } else {
-    //       this.$message.error("Request Error.");
-    //     }
-    //   })
-    //   .catch(error => {
-    //     console.log(error);
-    //   });
+  created(){
+    this.$axios('',{
+    }
+    )
   }
 };
 </script>

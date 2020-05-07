@@ -114,7 +114,7 @@
               </h2>
 
               <div class="row">
-                <div v-if="isCHECKED && notStart">
+                <div v-if="isCHECKED ">
                   <el-button
                     class="onPageBtn"
                     type="primary"
@@ -369,7 +369,19 @@
                 <el-button @click="preview(paper.id)">Preview</el-button>
                 <el-button @click="download(paper.id,paper.title)">Download</el-button>
                 <el-button @click="$router.push({path:'/paper/edit/'+paper.id}) ">Edit</el-button>
-                </el-card>                               
+                </el-card>
+                <div class="row">
+                <div class="col-xl-6 col-lg-12">
+                  <el-pagination
+                    hide-on-single-page
+                    layout="prev, pager, next"
+                    :page-size="pageSize"
+                    @current-change="pageChange"
+                    :current-page.sync="currentPage"
+                    :total="papers.length"
+                  >></el-pagination>
+                </div>
+              </div>                           
               </div>
             </div>
           </div>
@@ -453,8 +465,8 @@
       :close-on-press-escape = "true"
     >
     <p>Please choose a strategy to allocate papers contributed to this conference.</p>
-    <p><el-radio v-model="strategy" label="1" border>Based on the correlation degree of topic</el-radio></p>
-    <p><el-radio v-model="strategy" label="2" border>Based on the average burden on reviewing</el-radio></p>
+    <p><el-radio v-model="strategy" label="2" border>Based on the correlation degree of topic</el-radio></p>
+    <p><el-radio v-model="strategy" label="1" border>Based on the average burden on reviewing</el-radio></p>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="startReview()">Confirm</el-button>
       </span>
@@ -486,7 +498,7 @@ export default {
       isCHECKED: false,
       isSUBMIT_ALLOWED: false,
       isFINISHED: false,
-      notStart:true,
+//      notStart:true,
 
       // Visitor authority
       isADMIN: false,
@@ -503,7 +515,7 @@ export default {
       isSearchDisabled: true,
 
       // Paper paging
-      pageSize: 6,
+      pageSize: 2,
       currentPage: 1,
 
       // show Pc_member dialog
@@ -679,7 +691,8 @@ export default {
         })
         .then(resp => {
           if (resp.status === 200) {
-            this.notStart = false;
+            this.isCHECKED = false;
+            this.isSUBMIT_ALLOWED = true;
             this.$message({
               dangerouslyUseHTMLString: true,
               type: "success",
@@ -901,7 +914,8 @@ export default {
           strategy : Number(this.strategy)
           })
           .then(resp => {
-            if(resp.status === 200 && resp.message1 == "open success"){
+            console.log(resp);
+            if(resp.status === 200 && resp.data.message1 == "open success"){
               this.$message({
                 dangerouslyUseHTMLString: true,
                 type: "success",
