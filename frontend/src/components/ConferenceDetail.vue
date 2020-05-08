@@ -203,7 +203,7 @@
                     <!-- author -->
                     <el-form-item prop="author" label="Author" class="is-required">
                       <el-button class="button-new-tag" @click="showAddAuthorForm">+ New Author</el-button>
-                      <p v-if="paperForm.authors.length >0">Drag to sort</p>
+                      <span v-if="paperForm.authors.length >0" >&nbsp;Drag to sort</span>
 
                       <draggable v-model="paperForm.authors">
                         <el-card
@@ -226,25 +226,25 @@
                           </div>
                           <div>
                             <span class="itemlabel">
-                              <i class="el-icon-chat-line-round"></i> Name:
+                              <i class="el-icon-s-custom"></i> Name:
                             </span>
                             {{author.name}}
                           </div>
                           <div>
                             <span class="itemlabel">
-                              <i class="el-icon-chat-line-round"></i> Organization:
+                              <i class="el-icon-office-building"></i> Organization:
                             </span>
                             {{author.organization}}
                           </div>
                           <div>
                             <span class="itemlabel">
-                              <i class="el-icon-chat-line-round"></i> Region:
+                              <i class="el-icon-map-location"></i> Region:
                             </span>
                             {{author.region}}
                           </div>
                           <div>
                             <span class="itemlabel">
-                              <i class="el-icon-chat-line-round"></i> Email:
+                              <i class="el-icon-message"></i> Email:
                             </span>
                             {{author.email}}
                           </div>
@@ -488,12 +488,12 @@
         :close-on-click-modal="true"
         :close-on-press-escape="true"
       >
-        <p>Please choose a strategy to allocate papers contributed to this conference.</p>
+        <p>Please choose a strategy to distribute papers contributed to this conference.</p>
         <p>
-          <el-radio v-model="strategy" label="1" border>Based on the correlation degree of topic</el-radio>
+          <el-radio v-model="strategy" label="1" border>By topic correlation</el-radio>
         </p>
         <p>
-          <el-radio v-model="strategy" label="2" border>Based on the average burden on reviewing</el-radio>
+          <el-radio v-model="strategy" label="2" border>By even distribution</el-radio>
         </p>
         <span slot="footer" class="dialog-footer">
           <el-button type="primary" @click="startReview()">Confirm</el-button>
