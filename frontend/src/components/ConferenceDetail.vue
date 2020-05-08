@@ -286,12 +286,12 @@
             </section>
           </el-tab-pane>
 
-          <el-tab-pane v-if="isAUTHOR&& !isCHAIR && isSUBMIT_ALLOWED" label="Paper Submission">
+          <el-tab-pane v-if="isAUTHOR&& !isCHAIR && isSUBMIT_ALLOWED" label="My Papers">
             <section>
               <div class="row">
                 <div class="col-xl-6 col-lg-6">
                   <h2>
-                    <i class="el-icon-document"></i>Papers you have contributed
+                    <i class="el-icon-document"></i>My Papers
                   </h2>
                   <el-card
                     shadow="hover"
