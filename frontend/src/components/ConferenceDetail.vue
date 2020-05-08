@@ -20,399 +20,412 @@
     </section>
 
     <div class="contentContainer">
-      <section>
-        <div class="container">
-          <div class="row">
-            <div class="col-xl-8 col-lg-8">
-              <div>
-                <h2>
-                  <i class="el-icon-info"></i> Conference Info
-                </h2>
-                <div class="infoitem">
-                  <span class="itemlabel">
-                    <i class="el-icon-user-solid"></i> Owner:
-                  </span>
-                  {{conference.owner}}
-                </div>
-                <div class="infoitem">
-                  <span class="itemlabel">
-                    <i class="el-icon-chat-dot-round"></i> Short name:
-                  </span>
-                  {{conference.nameAbbreviation}}
-                </div>
-                <div class="infoitem">
-                  <span class="itemlabel">
-                    <i class="el-icon-chat-line-round"></i> Full name:
-                  </span>
-                  {{conference.fullName}}
-                </div>
-                <div class="infoitem" v-if="conference.topics">
-                  <span class="itemlabel">
-                    <i class="el-icon-price-tag"></i> Topics:
-                  </span>
-                  <el-tag
-                    :key="index"
-                    v-for="(topic,index) in conference.topics.split(',')"
-                  >{{topic}}</el-tag>
-                </div>
-                <div class="infoitem">
-                  <span class="itemlabel">
-                    <i class="el-icon-location"></i> Location:
-                  </span>
-                  {{conference.location}}
-                </div>
-                <div class="infoitem">
-                  <span class="itemlabel">
-                    <i class="el-icon-video-play"></i> Starts at:
-                  </span>
-                  <span v-if="conference.startTime">{{conference.startTime.substring(0, 10) }}</span>
-                </div>
-                <div class="infoitem">
-                  <span class="itemlabel">
-                    <i class="el-icon-video-pause"></i> Ends at:
-                  </span>
-                  <span v-if="conference.endTime">{{conference.endTime.substring(0, 10)}}</span>
-                </div>
-                <div class="infoitem">
-                  <span class="itemlabel">
-                    <i class="el-icon-date"></i> Submission deadline:
-                  </span>
-                  <span v-if="conference.deadline">{{conference.deadline.substring(0, 10)}}</span>
-                </div>
-                <div class="infoitem">
-                  <span class="itemlabel">
-                    <i class="el-icon-medal-1"></i> Result announcement at:
-                  </span>
-                  <span
-                    v-if="conference.resultAnnounceDate"
-                  >{{conference.resultAnnounceDate.substring(0,10)}}</span>
-                </div>
-                <div class="infoitem">
-                  <span class="itemlabel">
-                    <i class="el-icon-s-flag"></i> Status:
-                  </span>
-                  {{parseStatus(conference.status)}}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section v-if="!isADMIN">
-        <div class="container">
-          <div class="row">
-            <div v-if="isCHAIR" class="col-xl-8 col-lg-8">
-              <h2 v-if="isCHECKED || isSUBMIT_ALLOWED || isFINISHED">
-                <i class="el-icon-magic-stick"></i> Conference Operations
-              </h2>
-
+      <div class="container">
+        <el-tabs>
+          <el-tab-pane label="Conference Info">
+            <section>
               <div class="row">
-                <div v-if="isCHECKED ">
-                  <el-button
-                    class="onPageBtn"
-                    type="primary"
-                    @click="startContribution()"
-                  >Start accepting papers</el-button>
-                </div>
-
-                <div v-if="isCHECKED || isSUBMIT_ALLOWED|| isFINISHED">
-                  <el-button
-                    class="onPageBtn"
-                    type="primary"
-                    @click="dialogFormVisible = true"
-                  >Invite PC member</el-button>
-                </div>
-
-                <div v-if="isCHECKED || isSUBMIT_ALLOWED || isFINISHED">
-                  <el-button
-                    class="onPageBtn"
-                    type="primary"
-                    @click="updateInvitation()"
-                  >See current PC members</el-button>
-                </div>
-
-                <div v-if="isSUBMIT_ALLOWED">
-                  <el-button
-                    class="onPageBtn"
-                    type="primary"
-                    @click="seeChooseStrategy = true"
-                  >Start review</el-button>
-                </div>
-
-                <!-- Invite dialog -->
-                <el-dialog
-                  title="Invite PC members to your conference"
-                  :visible.sync="dialogFormVisible"
-                >
-                  <el-form
-                    @submit.native.prevent
-                    status-icon
-                    :model="inviteForm"
-                    :rules="inviteRules"
-                    :inline="true"
-                    label-position="left"
-                    v-loading="loading"
-                    :ref="inviteForm"
-                    hide-required-asterisk
-                  >
-                    <!-- user full name-->
-                    <el-form-item prop="fullName" label="Search user by their real names:">
-                      <el-input
-                        type="text"
-                        v-model="inviteForm.fullName"
-                        auto-complete="off"
-                        id="fullName"
-                        placeholder="Real name of the user"
-                      ></el-input>
-                    </el-form-item>
-
-                    <!-- submit button -->
-                    <el-form-item>
-                      <el-button
-                        native-type="submit"
-                        :disabled="isSearchDisabled"
-                        type="primary"
-                        style="width: 100%"
-                        v-on:click="search(inviteForm)"
-                      >Search</el-button>
-                    </el-form-item>
-                    <el-form-item>
-                      <el-button v-if="searched" @click="invite()" type="primary">Invite</el-button>
-                    </el-form-item>
-                  </el-form>
-
-                  <!-- display table -->
-                  <el-table
-                    @selection-change="handleSelectionChange"
-                    :data="users"
-                    style="width: 100%"
-                    max-height="250"
-                  >
-                    <el-table-column type="selection" width="50"></el-table-column>
-                    <el-table-column fixed prop="fullname" label="Real name" width="150"></el-table-column>
-                    <el-table-column prop="email" label="E-mail" width="150"></el-table-column>
-                    <el-table-column prop="region" label="Region" width="150"></el-table-column>
-                    <el-table-column prop="organization" label="Organization" width="150"></el-table-column>
-                  </el-table>
-                </el-dialog>
-
-                <!-- Look for current pc_members -->
-                <el-dialog title="See current PC member" :visible.sync="dialogMemberTableVisible">
-                  <!-- pc_members display table -->
-                  <el-table
-                    @selection-change="handleSelectionChange"
-                    :data="pcMembers"
-                    style="width: 100%"
-                    max-height="250"
-                  >
-                    <el-table-column fixed prop="fullname" label="Real name" width="130"></el-table-column>
-                    <el-table-column prop="email" label="E-mail" width="130"></el-table-column>
-                    <el-table-column prop="region" label="Region" width="130"></el-table-column>
-                    <el-table-column prop="organization" label="Organization" width="130"></el-table-column>
-                    <el-table-column
-                      prop="password"
-                      label="Status"
-                      width="130"
-                      :filters="[{ text: 'UNREAD', value: 'UNREAD' },{ text: 'ACCEPT', value: 'ACCEPT' }, { text: 'REJECT', value: 'REJECT' }]"
-                      :filter-method="filterTag"
-                      filter-placement="bottom-end"
-                    >
-                      <template slot-scope="scope">
-                        <el-tag
-                          :type="handleType(scope.row.password)"
-                          disable-transitions
-                        >{{scope.row.password}}</el-tag>
-                      </template>
-                    </el-table-column>
-                  </el-table>
-                </el-dialog>
-              </div>
-            </div>
-
-            <div class="col-xl-6 col-lg-6" v-if="!isCHAIR && isSUBMIT_ALLOWED">
-              <h2>
-                <i class="el-icon-upload2"></i> Paper submission
-              </h2>
-
-              <el-form
-                @submit.native.prevent
-                status-icon
-                :model="paperForm"
-                :rules="rules"
-                label-position="top"
-                ref="paperForm"
-                v-loading="loading"
-              >
-                <!-- title -->
-                <el-form-item prop="title" label="Title">
-                  <el-input
-                    type="text"
-                    v-model="paperForm.title"
-                    auto-complete="off"
-                    id="title"
-                    placeholder="Title of your paper"
-                  ></el-input>
-                </el-form-item>
-
-                <!-- summary -->
-                <el-form-item prop="summary" label="Summary">
-                  <el-input
-                    type="textarea"
-                    autosize
-                    v-model="paperForm.summary"
-                    auto-complete="off"
-                    id="summary"
-                    placeholder="Summary of your paper"
-                  ></el-input>
-                </el-form-item>
-
-                <!-- topic -->
-                <el-form-item prop="topic" label="Topic" class="is-required">
-                  <el-checkbox-group v-model="paperForm.topics" v-if="conference.topics">
-                    <el-checkbox
-                      class="checkboxes"
-                      v-for="topic in conference.topics.split(',')"
-                      :key="topic"
-                      :label="topic"
-                      border
-                    ></el-checkbox>
-                  </el-checkbox-group>
-                </el-form-item>
-
-                <!-- author -->
-                <el-form-item prop="author" label="Author" class="is-required">
-                  <el-button class="button-new-tag" @click="showAddAuthorForm">+ New Author</el-button>
-                  <p v-if="paperForm.authors.length >0">Drag to sort</p>
-
-                  <draggable v-model="paperForm.authors">
-                    <el-card
-                      shadow="hover"
-                      class="box-card"
-                      style="margin-top: 1em;"
-                      v-for="(author,index) in paperForm.authors"
-                      :key="index"
-                    >
-                      <div slot="header" class="clearfix">
-                        <span
-                          style="font-weight: bold"
-                        >{{ (index+1) + (['st', 'nd', 'rd'][(index+1) &lt; 20 ? index : (index+1) % 10 - 1] || 'th')}} Author</span>
-                        <router-link
-                          style="float: right; padding: 3px 0"
-                          type="text"
-                          to=""
-                          @click="deleteAuthor(index)"
-                        >Delete</router-link>
-                      </div>
-                      <div>
-                        <span class="itemlabel">
-                          <i class="el-icon-chat-line-round"></i> Name: 
-                        </span>
-                        {{author.name}}
-                      </div>
-                      <div>
-                        <span class="itemlabel">
-                          <i class="el-icon-chat-line-round"></i> Organization: 
-                        </span>
-                        {{author.organization}}
-                      </div>
-                      <div>
-                        <span class="itemlabel">
-                          <i class="el-icon-chat-line-round"></i> Region: 
-                        </span>
-                        {{author.region}}
-                      </div>
-                      <div>
-                        <span class="itemlabel">
-                          <i class="el-icon-chat-line-round"></i> Email: 
-                        </span>
-                        {{author.email}}
-                      </div>
-                    </el-card>
-                  </draggable>
-                </el-form-item>
-
-                <el-form-item prop="file" label="Upload File" class="is-required">
-                  <el-upload
-                    ref="upload"
-                    drag
-                    action
-                    :auto-upload="false"
-                    :limit="1"
-                    :http-request="upload"
-                    accept="application/pdf"
-                    :before-upload="onBeforeUpload"
-                    :on-exceed="handleExceed"
-                    :file-list="files"
-                  >
-                    <i class="el-icon-upload"></i>
-                    <div class="el-upload__text">
-                      Drag file here to upload，or
-                      <em>click here</em>
+                <div class="col-xl-8 col-lg-8">
+                  <div>
+                    <h2>
+                      <i class="el-icon-info"></i> Conference Info
+                    </h2>
+                    <div class="infoitem">
+                      <span class="itemlabel">
+                        <i class="el-icon-user-solid"></i> Owner:
+                      </span>
+                      {{conference.owner}}
                     </div>
-                    <div class="el-upload__tip" slot="tip">Please upload one PDF file only.</div>
-                  </el-upload>
-                </el-form-item>
-
-                <br />
-
-                <!-- submit button -->
-                <el-form-item>
-                  <el-button type="primary" v-on:click="Submit('paperForm')">Upload</el-button>
-                </el-form-item>
-              </el-form>
-
-              <div v-if="isAUTHOR">
-                <h2>
-                  <i class="el-icon-document"></i>Papers you have contributed
-                </h2>
-                <el-card
-                  shadow="hover"
-                  class="box-card"
-                  style="margin-top: 1em;"
-                  v-for="paper in papers.slice((currentPage- 1)*pageSize,currentPage*pageSize)"
-                  :key="paper.id"
-                >
-                  <p>
-                    <span class="itemlabel">
-                      <i class="el-icon-s-opportunity"></i> Title:
-                    </span>
-                    {{paper.title}}
-                  </p>
-                  <p>
-                    <span class="itemlabel">
-                      <i class="el-icon-s-fold"></i> Summary:
-                    </span>
-                    {{paper.summary}}
-                  </p>
-                  <p v-if="paper.createdTime">
-                    <span class="itemlabel">
-                      <i class="el-icon-date"></i> Upload date:
-                    </span>
-                    {{paper.createdTime.substring(0,10)}}
-                  </p>
-                  <!-- paper operation -->
-                  <preview :id="paper.id">Preview</preview>
-                  <download :id="paper.id" :title="paper.title"></download>
-                  <el-button @click="$router.push({path:'/paper/edit/'+paper.id}) ">Edit</el-button>
-                </el-card>
-                <div class="row">
-                  <div class="col-xl-6 col-lg-12">
-                    <el-pagination
-                      hide-on-single-page
-                      layout="prev, pager, next"
-                      :page-size="pageSize"
-                      :current-page.sync="currentPage"
-                      :total="papers.length"
-                    >></el-pagination>
+                    <div class="infoitem">
+                      <span class="itemlabel">
+                        <i class="el-icon-chat-dot-round"></i> Short name:
+                      </span>
+                      {{conference.nameAbbreviation}}
+                    </div>
+                    <div class="infoitem">
+                      <span class="itemlabel">
+                        <i class="el-icon-chat-line-round"></i> Full name:
+                      </span>
+                      {{conference.fullName}}
+                    </div>
+                    <div class="infoitem" v-if="conference.topics">
+                      <span class="itemlabel">
+                        <i class="el-icon-price-tag"></i> Topics:
+                      </span>
+                      <el-tag
+                        :key="index"
+                        v-for="(topic,index) in conference.topics.split(',')"
+                      >{{topic}}</el-tag>
+                    </div>
+                    <div class="infoitem">
+                      <span class="itemlabel">
+                        <i class="el-icon-location"></i> Location:
+                      </span>
+                      {{conference.location}}
+                    </div>
+                    <div class="infoitem">
+                      <span class="itemlabel">
+                        <i class="el-icon-video-play"></i> Starts at:
+                      </span>
+                      <span v-if="conference.startTime">{{conference.startTime.substring(0, 10) }}</span>
+                    </div>
+                    <div class="infoitem">
+                      <span class="itemlabel">
+                        <i class="el-icon-video-pause"></i> Ends at:
+                      </span>
+                      <span v-if="conference.endTime">{{conference.endTime.substring(0, 10)}}</span>
+                    </div>
+                    <div class="infoitem">
+                      <span class="itemlabel">
+                        <i class="el-icon-date"></i> Submission deadline:
+                      </span>
+                      <span v-if="conference.deadline">{{conference.deadline.substring(0, 10)}}</span>
+                    </div>
+                    <div class="infoitem">
+                      <span class="itemlabel">
+                        <i class="el-icon-medal-1"></i> Result announcement at:
+                      </span>
+                      <span
+                        v-if="conference.resultAnnounceDate"
+                      >{{conference.resultAnnounceDate.substring(0,10)}}</span>
+                    </div>
+                    <div class="infoitem">
+                      <span class="itemlabel">
+                        <i class="el-icon-s-flag"></i> Status:
+                      </span>
+                      {{parseStatus(conference.status)}}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
+            </section>
+          </el-tab-pane>
+
+          <el-tab-pane v-if="!isADMIN && isCHAIR" label="Conference Operations">
+            <section>
+              <div class="row">
+                <div class="col-xl-8 col-lg-8">
+                  <h2 v-if="isCHECKED || isSUBMIT_ALLOWED || isFINISHED">
+                    <i class="el-icon-magic-stick"></i> Conference Operations
+                  </h2>
+
+                  <div class="row">
+                    <div v-if="isCHECKED ">
+                      <el-button
+                        class="onPageBtn"
+                        type="primary"
+                        @click="startContribution()"
+                      >Start accepting papers</el-button>
+                    </div>
+
+                    <div v-if="isCHECKED || isSUBMIT_ALLOWED|| isFINISHED">
+                      <el-button
+                        class="onPageBtn"
+                        type="primary"
+                        @click="dialogFormVisible = true"
+                      >Invite PC member</el-button>
+                    </div>
+
+                    <div v-if="isCHECKED || isSUBMIT_ALLOWED || isFINISHED">
+                      <el-button
+                        class="onPageBtn"
+                        type="primary"
+                        @click="updateInvitation()"
+                      >See current PC members</el-button>
+                    </div>
+
+                    <div v-if="isSUBMIT_ALLOWED">
+                      <el-button
+                        class="onPageBtn"
+                        type="primary"
+                        @click="seeChooseStrategy = true"
+                      >Start review</el-button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </el-tab-pane>
+
+          <el-tab-pane v-if="!isCHAIR && isSUBMIT_ALLOWED" label="Paper Submission">
+            <section>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6">
+                  <h2>
+                    <i class="el-icon-upload2"></i> Paper Submission
+                  </h2>
+
+                  <el-form
+                    @submit.native.prevent
+                    status-icon
+                    :model="paperForm"
+                    :rules="rules"
+                    label-position="top"
+                    ref="paperForm"
+                    v-loading="loading"
+                  >
+                    <!-- title -->
+                    <el-form-item prop="title" label="Title">
+                      <el-input
+                        type="text"
+                        v-model="paperForm.title"
+                        auto-complete="off"
+                        id="title"
+                        placeholder="Title of your paper"
+                      ></el-input>
+                    </el-form-item>
+
+                    <!-- summary -->
+                    <el-form-item prop="summary" label="Summary">
+                      <el-input
+                        type="textarea"
+                        autosize
+                        v-model="paperForm.summary"
+                        auto-complete="off"
+                        id="summary"
+                        placeholder="Summary of your paper"
+                      ></el-input>
+                    </el-form-item>
+
+                    <!-- topic -->
+                    <el-form-item prop="topic" label="Topic" class="is-required">
+                      <el-checkbox-group v-model="paperForm.topics" v-if="conference.topics">
+                        <el-checkbox
+                          class="checkboxes"
+                          v-for="topic in conference.topics.split(',')"
+                          :key="topic"
+                          :label="topic"
+                          border
+                        ></el-checkbox>
+                      </el-checkbox-group>
+                    </el-form-item>
+
+                    <!-- author -->
+                    <el-form-item prop="author" label="Author" class="is-required">
+                      <el-button class="button-new-tag" @click="showAddAuthorForm">+ New Author</el-button>
+                      <p v-if="paperForm.authors.length >0">Drag to sort</p>
+
+                      <draggable v-model="paperForm.authors">
+                        <el-card
+                          shadow="hover"
+                          class="box-card"
+                          style="margin-top: 1em;"
+                          v-for="(author,index) in paperForm.authors"
+                          :key="index"
+                        >
+                          <div slot="header" class="clearfix">
+                            <span
+                              style="font-weight: bold"
+                            >{{ (index+1) + (['st', 'nd', 'rd'][(index+1) &lt; 20 ? index : (index+1) % 10 - 1] || 'th')}} Author</span>
+                            <router-link
+                              style="float: right; padding: 3px 0"
+                              type="text"
+                              to
+                              @click="deleteAuthor(index)"
+                            >Delete</router-link>
+                          </div>
+                          <div>
+                            <span class="itemlabel">
+                              <i class="el-icon-chat-line-round"></i> Name:
+                            </span>
+                            {{author.name}}
+                          </div>
+                          <div>
+                            <span class="itemlabel">
+                              <i class="el-icon-chat-line-round"></i> Organization:
+                            </span>
+                            {{author.organization}}
+                          </div>
+                          <div>
+                            <span class="itemlabel">
+                              <i class="el-icon-chat-line-round"></i> Region:
+                            </span>
+                            {{author.region}}
+                          </div>
+                          <div>
+                            <span class="itemlabel">
+                              <i class="el-icon-chat-line-round"></i> Email:
+                            </span>
+                            {{author.email}}
+                          </div>
+                        </el-card>
+                      </draggable>
+                    </el-form-item>
+
+                    <el-form-item prop="file" label="Upload File" class="is-required">
+                      <el-upload
+                        ref="upload"
+                        drag
+                        action
+                        :auto-upload="false"
+                        :limit="1"
+                        :http-request="upload"
+                        accept="application/pdf"
+                        :before-upload="onBeforeUpload"
+                        :on-exceed="handleExceed"
+                        :file-list="files"
+                      >
+                        <i class="el-icon-upload"></i>
+                        <div class="el-upload__text">
+                          Drag file here to upload，or
+                          <em>click here</em>
+                        </div>
+                        <div class="el-upload__tip" slot="tip">Please upload one PDF file only.</div>
+                      </el-upload>
+                    </el-form-item>
+
+                    <br />
+
+                    <!-- submit button -->
+                    <el-form-item>
+                      <el-button type="primary" v-on:click="Submit('paperForm')">Upload</el-button>
+                    </el-form-item>
+                  </el-form>
+                </div>
+              </div>
+            </section>
+          </el-tab-pane>
+
+          <el-tab-pane v-if="isAUTHOR&& !isCHAIR && isSUBMIT_ALLOWED" label="Paper Submission">
+            <section>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6">
+                  <h2>
+                    <i class="el-icon-document"></i>Papers you have contributed
+                  </h2>
+                  <el-card
+                    shadow="hover"
+                    class="box-card"
+                    style="margin-top: 1em;"
+                    v-for="paper in papers.slice((currentPage- 1)*pageSize,currentPage*pageSize)"
+                    :key="paper.id"
+                  >
+                    <p>
+                      <span class="itemlabel">
+                        <i class="el-icon-s-opportunity"></i> Title:
+                      </span>
+                      {{paper.title}}
+                    </p>
+                    <p>
+                      <span class="itemlabel">
+                        <i class="el-icon-s-fold"></i> Summary:
+                      </span>
+                      {{paper.summary}}
+                    </p>
+                    <p v-if="paper.createdTime">
+                      <span class="itemlabel">
+                        <i class="el-icon-date"></i> Upload date:
+                      </span>
+                      {{paper.createdTime.substring(0,10)}}
+                    </p>
+                    <!-- paper operation -->
+                    <preview :id="paper.id">Preview</preview>
+                    <download :id="paper.id" :title="paper.title"></download>
+                    <el-button @click="$router.push({path:'/paper/edit/'+paper.id}) ">Edit</el-button>
+                  </el-card>
+                  <div class="row">
+                    <div class="col-xl-6 col-lg-12">
+                      <el-pagination
+                        hide-on-single-page
+                        layout="prev, pager, next"
+                        :page-size="pageSize"
+                        :current-page.sync="currentPage"
+                        :total="papers.length"
+                      >></el-pagination>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </el-tab-pane>
+        </el-tabs>
+      </div>
     </div>
+
+    <!-- Invite dialog -->
+    <el-dialog title="Invite PC members to your conference" :visible.sync="dialogFormVisible">
+      <el-form
+        @submit.native.prevent
+        status-icon
+        :model="inviteForm"
+        :rules="inviteRules"
+        :inline="true"
+        label-position="left"
+        v-loading="loading"
+        :ref="inviteForm"
+        hide-required-asterisk
+      >
+        <!-- user full name-->
+        <el-form-item prop="fullName" label="Search user by their real names:">
+          <el-input
+            type="text"
+            v-model="inviteForm.fullName"
+            auto-complete="off"
+            id="fullName"
+            placeholder="Real name of the user"
+          ></el-input>
+        </el-form-item>
+
+        <!-- submit button -->
+        <el-form-item>
+          <el-button
+            native-type="submit"
+            :disabled="isSearchDisabled"
+            type="primary"
+            style="width: 100%"
+            v-on:click="search(inviteForm)"
+          >Search</el-button>
+        </el-form-item>
+        <el-form-item>
+          <el-button v-if="searched" @click="invite()" type="primary">Invite</el-button>
+        </el-form-item>
+      </el-form>
+
+      <!-- display table -->
+      <el-table
+        @selection-change="handleSelectionChange"
+        :data="users"
+        style="width: 100%"
+        max-height="250"
+      >
+        <el-table-column type="selection" width="50"></el-table-column>
+        <el-table-column fixed prop="fullname" label="Real name" width="150"></el-table-column>
+        <el-table-column prop="email" label="E-mail" width="150"></el-table-column>
+        <el-table-column prop="region" label="Region" width="150"></el-table-column>
+        <el-table-column prop="organization" label="Organization" width="150"></el-table-column>
+      </el-table>
+    </el-dialog>
+
+    <!-- Look for current pc_members -->
+    <el-dialog title="See current PC member" :visible.sync="dialogMemberTableVisible">
+      <!-- pc_members display table -->
+      <el-table
+        @selection-change="handleSelectionChange"
+        :data="pcMembers"
+        style="width: 100%"
+        max-height="250"
+      >
+        <el-table-column fixed prop="fullname" label="Real name" width="130"></el-table-column>
+        <el-table-column prop="email" label="E-mail" width="130"></el-table-column>
+        <el-table-column prop="region" label="Region" width="130"></el-table-column>
+        <el-table-column prop="organization" label="Organization" width="130"></el-table-column>
+        <el-table-column
+          prop="password"
+          label="Status"
+          width="130"
+          :filters="[{ text: 'UNREAD', value: 'UNREAD' },{ text: 'ACCEPT', value: 'ACCEPT' }, { text: 'REJECT', value: 'REJECT' }]"
+          :filter-method="filterTag"
+          filter-placement="bottom-end"
+        >
+          <template slot-scope="scope">
+            <el-tag
+              :type="handleType(scope.row.password)"
+              disable-transitions
+            >{{scope.row.password}}</el-tag>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
 
     <!-- Choose Authority -->
     <el-dialog
