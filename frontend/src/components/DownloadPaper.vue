@@ -12,7 +12,7 @@ export default {
         required:true
     },
     title:{
-        type:[String,Number],
+        type:[String],
         required:true
     }
   },

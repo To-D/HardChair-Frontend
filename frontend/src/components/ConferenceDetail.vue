@@ -367,7 +367,7 @@
                   </span>{{paper.createdTime.substring(0,10)}}</p>                
                 <!-- paper operation -->
                 <preview :id="paper.id">Preview</preview>
-                <download :id="paper.id" :title="paper.title"></download>                
+                <download :id="paper.id" :title="paper.title"></download>                                
                 <el-button @click="$router.push({path:'/paper/edit/'+paper.id}) ">Edit</el-button>
                 </el-card>
                 <div class="row">
@@ -457,8 +457,8 @@
       :close-on-press-escape = "true"
     >
     <p>Please choose a strategy to allocate papers contributed to this conference.</p>
-    <p><el-radio v-model="strategy" label="2" border>Based on the correlation degree of topic</el-radio></p>
-    <p><el-radio v-model="strategy" label="1" border>Based on the average burden on reviewing</el-radio></p>
+    <p><el-radio v-model="strategy" label="1" border>Based on the correlation degree of topic</el-radio></p>
+    <p><el-radio v-model="strategy" label="2" border>Based on the average burden on reviewing</el-radio></p>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="startReview()">Confirm</el-button>
       </span>
@@ -941,7 +941,6 @@ export default {
       .then(resp => {
         if (resp.status === 200) {
           this.papers = resp.data.papers;
-          console.log(this.papers);
           this.authorities = resp.data.authorities;
           this.conference = resp.data.conference;
 

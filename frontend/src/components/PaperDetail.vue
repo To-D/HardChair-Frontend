@@ -7,7 +7,6 @@
         <div class="row my-4 my-md-6 text-light">
           <div class="col-lg-9 col-xl-6">
             <h1 class="display-4">{{paper.title}}</h1>
-            <p class="lead mb-0">Paper Author names here (optional)</p>
           </div>
         </div>
       </div>
@@ -34,11 +33,29 @@
                   </span>
                   {{paper.summary}}
                 </div>
+                <div class="infoitem" v-if= "paper.topics">
+                  <span class="itemlabel">
+                    <i class="el-icon-price-tag"></i> Topics:
+                  </span>
+                  <el-tag
+                  :key="index"
+                  v-for="(topic,index) in paper.topics.split(',')"
+                  >
+                {{topic}}
+                </el-tag>
+                </div>
                 <div class="infoitem">
                   <span class="itemlabel">
                     <i class="el-icon-s-flag"></i> Status:
                   </span>
-                  {{paper.status}}
+                  <span v-if="paper.reviewResults && paper.reviewResults.length"> Scores announced</span>
+                  <span v-else>Wating for reviewing</span>
+                </div>
+                <div class="infoitem" v-if="paper.createdTime">
+                  <span class="itemlabel">
+                    <i class="el-icon-s-flag"></i> Created Time:
+                  </span>
+                  {{paper.createdTime.substring(0,10)}}
                 </div>
               </div>
             </div>
@@ -56,11 +73,11 @@
 
               <div class="row">
                 <div>
-                  <preview :id="paper.id">Preview</preview>
+                  <preview  v-if="paper.id" :id="paper.id">Preview</preview>
                 </div>
 
                 <div>
-                  <download :id="paper.id" :title="paper.title">Download</download>
+                  <download v-if="paper.id && paper.title" :id="paper.id" :title="paper.title">Download</download>
                 </div>
               </div>
             </div>
@@ -71,7 +88,7 @@
       <section v-if="isPC_MEMBER">
         <div class="col-xl-6 col-lg-6" >
           <h2>
-            <i class="el-icon-upload2"></i> Paper submission
+            <i class="el-icon-upload2"></i> Paper Review
           </h2>
 
           <el-form
@@ -83,13 +100,14 @@
             ref="reviewForm"
           >
             <!-- score -->
-            <el-form-item prop="score" label="Score">
+            <el-form-item prop="score" label="Score" class="is-required">
               <el-rate 
                 v-model="reviewForm.score" 
-                show-text 
+                show-text
                 id="score"
                 :max="max"
                 :texts="texts"
+                :colors="colors"
               ></el-rate>
             </el-form-item>
 
@@ -123,6 +141,7 @@
                 native-type="submit"
                 type="primary"
                 v-on:click="Submit('reviewForm')"
+                :disabled="reviewDisiabled"
               >Submit Review Results</el-button>
             </el-form-item>
           </el-form>
@@ -151,37 +170,73 @@ export default {
     return {
       // Authorities
       isAUTHOR:false,
-      isPC_MEMBER:false,
+      isPC_MEMBER:true,
 
       // paper
-      paper:{
-        id:12,
-        title:"liu",
-        summary:"laghalkh",
-        status:"hi",
-      },
-      texts:[" -2 ( reject )"," -1 ( week reject )"," 1 ( weak accept )"," 2 ( accept )"],
-      max:4,
-      reviewForm:{
-        value:"",
-        comment:"",
-        score:"",
-        confident:"",
+      paper:{},
 
+      // Review form
+      reviewForm:{
+        score:null, 
+        comment:"",
+        confidence:"",
       },
       rules:{
-
-      }
+        score:[{
+           validator:(rule,value,callback)=>{
+             if(!value){
+               callback(new Error("Score is required"));
+             }
+             callback();
+           },
+           trigger:"blur"
+         }],
+         comment:[{required:true,trigger:"blur"}],
+         confidence:[{required:true,trigger:"blur"}]
+      },
+      // el-rate
+      texts:[" -2 ( reject )"," -1 ( week reject )"," 1 ( weak accept )"," 2 ( accept )"],
+      max:4,
+      colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
        }
+  },
+  methods:{
+    Submit(formName){
+      let tmp = this.reviewForm;
+      this.$axios.post('/SubmitReviewResult',{
+        paperId:this.paper.id,
+        score:tmp.score,
+        comment:tmp.comment,
+        confidence:tmp.confidence
+      })
+      .then(resp=>{
+        if(resp.status === 200){
+          this.$message({
+              dangerouslyUseHTMLString: true,
+              type: "success",
+              message:'<strong style="color:teal">Submit success!</strong>',
+              center: true
+            });
+        }
+      })
+      .catch(error=>{
+        console.log(error);
+      })
+    }
+  },
+  computed:{
+    reviewDisiabled(){
+      let tmp = this.reviewForm;
+      return !tmp.score || tmp.comment=="" || tmp.confidence=="";
+    }
   },
   created(){
     this.$axios.post('/PaperAuthority',{
       paperId:this.$route.params.paperID
     })
     .then(resp=>{
-      console.log(resp.data);
       if(resp.status === 200 && !resp.data.hasOwnProperty("message")){
-        this.paper = resp.data.paper;
+        this.paper = resp.data;
         switch(this.paper.url){
           case 'AUTHOR':
             this.isAUTHOR = true;
