@@ -8,11 +8,14 @@
           <div class="col-lg-9 col-xl-6">
             <h1 class="display-4">{{conference.nameAbbreviation}}</h1>
             <p class="lead mb-0">{{conference.fullName}}</p>
-            <br>
-            <el-button class="lead mb-0" v-if = "seeChangeAuthority" @click="seeChooseAuthority = true">Change Authority</el-button>
+            <br />
+            <el-button
+              class="lead mb-0"
+              v-if="seeChangeAuthority"
+              @click="seeChooseAuthority = true"
+            >Change Authority</el-button>
           </div>
         </div>
-
       </div>
     </section>
 
@@ -43,16 +46,14 @@
                   </span>
                   {{conference.fullName}}
                 </div>
-                <div class="infoitem" v-if= "conference.topics">
+                <div class="infoitem" v-if="conference.topics">
                   <span class="itemlabel">
                     <i class="el-icon-price-tag"></i> Topics:
                   </span>
                   <el-tag
-                  :key="index"
-                  v-for="(topic,index) in conference.topics.split(',')"
-                  >
-                {{topic}}
-                </el-tag>
+                    :key="index"
+                    v-for="(topic,index) in conference.topics.split(',')"
+                  >{{topic}}</el-tag>
                 </div>
                 <div class="infoitem">
                   <span class="itemlabel">
@@ -64,33 +65,27 @@
                   <span class="itemlabel">
                     <i class="el-icon-video-play"></i> Starts at:
                   </span>
-                  <span v-if = "conference.startTime">
-                  {{conference.startTime.substring(0, 10) }}
-                  </span>
+                  <span v-if="conference.startTime">{{conference.startTime.substring(0, 10) }}</span>
                 </div>
                 <div class="infoitem">
                   <span class="itemlabel">
                     <i class="el-icon-video-pause"></i> Ends at:
                   </span>
-                  <span v-if = "conference.endTime">
-                  {{conference.endTime.substring(0, 10)}}
-                  </span>
+                  <span v-if="conference.endTime">{{conference.endTime.substring(0, 10)}}</span>
                 </div>
                 <div class="infoitem">
                   <span class="itemlabel">
                     <i class="el-icon-date"></i> Submission deadline:
                   </span>
-                  <span v-if = "conference.deadline">
-                  {{conference.deadline.substring(0, 10)}}
-                  </span>
+                  <span v-if="conference.deadline">{{conference.deadline.substring(0, 10)}}</span>
                 </div>
                 <div class="infoitem">
                   <span class="itemlabel">
                     <i class="el-icon-medal-1"></i> Result announcement at:
                   </span>
-                  <span v-if = "conference.resultAnnounceDate">
-                  {{conference.resultAnnounceDate.substring(0,10)}}
-                  </span>
+                  <span
+                    v-if="conference.resultAnnounceDate"
+                  >{{conference.resultAnnounceDate.substring(0,10)}}</span>
                 </div>
                 <div class="infoitem">
                   <span class="itemlabel">
@@ -108,7 +103,6 @@
         <div class="container">
           <div class="row">
             <div v-if="isCHAIR" class="col-xl-8 col-lg-8">
-
               <h2 v-if="isCHECKED || isSUBMIT_ALLOWED || isFINISHED">
                 <i class="el-icon-magic-stick"></i> Conference Operations
               </h2>
@@ -184,7 +178,7 @@
                       >Search</el-button>
                     </el-form-item>
                     <el-form-item>
-                      <el-button v-if="searched"  @click="invite()" type="primary">Invite</el-button>
+                      <el-button v-if="searched" @click="invite()" type="primary">Invite</el-button>
                     </el-form-item>
                   </el-form>
 
@@ -204,10 +198,7 @@
                 </el-dialog>
 
                 <!-- Look for current pc_members -->
-                <el-dialog
-                  title="See current PC member"
-                  :visible.sync="dialogMemberTableVisible"
-                >
+                <el-dialog title="See current PC member" :visible.sync="dialogMemberTableVisible">
                   <!-- pc_members display table -->
                   <el-table
                     @selection-change="handleSelectionChange"
@@ -225,11 +216,13 @@
                       width="130"
                       :filters="[{ text: 'UNREAD', value: 'UNREAD' },{ text: 'ACCEPT', value: 'ACCEPT' }, { text: 'REJECT', value: 'REJECT' }]"
                       :filter-method="filterTag"
-                      filter-placement="bottom-end">
+                      filter-placement="bottom-end"
+                    >
                       <template slot-scope="scope">
                         <el-tag
                           :type="handleType(scope.row.password)"
-                          disable-transitions>{{scope.row.password}}</el-tag>
+                          disable-transitions
+                        >{{scope.row.password}}</el-tag>
                       </template>
                     </el-table-column>
                   </el-table>
@@ -276,38 +269,69 @@
 
                 <!-- topic -->
                 <el-form-item prop="topic" label="Topic" class="is-required">
-                 <el-checkbox-group 
-                 v-model="paperForm.topics" 
-                 v-if = "conference.topics"
-                 >
+                  <el-checkbox-group v-model="paperForm.topics" v-if="conference.topics">
                     <el-checkbox
-                    v-for="topic in conference.topics.split(',')"
-                    :key = "topic"
-                    :label="topic"
-                    border
-                    >
-                    </el-checkbox>
+                      class="checkboxes"
+                      v-for="topic in conference.topics.split(',')"
+                      :key="topic"
+                      :label="topic"
+                      border
+                    ></el-checkbox>
                   </el-checkbox-group>
                 </el-form-item>
-                
+
                 <!-- author -->
                 <el-form-item prop="author" label="Author" class="is-required">
-                <el-button class="button-new-tag"  @click="showAddAuthorForm">+ New Author</el-button>
-                <p v-if="paperForm.authors.length >0">Drag to sort</p>
-                <draggable v-model="paperForm.authors">
-                  <el-card v-for="(author,index) in paperForm.authors" :key=index >                    
-                    <div slot="header" class="clearfix">
-                      <span>{{ (index+1) + (['st', 'nd', 'rd'][(index+1) &lt; 20 ? index : (index+1) % 10 - 1] || 'th')}} Author</span>
-                      <el-button style="float: right; padding: 3px 0" type="text" @click="deleteAuthor(index)">Delete</el-button>
-                    </div>
-                    <p>Name: {{author.name}}</p>
-                    <p>Organization: {{author.organization}}</p>
-                    <p>Region: {{author.region}}</p>
-                    <p>Email: {{author.email}}</p>
-                  </el-card>
-                </draggable>
+                  <el-button class="button-new-tag" @click="showAddAuthorForm">+ New Author</el-button>
+                  <p v-if="paperForm.authors.length >0">Drag to sort</p>
+
+                  <draggable v-model="paperForm.authors">
+                    <el-card
+                      shadow="hover"
+                      class="box-card"
+                      style="margin-top: 1em;"
+                      v-for="(author,index) in paperForm.authors"
+                      :key="index"
+                    >
+                      <div slot="header" class="clearfix">
+                        <span
+                          style="font-weight: bold"
+                        >{{ (index+1) + (['st', 'nd', 'rd'][(index+1) &lt; 20 ? index : (index+1) % 10 - 1] || 'th')}} Author</span>
+                        <router-link
+                          style="float: right; padding: 3px 0"
+                          type="text"
+                          to=""
+                          @click="deleteAuthor(index)"
+                        >Delete</router-link>
+                      </div>
+                      <div>
+                        <span class="itemlabel">
+                          <i class="el-icon-chat-line-round"></i> Name: 
+                        </span>
+                        {{author.name}}
+                      </div>
+                      <div>
+                        <span class="itemlabel">
+                          <i class="el-icon-chat-line-round"></i> Organization: 
+                        </span>
+                        {{author.organization}}
+                      </div>
+                      <div>
+                        <span class="itemlabel">
+                          <i class="el-icon-chat-line-round"></i> Region: 
+                        </span>
+                        {{author.region}}
+                      </div>
+                      <div>
+                        <span class="itemlabel">
+                          <i class="el-icon-chat-line-round"></i> Email: 
+                        </span>
+                        {{author.email}}
+                      </div>
+                    </el-card>
+                  </draggable>
                 </el-form-item>
-                
+
                 <el-form-item prop="file" label="Upload File" class="is-required">
                   <el-upload
                     ref="upload"
@@ -326,61 +350,63 @@
                       Drag file here to upload，or
                       <em>click here</em>
                     </div>
-                    <div
-                      class="el-upload__tip"
-                      slot="tip"
-                    >Please upload one PDF file only.</div>
+                    <div class="el-upload__tip" slot="tip">Please upload one PDF file only.</div>
                   </el-upload>
-                </el-form-item>                
+                </el-form-item>
 
                 <br />
 
                 <!-- submit button -->
                 <el-form-item>
-                  <el-button
-                    type="primary"
-                    v-on:click="Submit('paperForm')"
-                  >Upload</el-button>
+                  <el-button type="primary" v-on:click="Submit('paperForm')">Upload</el-button>
                 </el-form-item>
               </el-form>
 
-              <div v-if = "isAUTHOR">
-                <h2><i class="el-icon-document"></i>Papers you have contributed</h2>
-                <el-card 
-                shadow="hover"
-                class="box-card"
-                style="margin-top: 1em;"
-                v-for="paper in papers.slice((currentPage- 1)*pageSize,currentPage*pageSize)"
-                :key="paper.id"
+              <div v-if="isAUTHOR">
+                <h2>
+                  <i class="el-icon-document"></i>Papers you have contributed
+                </h2>
+                <el-card
+                  shadow="hover"
+                  class="box-card"
+                  style="margin-top: 1em;"
+                  v-for="paper in papers.slice((currentPage- 1)*pageSize,currentPage*pageSize)"
+                  :key="paper.id"
                 >
-                <p>
-                  <span class="itemlabel">
-                    <i class="el-icon-s-opportunity"></i> Title:
-                  </span>{{paper.title}}</p>
-                <p>                  
-                  <span class="itemlabel">
-                    <i class="el-icon-s-fold"></i> Summary:
-                  </span>{{paper.summary}}</p>
-                <p v-if = "paper.createdTime">                  
-                  <span class="itemlabel">
-                    <i class="el-icon-date"></i> Upload date:
-                  </span>{{paper.createdTime.substring(0,10)}}</p>                
-                <!-- paper operation -->
-                <preview :id="paper.id">Preview</preview>
-                <download :id="paper.id" :title="paper.title"></download>                                
-                <el-button @click="$router.push({path:'/paper/edit/'+paper.id}) ">Edit</el-button>
+                  <p>
+                    <span class="itemlabel">
+                      <i class="el-icon-s-opportunity"></i> Title:
+                    </span>
+                    {{paper.title}}
+                  </p>
+                  <p>
+                    <span class="itemlabel">
+                      <i class="el-icon-s-fold"></i> Summary:
+                    </span>
+                    {{paper.summary}}
+                  </p>
+                  <p v-if="paper.createdTime">
+                    <span class="itemlabel">
+                      <i class="el-icon-date"></i> Upload date:
+                    </span>
+                    {{paper.createdTime.substring(0,10)}}
+                  </p>
+                  <!-- paper operation -->
+                  <preview :id="paper.id">Preview</preview>
+                  <download :id="paper.id" :title="paper.title"></download>
+                  <el-button @click="$router.push({path:'/paper/edit/'+paper.id}) ">Edit</el-button>
                 </el-card>
                 <div class="row">
-                <div class="col-xl-6 col-lg-12">
-                  <el-pagination
-                    hide-on-single-page
-                    layout="prev, pager, next"
-                    :page-size="pageSize"
-                    :current-page.sync="currentPage"
-                    :total="papers.length"
-                  >></el-pagination>
+                  <div class="col-xl-6 col-lg-12">
+                    <el-pagination
+                      hide-on-single-page
+                      layout="prev, pager, next"
+                      :page-size="pageSize"
+                      :current-page.sync="currentPage"
+                      :total="papers.length"
+                    >></el-pagination>
+                  </div>
                 </div>
-              </div>                           
               </div>
             </div>
           </div>
@@ -394,39 +420,33 @@
       :visible.sync="seeChooseAuthority"
       width="50%"
       :show-close="false"
-      :close-on-click-modal = "false"
-      :close-on-press-escape = "false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
     >
-    <p>You have more than 1 authority in this conference, choose one to enter</p>
-    <el-radio-group v-model="chooseAuthority" @change="changeAuthority">
-      <el-radio 
-      border
-      v-for="authority in authorities"
-      :key="authority.id"
-      :label="authority.authority"
-      >
-      {{authority.authority}}
-      </el-radio>
-    </el-radio-group>
+      <p>You have more than 1 authority in this conference, please choose one to enter</p>
+      <el-radio-group v-model="chooseAuthority" @change="changeAuthority">
+        <el-radio
+          class="checkboxes"
+          border
+          v-for="authority in authorities"
+          :key="authority.id"
+          :label="authority.authority"
+        >{{authority.authority}}</el-radio>
+      </el-radio-group>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="seeChooseAuthority = false" :disabled = "hasChosen">Enter</el-button>
+        <el-button type="primary" @click="seeChooseAuthority = false" :disabled="hasChosen">Enter</el-button>
       </span>
     </el-dialog>
 
     <!-- Add new author -->
-    <el-dialog 
-    title="Add new Author" 
-    :visible.sync="addAuthorVisible"
-    :show-close="false"
-    :close-on-click-modal = "false"
-    :close-on-press-escape = "false"
+    <el-dialog
+      title="Add new Author"
+      :visible.sync="addAuthorVisible"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
     >
-      <el-form 
-      :model="authorForm" 
-      status-icon
-      :rules="authorRules"
-      ref = "authorForm"
-      >
+      <el-form :model="authorForm" status-icon :rules="authorRules" ref="authorForm">
         <el-form-item label="Name" prop="name">
           <el-input v-model="authorForm.name" autocomplete="off" ref="authorName"></el-input>
         </el-form-item>
@@ -445,26 +465,28 @@
         <el-button type="primary" @click="addAuthor" :disabled="addButtonDisable">Add</el-button>
       </div>
     </el-dialog>
-    <div> 
-
-    <!-- chooose review strategy -->
-    <el-dialog
-      title="Choose Distribution Strategy"
-      :visible.sync="seeChooseStrategy"
-      width="50%"
-      :show-close="true"
-      :close-on-click-modal = "true"
-      :close-on-press-escape = "true"
-    >
-    <p>Please choose a strategy to allocate papers contributed to this conference.</p>
-    <p><el-radio v-model="strategy" label="1" border>Based on the correlation degree of topic</el-radio></p>
-    <p><el-radio v-model="strategy" label="2" border>Based on the average burden on reviewing</el-radio></p>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="startReview()">Confirm</el-button>
-      </span>
-    </el-dialog>
-
-  </div>
+    <div>
+      <!-- chooose review strategy -->
+      <el-dialog
+        title="Choose Distribution Strategy"
+        :visible.sync="seeChooseStrategy"
+        width="50%"
+        :show-close="true"
+        :close-on-click-modal="true"
+        :close-on-press-escape="true"
+      >
+        <p>Please choose a strategy to allocate papers contributed to this conference.</p>
+        <p>
+          <el-radio v-model="strategy" label="1" border>Based on the correlation degree of topic</el-radio>
+        </p>
+        <p>
+          <el-radio v-model="strategy" label="2" border>Based on the average burden on reviewing</el-radio>
+        </p>
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="startReview()">Confirm</el-button>
+        </span>
+      </el-dialog>
+    </div>
     <footerbar></footerbar>
   </div>
 </template>
@@ -472,13 +494,13 @@
 <script>
 import navbar from "./Nav";
 import footerbar from "./Footer";
-import draggable from 'vuedraggable';
+import draggable from "vuedraggable";
 import download from "./DownloadPaper";
 import preview from "./PreviewPaper";
 
 export default {
   name: "ConferenceDetail",
-  components: { navbar, footerbar,draggable,download,preview },
+  components: { navbar, footerbar, draggable, download, preview },
   inject: ["reload"],
 
   data() {
@@ -487,24 +509,23 @@ export default {
       papers: [],
       authorities: [],
       conference: {},
-      pcMembers:[],
+      pcMembers: [],
       isCHECKED: false,
       isSUBMIT_ALLOWED: false,
       isFINISHED: false,
-//      notStart:true,
+      //      notStart:true,
 
       // Visitor authority
       isADMIN: false,
       isCHAIR: false,
       isPC_MEMBER: false,
       isAUTHOR: false,
-      
 
       // Choose Authority
-      hasChosen:true,
-      chooseAuthority:'',
-      seeChooseAuthority:false,
-      seeChangeAuthority:false,
+      hasChosen: true,
+      chooseAuthority: "",
+      seeChooseAuthority: false,
+      seeChangeAuthority: false,
       isSearchDisabled: true,
 
       // Paper paging
@@ -515,8 +536,8 @@ export default {
       dialogMemberTableVisible: false,
 
       // start review
-      seeChooseStrategy:false,
-      strategy:"",
+      seeChooseStrategy: false,
+      strategy: "",
 
       /** Form data **/
       // 1. Search & invite form
@@ -531,25 +552,27 @@ export default {
             message: "Please enter the real name",
             trigger: "blur"
           },
-          { validator: (rule, value, callback) => {
-            this.isSearchDisabled = this.inviteForm.fullName == "";
-            this.users = [];
-            callback();
+          {
+            validator: (rule, value, callback) => {
+              this.isSearchDisabled = this.inviteForm.fullName == "";
+              this.users = [];
+              callback();
             },
-             trigger: "change" }
+            trigger: "change"
+          }
         ]
       },
       users: [],
       searched: false,
       multipleSelection: [],
-      inviteUsers:[],
+      inviteUsers: [],
 
       // 2. Paper submit form
       paperForm: {
         title: "",
         summary: "",
-        topics:[],
-        authors:[]
+        topics: [],
+        authors: []
       },
       rules: {
         title: [
@@ -576,26 +599,26 @@ export default {
             trigger: "change"
           }
         ],
-        topic:[          
+        topic: [
           {
-            validator:(rule,value,callback) =>{
-              if(this.paperForm.topics.length == 0){
+            validator: (rule, value, callback) => {
+              if (this.paperForm.topics.length == 0) {
                 callback(new Error("Please choose at least one topic."));
               }
               callback();
             },
-            trigger:"change"
+            trigger: "change"
           }
         ],
-        author:[
+        author: [
           {
-            validator:(rule,value,callback) =>{
-              if(this.paperForm.authors.length == 0){
+            validator: (rule, value, callback) => {
+              if (this.paperForm.authors.length == 0) {
                 callback(new Error("Please enter at least one author"));
               }
               callback();
             },
-            trigger:"blur"
+            trigger: "blur"
           }
         ]
       },
@@ -603,28 +626,45 @@ export default {
       files: [],
 
       // 2.1 add author form
-      addAuthorVisible:false,
-      authorForm:{
-        name:"",
-        organization:"",
-        region:"",
-        email:""
-        },
-      authorRules:{
-        name:[{required:true, message:"Name is required.", trigger:"blur"}],
-        organization:[{required:true, message:"Organization is required.", trigger:"blur"}],
-        region:[{required:true, message:"Region is required.", trigger:"blur"}],
-        email:[{required:true, message:"Email is required.", trigger:"blur"},{type:"email",message:"Invalid email.",trigger:"blur"}]
-      },     
+      addAuthorVisible: false,
+      authorForm: {
+        name: "",
+        organization: "",
+        region: "",
+        email: ""
+      },
+      authorRules: {
+        name: [
+          { required: true, message: "Name is required.", trigger: "blur" }
+        ],
+        organization: [
+          {
+            required: true,
+            message: "Organization is required.",
+            trigger: "blur"
+          }
+        ],
+        region: [
+          { required: true, message: "Region is required.", trigger: "blur" }
+        ],
+        email: [
+          { required: true, message: "Email is required.", trigger: "blur" },
+          { type: "email", message: "Invalid email.", trigger: "blur" }
+        ]
+      }
     };
   },
-  computed:{
-    addButtonDisable(){
-      return this.authorForm.name == "" ||
-       this.authorForm.organization =="" ||
-       this.authorForm.region == "" || 
-       this.authorForm.email == "" ||
-       !/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(this.authorForm.email);
+  computed: {
+    addButtonDisable() {
+      return (
+        this.authorForm.name == "" ||
+        this.authorForm.organization == "" ||
+        this.authorForm.region == "" ||
+        this.authorForm.email == "" ||
+        !/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(
+          this.authorForm.email
+        )
+      );
     }
   },
   methods: {
@@ -647,22 +687,22 @@ export default {
     },
 
     // 1. Change visitor authority
-    changeAuthority(val){
-      switch(val){
-        case 'CHAIR':
+    changeAuthority(val) {
+      switch (val) {
+        case "CHAIR":
           this.isCHAIR = true;
-          this.isPC_MEMBER = false;        
+          this.isPC_MEMBER = false;
           this.isAUTHOR = false;
           break;
-        case 'PC_MEMBER':
+        case "PC_MEMBER":
           this.isPC_MEMBER = true;
-          this.isCHAIR = false;        
+          this.isCHAIR = false;
           this.isAUTHOR = false;
           break;
-        case 'AUTHOR':
+        case "AUTHOR":
           this.isAUTHOR = true;
           this.isCHAIR = false;
-          this.isPC_MEMBER = false;        
+          this.isPC_MEMBER = false;
           break;
       }
       this.hasChosen = false;
@@ -703,15 +743,15 @@ export default {
           this.$axios
             .post("/SearchByFullName", {
               fullname: this.inviteForm.fullName,
-              conferenceId:this.conference.id
+              conferenceId: this.conference.id
             })
             .then(resp => {
               if (resp.status === 200) {
-                if(resp.data.length != 0){
-                  this.users = resp.data;                
+                if (resp.data.length != 0) {
+                  this.users = resp.data;
                   this.searched = true;
-                }else{
-                  this.$message("No result!");  
+                } else {
+                  this.$message("No result!");
                 }
               } else {
                 this.$message.error("Request Error!");
@@ -730,9 +770,9 @@ export default {
       this.multipleSelection = val;
     },
     invite() {
-      let len =  this.multipleSelection.length;
-      if(len > 0){
-        for(let i = 0; i< len; i++){
+      let len = this.multipleSelection.length;
+      if (len > 0) {
+        for (let i = 0; i < len; i++) {
           this.inviteUsers.push(this.multipleSelection[i].id);
         }
         this.$axios
@@ -760,8 +800,8 @@ export default {
             this.$message("Request Error!");
             console.log(error);
           });
-      }else{
-        this.$message("Please choose at least one user !")
+      } else {
+        this.$message("Please choose at least one user !");
       }
     },
 
@@ -781,14 +821,14 @@ export default {
       data.append("topic", this.paperForm.topics);
       data.append("conferenceId", this.conference.id);
       let authors = [];
-      for(let i = 0 ; i<this.paperForm.authors.length; i ++){
+      for (let i = 0; i < this.paperForm.authors.length; i++) {
         authors.push(this.paperForm.authors[i].name);
         authors.push(this.paperForm.authors[i].organization);
         authors.push(this.paperForm.authors[i].region);
         authors.push(this.paperForm.authors[i].email);
       }
-      data.append('authors',authors);
-      
+      data.append("authors", authors);
+
       var config = {
         headers: { "Content-Type": "multipart/form-data" }
       };
@@ -829,107 +869,111 @@ export default {
     },
 
     // 4.1 add author
-    cancelAddAuthor(){
+    cancelAddAuthor() {
       this.$refs["authorForm"].resetFields();
       this.addAuthorVisible = false;
-      this.$refs["paperForm"].validateField('author');
+      this.$refs["paperForm"].validateField("author");
     },
-    addAuthor(){
+    addAuthor() {
       let author = {
-        name:this.authorForm.name,
-        organization:this.authorForm.organization,
-        region:this.authorForm.region,
-        email:this.authorForm.email,
-      }
+        name: this.authorForm.name,
+        organization: this.authorForm.organization,
+        region: this.authorForm.region,
+        email: this.authorForm.email
+      };
       this.paperForm.authors.push(author);
       this.cancelAddAuthor();
     },
-    showAddAuthorForm(){
+    showAddAuthorForm() {
       this.addAuthorVisible = true;
       this.$nextTick(_ => {
         this.$refs.authorName.focus();
       });
     },
-    deleteAuthor(index){
-      this.paperForm.authors.splice(index,1);
-      this.$refs["paperForm"].validateField('author');
+    deleteAuthor(index) {
+      this.paperForm.authors.splice(index, 1);
+      this.$refs["paperForm"].validateField("author");
     },
 
-    // 6. See PC_MEMBER 
-    updateInvitation(){
-      this.$axios.post('/FindInvitationStatus',{
-        conferenceId:this.conference.id
-      })
-      .then(resp => {
-        if(resp.status === 200){
-          this.pcMembers = resp.data;
-        }else{
+    // 6. See PC_MEMBER
+    updateInvitation() {
+      this.$axios
+        .post("/FindInvitationStatus", {
+          conferenceId: this.conference.id
+        })
+        .then(resp => {
+          if (resp.status === 200) {
+            this.pcMembers = resp.data;
+          } else {
+            this.$message.error("Request Error");
+          }
+        })
+        .catch(error => {
           this.$message.error("Request Error");
-        }
-      })
-      .catch(error =>{
-        this.$message.error("Request Error");
-        console.log(error);
-      })
+          console.log(error);
+        });
       this.dialogMemberTableVisible = true;
     },
     // Invitation Status Tag
-    handleType(tag){
-      switch(tag){
-        case 'UNREAD':
-          return 'info';
+    handleType(tag) {
+      switch (tag) {
+        case "UNREAD":
+          return "info";
           break;
-        case 'ACCEPT':
-          return 'success';
+        case "ACCEPT":
+          return "success";
           break;
-        case 'REJECT':
-          return 'danger';
+        case "REJECT":
+          return "danger";
       }
     },
     filterTag(value, row) {
-        return row.password === value;
-      },
-    
+      return row.password === value;
+    },
+
     // 7. Start Review
-    startReview(){
+    startReview() {
       this.seeChooseStrategy = true;
-      if(this.strategy !== ""){
-        this.$axios.post('/OpenReview',{
-          conferenceId : this.conference.id,
-          strategy : Number(this.strategy)
+      if (this.strategy !== "") {
+        this.$axios
+          .post("/OpenReview", {
+            conferenceId: this.conference.id,
+            strategy: Number(this.strategy)
           })
           .then(resp => {
             console.log(resp);
-            if(resp.status === 200 && resp.data.message1 == "open success"){
+            if (resp.status === 200 && resp.data.message1 == "open success") {
               this.$message({
                 dangerouslyUseHTMLString: true,
                 type: "success",
-                message:'<strong style="color:teal">PC members will start to review papers!</strong>',
+                message:
+                  '<strong style="color:teal">PC members will start to review papers!</strong>',
                 center: true
-              })
-            }else{
+              });
+            } else {
               this.$message({
                 dangerouslyUseHTMLString: true,
                 type: "error",
-                message:'<strong style="color:teal">Fail since less than 2 pc members in your conference.</strong>',
+                message:
+                  '<strong style="color:teal">Fail since less than 2 pc members in your conference.</strong>',
                 center: true
-              })
+              });
             }
           })
-          .catch(error=>{
+          .catch(error => {
             console.log(error);
-          })
-      }else{
+          });
+      } else {
         this.$message({
           dangerouslyUseHTMLString: true,
-          type:'warning',
-          message:'<strong style="color:teal">Please choose a strategy!</strong>',
-          center:true
-        })
+          type: "warning",
+          message:
+            '<strong style="color:teal">Please choose a strategy!</strong>',
+          center: true
+        });
       }
       this.strategy = "";
-    },
-    
+    }
   },
 
   created() {
@@ -978,11 +1022,11 @@ export default {
               this.isFINISHED = true;
               break;
           }
-          
-        if(this.authorities.length > 1){
-          this.seeChooseAuthority = true;
-          this.seeChangeAuthority = true;
-        }
+
+          if (this.authorities.length > 1) {
+            this.seeChooseAuthority = true;
+            this.seeChangeAuthority = true;
+          }
         } else {
           this.$message("Request Error");
         }
@@ -991,7 +1035,7 @@ export default {
         console.log(error);
         this.$message("Request Error");
       });
-  },
+  }
 };
 </script>
 
@@ -1018,11 +1062,14 @@ el-form-item {
   margin-bottom: 0;
 }
 .el-tag {
-    margin-right: 5px;
-  }
+  margin-right: 5px;
+}
 .input-new-tag {
   width: 103px;
   margin-right: 5px;
   vertical-align: bottom;
+}
+.checkboxes {
+  margin-right: 0;
 }
 </style>
