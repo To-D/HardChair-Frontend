@@ -141,6 +141,14 @@
                         @click="seeChooseStrategy = true"
                       >Start review</el-button>
                     </div>
+
+                    <div v-if="isSUBMIT_ALLOWED">
+                      <el-button
+                        class="onPageBtn"
+                        type="primary"
+                        
+                      >Announce Results</el-button>
+                    </div>
                   </div>
                 </div>
               </div>
