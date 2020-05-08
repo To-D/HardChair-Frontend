@@ -35,10 +35,7 @@ export default {
       })
       .then(resp=>{
         this.dialogVisible = true;
-        //this.pdfUrl=URL.createObjectURL(new Blob([resp.data],{type:'application/pdf'}));
-         this.pdfUrl = "/static/pdf/web/viewer.html?file="+URL.createObjectURL(new Blob([resp.data],{type:'application/pdf'}));
-        // let url = URL.createObjectURL(new Blob([resp.data],{type:'application/pdf'}));
-        // this.pdfUrl = "/static/pdf/web/viewer.html?file="+url;
+        this.pdfUrl=URL.createObjectURL(new Blob([resp.data],{type:'application/pdf'}));
       })
       .catch(error =>{
         console.log(error);
