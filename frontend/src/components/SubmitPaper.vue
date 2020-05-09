@@ -403,6 +403,7 @@ export default {
             this.files[0].name = this.paperForm.title+".pdf";
             this.conferenceTopics = this.topics[0].topic.split(',');
             this.paperForm.topics =[];
+            this.paperForm.authors.sort(function(a, b){return a.orderOfAuthor - b.orderOfAuthor});
             return;
         }
 
