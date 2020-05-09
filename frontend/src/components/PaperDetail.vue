@@ -147,7 +147,7 @@
           </el-form>
         </div>
       </section>
-      <p v-else>You have reviewd this paper!</p>
+      <p v-else>You have reviewed this paper!</p>
 
       <section v-if = "isAUTHOR">
         <p>Your goal:</p>
