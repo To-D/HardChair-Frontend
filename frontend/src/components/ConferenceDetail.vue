@@ -168,7 +168,7 @@
             </section>
           </el-tab-pane>
 
-          <el-tab-pane v-if="isAUTHOR && !isCHAIR && isSUBMIT_ALLOWED" label="My Papers" name="myPaper">
+          <el-tab-pane v-if=" isAUTHOR " label="My Papers" name="myPaper">
             <section>
               <div class="row">
                 <div class="col-xl-6 col-lg-6">
@@ -216,6 +216,19 @@
                       >></el-pagination>
                     </div>
                   </div>
+                </div>
+              </div>
+            </section>
+          </el-tab-pane>
+
+          <el-tab-pane v-if="isPC_MEMBER" label="Papers to review" name="review">
+            <section>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6">
+                  <h2>
+                    <i class="el-icon-document"></i>Papers to review
+                  </h2>
+                   <showPapers :conferenceId="conference.id"></showPapers>
                 </div>
               </div>
             </section>
@@ -367,10 +380,11 @@ import draggable from "vuedraggable";
 import download from "./DownloadPaper";
 import preview from "./PreviewPaper";
 import contribution from "./SubmitPaper";
+import showPapers from "./ShowReviewPapers";
 
 export default {
   name: "ConferenceDetail",
-  components: { navbar, footerbar, draggable, download, preview,contribution },
+  components: { navbar, footerbar, draggable, download, preview,contribution,showPapers },
   inject: ["reload"],
 
   data() {
