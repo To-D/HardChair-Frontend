@@ -142,8 +142,9 @@
                       >Start review</el-button>
                     </div>
 
-                    <div v-if="isOPEN_REVIEW">
+                    <div>
                       <el-button
+                      v-if="isOPEN_REVIEW"
                         class="onPageBtn"
                         type="primary"
                         @click = "announceResults"
@@ -581,7 +582,7 @@ export default {
       }
     },
 
-    // 6. See PC_MEMBER
+    // 4. See PC_MEMBER
     updateInvitation() {
       this.$axios
         .post("/FindInvitationStatus", {
@@ -617,7 +618,7 @@ export default {
       return row.password === value;
     },
 
-    // 7. Start Review
+    // 5. Start Review
     startReview() {
       this.seeChooseStrategy = true;
       if (this.strategy !== "") {
@@ -661,6 +662,33 @@ export default {
         });
       }
       this.strategy = "";
+    },
+    announceResults(){
+      this.$axios.post('/OpenResult',{
+        conferenceId:this.conference.id
+      })
+      .then(resp=>{
+        if(resp.data.message == "open success"){
+          this.$message({
+            dangerouslyUseHTMLString: true,
+            type: "success",
+            message:
+              '<strong style="color:teal">Open success!</strong>',
+            center: true
+          });
+        }else{
+          this.$message({
+            dangerouslyUseHTMLString: true,
+            type: "error",
+            message:
+              '<strong style="color:teal">There are papers waiting to review now!</strong>',
+            center: true
+          });
+        }
+      })
+      .catch(error=>{
+        console.log(error);
+      })
     }
   },
   computed:{
