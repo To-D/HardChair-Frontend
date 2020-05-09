@@ -173,7 +173,7 @@ export default {
     return {
       // Authorities
       isAUTHOR:false,
-      isPC_MEMBER:true,
+      isPC_MEMBER:false,
 
       // paper
       paper:{},
@@ -247,7 +247,11 @@ export default {
             break;
           case 'PC_MEMBER':
             this.isPC_MEMBER = true;
-            break;            
+            break;
+          case 'A&P':
+            this.isAUTHOR = true;
+            this.isPC_MEMBER = true;
+            break;
         }
       }else{
         this.$router.go(-1);

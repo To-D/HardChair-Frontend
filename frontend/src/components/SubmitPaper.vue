@@ -167,7 +167,7 @@ export default {
   inject: ["reload"],
   data(){
       return{
-        file:{},
+        file:null,
         conferenceTopics:"",
         // Upload form
         paperForm: {
@@ -327,7 +327,6 @@ export default {
             data.append("title", paperTmp.title);
             data.append("summary", paperTmp.summary);
             data.append("topic", paperTmp.topics);
-            console.log(paperTmp.topics);
             data.append("conferenceId",this.conferenceId);
             var authors = [];
             var len = paperTmp.authors.length;
@@ -340,16 +339,12 @@ export default {
             }
             data.append("authors", authors);
             data.append("file", this.file);
+            data.append("paperId", paperTmp.id);
 
-            console.log(this.file);
-            console.log(typeof this.file);
-            console.log(this.file.hasOwnProperty("name"));
-            if( this.isEdit && this.file.name){// File was changed
+            if( this.isEdit && this.file !== undefined){// File was changed
                 data.append("reviseFile","reviseFile");
-                console.log("File was changed");
             }else{// Not edit or file not change
                 data.append("reviseFile","");
-                console.log("Not edit or file not change");
             }
 
             var config = {
@@ -396,10 +391,8 @@ export default {
       }
     },
     created(){
-        console.log("submitPaper");
         // Edit
         if(this.paper !== undefined){
-            console.log("Edit");
             this.paperForm = this.paper;
             this.isEdit = true;
             this.files[0].name = this.paperForm.title+".pdf";
@@ -409,7 +402,6 @@ export default {
         }
 
         // First upload
-        console.log("First upload");
         this.conferenceTopics = this.topics.split(',');
         this.files=[];
     }
