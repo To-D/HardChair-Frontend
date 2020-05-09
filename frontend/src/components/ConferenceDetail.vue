@@ -93,7 +93,7 @@
                       <span class="itemlabel">
                         <i class="el-icon-s-flag"></i> Status:
                       </span>
-                      {{parseStatus(conference.status)}}
+                      {{status}}
                     </div>
                   </div>
                 </div>
@@ -458,27 +458,6 @@ export default {
     };
   },
   methods: {
-    // Show information
-    parseStatus(status) {
-      switch (status) {
-        case "CHECKED":
-          return "Approved by admin";
-          break;
-        case "SUBMIT_ALLOWED":
-          return "Accepting papers";
-          break;
-        case "UNCHECKED":
-          return "Waiting for verification";
-          break;
-        case "OPEN_REVIEW":
-          return "Papers are being reviewed"
-          break;
-        default:
-          return "Currently unknown";
-          break;
-      }
-    },
-
     // 1. Change visitor authority
     changeAuthority(val) {
       switch (val) {
@@ -492,7 +471,7 @@ export default {
           this.isPC_MEMBER = true;
           this.isCHAIR = false;
           this.isAUTHOR = false;
-          this.activeName="info";
+          this.activeName="review";
           break;
         case "AUTHOR":
           this.isAUTHOR = true;
@@ -514,6 +493,7 @@ export default {
           if (resp.status === 200) {
             this.isCHECKED = false;
             this.isSUBMIT_ALLOWED = true;
+            this.conference.status = "SUBMIT_ALLOWED";
             this.$message({
               dangerouslyUseHTMLString: true,
               type: "success",
@@ -648,14 +628,16 @@ export default {
           })
           .then(resp => {
             if (resp.status === 200 && resp.data.message1 == "open success") {
+              this.isSUBMIT_ALLOWED = false;
+              this.isOPEN_REVIEW = true;
+              this.conference.status = "OPEN_REVIEW";
               this.$message({
                 dangerouslyUseHTMLString: true,
                 type: "success",
                 message:
                   '<strong style="color:teal">PC members will start to review papers!</strong>',
                 center: true
-              });
-              this.isOPEN_REVIEW = true;
+              });              
             } else {
               this.$message({
                 dangerouslyUseHTMLString: true,
@@ -681,7 +663,27 @@ export default {
       this.strategy = "";
     }
   },
-
+  computed:{
+    status(){
+      switch (this.conference.status) {
+        case "CHECKED":
+          return "Approved by admin";
+          break;
+        case "SUBMIT_ALLOWED":
+          return "Accepting papers";
+          break;
+        case "UNCHECKED":
+          return "Waiting for verification";
+          break;
+        case "OPEN_REVIEW":
+          return "Papers are being reviewed"
+          break;
+        default:
+          return "Currently unknown";
+          break;
+      }
+    }
+  },
   created() {
     //获取会议信息
     this.$axios

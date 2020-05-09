@@ -68,7 +68,6 @@ export default {
           conferenceId:this.conferenceId,
       })
       .then(resp=>{
-          console.log(resp);
           this.papers = resp.data;
       })
       .catch(error=>{
