@@ -101,16 +101,16 @@
             </section>
           </el-tab-pane>
 
-          <el-tab-pane v-if="!isADMIN && isCHAIR" label="Conference Operations">
+          <el-tab-pane v-if="isCHAIR" label="Conference Operations">
             <section>
               <div class="row">
                 <div class="col-xl-8 col-lg-8">
-                  <h2 v-if="isCHECKED || isSUBMIT_ALLOWED || isFINISHED">
+                  <h2>
                     <i class="el-icon-magic-stick"></i> Conference Operations
                   </h2>
 
                   <div class="row">
-                    <div v-if="isCHECKED ">
+                    <div v-if="isCHECKED">
                       <el-button
                         class="onPageBtn"
                         type="primary"
@@ -118,7 +118,7 @@
                       >Start accepting papers</el-button>
                     </div>
 
-                    <div v-if="isCHECKED || isSUBMIT_ALLOWED|| isFINISHED">
+                    <div v-if="isCHECKED || isSUBMIT_ALLOWED ">
                       <el-button
                         class="onPageBtn"
                         type="primary"
@@ -146,7 +146,7 @@
                       <el-button
                         class="onPageBtn"
                         type="primary"
-                        
+                        @click = "announceResults"
                       >Announce Results</el-button>
                     </div>
                   </div>
@@ -382,6 +382,7 @@ export default {
       isCHECKED: false,
       isSUBMIT_ALLOWED: false,
       isFINISHED: false,
+      isOPEN_REVIEW:false,
 
       // Visitor authority
       isADMIN: false,
@@ -625,7 +626,6 @@ export default {
             strategy: Number(this.strategy)
           })
           .then(resp => {
-            console.log(resp);
             if (resp.status === 200 && resp.data.message1 == "open success") {
               this.$message({
                 dangerouslyUseHTMLString: true,
@@ -634,6 +634,7 @@ export default {
                   '<strong style="color:teal">PC members will start to review papers!</strong>',
                 center: true
               });
+              this.isOPEN_REVIEW = true;
             } else {
               this.$message({
                 dangerouslyUseHTMLString: true,
@@ -704,6 +705,9 @@ export default {
               break;
             case "FINISHED":
               this.isFINISHED = true;
+              break;
+            case "OPEN_REVIEW":
+              this.isOPEN_REVIEW = true;
               break;
           }
 

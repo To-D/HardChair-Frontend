@@ -341,7 +341,7 @@ export default {
             data.append("file", this.file);
             data.append("paperId", paperTmp.id);
 
-            if( this.isEdit && this.file !== undefined){// File was changed
+            if( this.isEdit && this.file !== null){// File was changed
                 data.append("reviseFile","reviseFile");
             }else{// Not edit or file not change
                 data.append("reviseFile","");
