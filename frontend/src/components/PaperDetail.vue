@@ -151,6 +151,8 @@
       <section v-if = "isAUTHOR">
         <p>Your goal:</p>
       </section>
+
+      <contribution v-if="paper.conferenceId" :paper="paper" :topics="paper.nTopics" :conferenceId="paper.conferenceId" ></contribution>
     </div>
 
     <footerbar></footerbar>
@@ -162,10 +164,11 @@ import navbar from "./Nav";
 import footerbar from "./Footer";
 import download from "./DownloadPaper";
 import preview from "./PreviewPaper"
+import contribution from "./SubmitPaper"
 
 export default {
   name: "PaperDetail",
-  components: { navbar, footerbar,download,preview },
+  components: { navbar, footerbar,download,preview,contribution },
   data() {
     return {
       // Authorities
@@ -237,6 +240,7 @@ export default {
     .then(resp=>{
       if(resp.status === 200 && !resp.data.hasOwnProperty("message")){
         this.paper = resp.data;
+        console.log(resp.data);
         switch(this.paper.url){
           case 'AUTHOR':
             this.isAUTHOR = true;
