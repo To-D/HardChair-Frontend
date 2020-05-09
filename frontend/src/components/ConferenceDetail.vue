@@ -126,7 +126,7 @@
                       >Invite PC member</el-button>
                     </div>
 
-                    <div v-if="isCHECKED || isSUBMIT_ALLOWED ||isOPEN_REVIEW || isFINISHED">
+                    <div v-if="isCHECKED || isSUBMIT_ALLOWED ||isOPEN_REVIEW || isOPEN_RESULT || isFINISHED">
                       <el-button
                         class="onPageBtn"
                         type="primary"
@@ -767,6 +767,9 @@ export default {
               break;
             case "OPEN_REVIEW":
               this.isOPEN_REVIEW = true;
+              break;
+            case "OPEN_RESULT":
+              this.isOPEN_RESULT = true;
               break;
           }
 
