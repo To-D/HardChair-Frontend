@@ -21,8 +21,8 @@
 
     <div class="contentContainer">
       <div class="container">
-        <el-tabs>
-          <el-tab-pane label="Conference Info">
+        <el-tabs v-model="activeName">
+          <el-tab-pane label="Conference Info" name="info">
             <section>
               <div class="row">
                 <div class="col-xl-8 col-lg-8">
@@ -101,7 +101,7 @@
             </section>
           </el-tab-pane>
 
-          <el-tab-pane v-if="isCHAIR" label="Conference Operations">
+          <el-tab-pane v-if="isCHAIR" label="Conference Operations" name="operation">
             <section>
               <div class="row">
                 <div class="col-xl-8 col-lg-8">
@@ -126,7 +126,7 @@
                       >Invite PC member</el-button>
                     </div>
 
-                    <div v-if="isCHECKED || isSUBMIT_ALLOWED || isFINISHED">
+                    <div v-if="isCHECKED || isSUBMIT_ALLOWED ||isOPEN_REVIEW || isFINISHED">
                       <el-button
                         class="onPageBtn"
                         type="primary"
@@ -142,7 +142,7 @@
                       >Start review</el-button>
                     </div>
 
-                    <div v-if="isSUBMIT_ALLOWED">
+                    <div v-if="isOPEN_REVIEW">
                       <el-button
                         class="onPageBtn"
                         type="primary"
@@ -155,7 +155,7 @@
             </section>
           </el-tab-pane>
 
-          <el-tab-pane v-if="!isCHAIR && isSUBMIT_ALLOWED" label="Paper Submission">
+          <el-tab-pane v-if="!isCHAIR && isSUBMIT_ALLOWED && !forbidContribute" label="Paper Submission" name="contribution">
             <section>
               <div class="row">
                 <div class="col-xl-6 col-lg-6">
@@ -168,7 +168,7 @@
             </section>
           </el-tab-pane>
 
-          <el-tab-pane v-if="isAUTHOR&& !isCHAIR && isSUBMIT_ALLOWED" label="My Papers">
+          <el-tab-pane v-if="isAUTHOR && !isCHAIR && isSUBMIT_ALLOWED" label="My Papers" name="myPaper">
             <section>
               <div class="row">
                 <div class="col-xl-6 col-lg-6">
@@ -263,8 +263,8 @@
         </el-form-item>
       </el-form>
 
-      <!-- display table -->
-      <el-table
+      <!-- display search result -->
+    <el-table
         @selection-change="handleSelectionChange"
         :data="users"
         style="width: 100%"
@@ -276,7 +276,7 @@
         <el-table-column prop="region" label="Region" width="150"></el-table-column>
         <el-table-column prop="organization" label="Organization" width="150"></el-table-column>
       </el-table>
-    </el-dialog>
+  </el-dialog>
 
     <!-- Look for current pc_members -->
     <el-dialog title="See current PC member" :visible.sync="dialogMemberTableVisible">
@@ -355,6 +355,7 @@
         </span>
       </el-dialog>
     </div>
+
     <footerbar></footerbar>
   </div>
 </template>
@@ -389,6 +390,7 @@ export default {
       isCHAIR: false,
       isPC_MEMBER: false,
       isAUTHOR: false,
+      forbidContribute:false,
 
       // Choose Authority
       hasChosen: true,
@@ -408,10 +410,12 @@ export default {
       seeChooseStrategy: false,
       strategy: "",
 
+      // tab page
+      activeName:"info",
+
       loading:false,
 
-      /** Form data **/
-      // 1. Search & invite form
+      // Search & invite form
       dialogFormVisible: false,
       inviteForm: {
         fullName: ""
@@ -468,16 +472,19 @@ export default {
           this.isCHAIR = true;
           this.isPC_MEMBER = false;
           this.isAUTHOR = false;
+          this.activeName="operation";
           break;
         case "PC_MEMBER":
           this.isPC_MEMBER = true;
           this.isCHAIR = false;
           this.isAUTHOR = false;
+          this.activeName="info";
           break;
         case "AUTHOR":
           this.isAUTHOR = true;
           this.isCHAIR = false;
           this.isPC_MEMBER = false;
+          this.activeName="myPaper";
           break;
       }
       this.hasChosen = false;
@@ -684,6 +691,7 @@ export default {
               switch (this.authorities[i].authority) {
                 case "CHAIR":
                   this.isCHAIR = true;
+                  this.forbidContribute = true;
                   break;
                 case "PC_MEMBER":
                   this.isPC_MEMBER = true;
