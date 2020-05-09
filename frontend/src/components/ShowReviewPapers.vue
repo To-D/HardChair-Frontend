@@ -32,7 +32,7 @@
       <!-- paper operation -->
       <preview :id="paper.id">Preview</preview>
       <download :id="paper.id" :title="paper.title"></download>
-      <el-button @click="$router.push({path:'/paper/edit/'+paper.id}) ">Edit</el-button>
+      <el-button @click="$router.push({path:'/paper/'+paper.id}) ">Edit</el-button>
     </el-card>
     <div class="row">
       <div class="col-xl-6 col-lg-12">

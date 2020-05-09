@@ -87,7 +87,7 @@ export const router = new Router({
             }
         },
         {
-            path: '/paper/:operation/:paperID',
+            path: '/paper/:paperID',
             name: 'PaperDetail',
             component: PaperDetail,
             meta: {
