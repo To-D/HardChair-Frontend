@@ -399,6 +399,7 @@ export default {
       isSUBMIT_ALLOWED: false,
       isFINISHED: false,
       isOPEN_REVIEW:false,
+      isOPEN_RESULT:false,
 
       // Visitor authority
       isADMIN: false,
@@ -638,7 +639,8 @@ export default {
                 message:
                   '<strong style="color:teal">PC members will start to review papers!</strong>',
                 center: true
-              });              
+              });
+            this.seeChooseStrategy = false;
             } else {
               this.$message({
                 dangerouslyUseHTMLString: true,
@@ -669,6 +671,8 @@ export default {
       })
       .then(resp=>{
         if(resp.data.message == "open success"){
+          this.isOPEN_REVIEW = false;
+          this.isOPEN_RESULT = true;
           this.$message({
             dangerouslyUseHTMLString: true,
             type: "success",
@@ -705,6 +709,9 @@ export default {
           break;
         case "OPEN_REVIEW":
           return "Papers are being reviewed"
+          break;
+        case "OPEN_RESULT":
+          return "Result has been announced"
           break;
         default:
           return "Currently unknown";

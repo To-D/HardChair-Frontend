@@ -85,7 +85,7 @@
         </div>
       </section>
 
-      <section v-if="isPC_MEMBER">
+      <section v-if="isPC_MEMBER && paper.status == -1">
         <div class="col-xl-6 col-lg-6" >
           <h2>
             <i class="el-icon-upload2"></i> Paper Review
@@ -147,12 +147,45 @@
           </el-form>
         </div>
       </section>
+      <p v-else>You have reviewd this paper!</p>
 
       <section v-if = "isAUTHOR">
         <p>Your goal:</p>
+        <div v-if="paper.reviewResults.length == 0">
+          <el-card shadow="hover">Result hasn't been announced!</el-card>
+        </div>
+        <el-card
+          v-else
+          shadow="hover"
+          class="box-card"
+          style="margin-top: 1em;"
+          v-for="(result,index) in paper.reviewResults"
+          :key="index"
+        >
+          <p>
+            <span class="itemlabel">
+              <i class="el-icon-s-opportunity"></i> Comment:
+            </span>
+            {{result.comment}}
+          </p>
+          <p>
+            <span class="itemlabel">
+              <i class="el-icon-s-fold"></i> Confidence:
+            </span>
+            {{result.confidence}}
+          </p>
+          <p>
+            <span class="itemlabel">
+              <i class="el-icon-date"></i> Score：
+            </span>
+            {{result.score}}
+          </p>
+        </el-card>
       </section>
-
-      <contribution v-if="paper.conferenceId" :paper="paper" :topics="paper.nTopics" :conferenceId="paper.conferenceId" ></contribution>
+      <section v-if = "isAUTHOR">
+        <contribution v-if="paper.conferenceId" :paper="paper" :topics="paper.nTopics" :conferenceId="paper.conferenceId" ></contribution>
+      </section>
+      
     </div>
 
     <footerbar></footerbar>
@@ -164,11 +197,14 @@ import navbar from "./Nav";
 import footerbar from "./Footer";
 import download from "./DownloadPaper";
 import preview from "./PreviewPaper"
-import contribution from "./SubmitPaper"
+import contribution from "./SubmitPaper";
+
 
 export default {
   name: "PaperDetail",
   components: { navbar, footerbar,download,preview,contribution },
+  inject: ["reload"],
+  
   data() {
     return {
       // Authorities
@@ -220,6 +256,7 @@ export default {
               message:'<strong style="color:teal">Submit success!</strong>',
               center: true
             });
+          this.reload();
         }
       })
       .catch(error=>{
