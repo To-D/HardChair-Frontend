@@ -134,7 +134,7 @@
     :close-on-click-modal="false"
     :close-on-press-escape="false"
   >
-    <el-form :model="authorForm" status-icon :rules="authorRules" ref="authorForm">
+    <el-form :model="authorForm" status-icon :rules="authorRules" ref="authorForm" @keyup.enter.native="enterAdd()">
       <el-form-item label="Name" prop="name">
         <el-input v-model="authorForm.name" autocomplete="off" ref="authorName"></el-input>
       </el-form-item>
@@ -256,6 +256,11 @@ export default {
       }
   },
   methods:{
+      enterAdd(){
+          if(!this.addButtonDisable){
+              this.addAuthor();
+          }
+      },
       showAddAuthorForm(){
         this.addAuthorVisible = true;
         this.$nextTick(_ => {
