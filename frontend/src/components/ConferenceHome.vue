@@ -9,16 +9,15 @@
             <h1 class="display-4">Conference Home</h1>
             <p class="lead mb-0">Check out ongoing conferences here.</p>
             <br/>
-            <!--
-            <el-select v-model="status" placeholder="Filter status">
+            <el-select v-model="value" placeholder="Filter status" @change="statusFilter">
               <el-option
-                v-for="statu in options"
+                v-for="item in options"
                 :key="item.value"
                 :label="item.label"
-                :value="item.value">
+                :value="item.value"
+                >
               </el-option>
             </el-select>
-            -->
           </div>
         </div>
       </div>
@@ -29,7 +28,7 @@
         <div class="row">
           <div class="col-xl-8 col-lg-12">
             <div class="text item">
-              <div v-if = "noMeeting"><el-card shadow="hover">No conference now!</el-card></div>
+              <div v-if = "conferences.length == 0"><el-card shadow="hover">No conference now!</el-card></div>
               <el-card v-else
                 shadow="hover"
                 class="box-card"
@@ -93,15 +92,61 @@ export default {
   data() {
     return{
       conferences:[],
+      all:[],
+      checked:[],
+      submitAllowed:[],
+      openReview:[],
+      openResult:[],
       pageSize:6,
       currentPage:1,
-      noMeeting: false
+      noMeeting: false,
+
+      options: [{
+        value:'ALL',
+        label: 'All conferences'
+      },{
+        value: 'CHECKED',
+        label: 'Approved by admin'
+      }, {
+        value: 'SUBMIT_ALLOWED',
+        label: 'Accepting papers'
+      }, {
+        value: 'OPEN_REVIEW',
+        label: 'Papers reviewed'
+      }, {
+        value: 'OPEN_RESULT',
+        label: 'Result announced'
+      }],
+      value: 'ALL'
+
     }
   },
   methods: {
     pageChange(){
       this.currentPage = currentPage
     },
+    statusFilter(value){
+      switch(value){
+        case "ALL":
+          this.conferences = this.all;
+          break;
+        case "CHECKED":
+          this.conferences = this.checked;
+          break;
+        case "SUBMIT_ALLOWED":
+          this.conferences = this.submitAllowed;
+          break;
+        case "OPEN_REVIEW":
+          this.conferences = this.openReview;
+          break;
+        case "OPEN_RESULT":
+          this.conferences = this.openResult;
+          break;
+        default:
+          this.conferences = this.all;
+          break;
+      }
+    }
   },
   created(){
     // 获取会议列表
@@ -109,11 +154,15 @@ export default {
     .get('/ShowConferences',{})
     .then(resp => {
       if (resp.status === 200) {
-        // [Waiting to polish] add a filter to choose di
-        this.conferences.push.apply(this.conferences,resp.data.CHECKED);
-        this.conferences.push.apply(this.conferences,resp.data.SUBMIT_ALLOWED);
-        this.conferences.push.apply(this.conferences,resp.data.OPEN_REVIEW);
-        this.conferences.push.apply(this.conferences,resp.data.OPEN_RESULT);
+        this.checked = resp.data.CHECKED;
+        this.submitAllowed = resp.data.SUBMIT_ALLOWED;
+        this.openReview = resp.data.OPEN_REVIEW;
+        this.openResult = resp.data.OPEN_RESULT;
+        this.all.push.apply(this.all,resp.data.CHECKED);
+        this.all.push.apply(this.all,resp.data.SUBMIT_ALLOWED);
+        this.all.push.apply(this.all,resp.data.OPEN_REVIEW);
+        this.all.push.apply(this.all,resp.data.OPEN_RESULT);
+        this.conferences = this.all;
       } else {
         this.$message.error("Request Error.")
       }

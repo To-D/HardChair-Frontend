@@ -19,7 +19,7 @@ export default {
                 return "Waiting for verification";
                 break;
               case "OPEN_REVIEW":
-                return "Papers are being reviewed"
+                return "Papers being reviewed"
                 break;
               case "OPEN_RESULT":
                 return "Result has been announced"
