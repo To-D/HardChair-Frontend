@@ -79,21 +79,7 @@
                   id="location"
                   placeholder="Enter the location of the conference"
                 ></el-input>
-              </el-form-item>
-
-              <!-- start & end time -->
-              <el-form-item prop="time" label="Start and end dates">
-                <el-date-picker
-                  :clearable="false"
-                  :picker-options="dateRangePickerOptions"
-                  v-model="applicationForm.time"
-                  type="daterange"
-                  range-separator="to"
-                  start-placeholder="Start date"
-                  end-placeholder="End date"
-                  style="width:100%"
-                ></el-date-picker>
-              </el-form-item>
+              </el-form-item>              
 
               <!-- deadline -->
               <el-form-item prop="deadline" label="Submission deadline">
@@ -116,6 +102,20 @@
                   type="date"
                   placeholder="Pick result announcement date"
                   style="width: 100%"
+                ></el-date-picker>
+              </el-form-item>
+
+              <!-- start & end time -->
+              <el-form-item prop="time" label="Start and end dates">
+                <el-date-picker
+                  :clearable="false"
+                  :picker-options="dateRangePickerOptions"
+                  v-model="applicationForm.time"
+                  type="daterange"
+                  range-separator="to"
+                  start-placeholder="Start date"
+                  end-placeholder="End date"
+                  style="width:100%"
                 ></el-date-picker>
               </el-form-item>
 
