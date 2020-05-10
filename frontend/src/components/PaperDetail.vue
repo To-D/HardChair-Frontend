@@ -353,7 +353,7 @@ export default {
 
 <style scoped>
 section {
-  padding: 2em;
+  padding: 0.5em;
 }
 .itemlabel,
 h2 {

@@ -204,7 +204,7 @@
                     <!-- paper operation -->
                     <preview :id="paper.id">Preview</preview>
                     <download :id="paper.id" :title="paper.title"></download>
-                    <el-button @click="$router.push({path:'/paper/'+paper.id}) ">Edit</el-button>
+                    <el-button type="primary" @click="$router.push({path:'/paper/'+paper.id}) ">Edit</el-button>
                   </el-card>
                   <div class="row">
                     <div class="col-xl-6 col-lg-12">
@@ -229,7 +229,7 @@
                   <h2>
                     <i class="el-icon-document"></i> Papers to review
                   </h2>
-                   <showPapers :conferenceId="conference.id"></showPapers>
+                  <showPapers :conferenceId="conference.id"></showPapers>
                 </div>
               </div>
             </section>
