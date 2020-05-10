@@ -630,26 +630,41 @@ export default {
             strategy: Number(this.strategy)
           })
           .then(resp => {
-            if (resp.status === 200 && resp.data.message1 == "open success") {
-              this.isSUBMIT_ALLOWED = false;
-              this.isOPEN_REVIEW = true;
-              this.conference.status = "OPEN_REVIEW";
-              this.$message({
-                dangerouslyUseHTMLString: true,
-                type: "success",
-                message:
-                  '<strong style="color:teal">PC members will start to review papers!</strong>',
-                center: true
-              });
-            this.seeChooseStrategy = false;
-            } else {
-              this.$message({
-                dangerouslyUseHTMLString: true,
-                type: "error",
-                message:
-                  '<strong style="color:teal">Fail since less than 2 pc members in your conference.</strong>',
-                center: true
-              });
+            if (resp.status === 200 ) {
+              console.log(resp.data);
+              switch(resp.data.message1){
+                case "open success":
+                  this.isSUBMIT_ALLOWED = false;
+                  this.isOPEN_REVIEW = true;
+                  this.conference.status = "OPEN_REVIEW";
+                  this.$message({
+                    dangerouslyUseHTMLString: true,
+                    type: "success",
+                    message:
+                      '<strong style="color:teal">PC members will start to review papers!</strong>',
+                    center: true
+                  });
+                  this.seeChooseStrategy = false;
+                  break;
+                case "open fail: at least 1 paper is expected":
+                  this.$message({
+                    dangerouslyUseHTMLString: true,
+                    type: "error",
+                    message:
+                      '<strong style="color:teal">Fail since no paper contributed to the conference.</strong>',
+                    center: true
+                  });
+                  break;
+                case "open fail: number of PC MEMBER should more than 2":
+                  this.$message({
+                    dangerouslyUseHTMLString: true,
+                    type: "error",
+                    message:
+                      '<strong style="color:teal">Fail since less than 2 pc members in the conference.</strong>',
+                    center: true
+                  });
+                  break;
+              }
             }
           })
           .catch(error => {
@@ -719,7 +734,6 @@ export default {
                 case "CHAIR":
                   this.isCHAIR = true;
                   this.forbidContribute = true;
-                  console.log('??');
                   break;
                 case "PC_MEMBER":
                   this.isPC_MEMBER = true;
