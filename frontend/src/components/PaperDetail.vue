@@ -95,9 +95,11 @@
                   <h2>
                     <i class="el-icon-upload2"></i> Paper Review
                   </h2>
+                  
+                  <el-card v-if="paper.status == -1" shadow="hover">You have reviewed this paper!</el-card>
 
                   <el-form
-                    v-if="paper.status == -1"
+                    v-else
                     @submit.native.prevent
                     status-icon
                     :model="reviewForm"
@@ -147,12 +149,12 @@
                         native-type="submit"
                         type="primary"
                         v-on:click="Submit('reviewForm')"
-                        :disabled="reviewDisiabled"
+                        :disabled="reviewDisabled"
                       >Submit Review Results</el-button>
                     </el-form-item>
                   </el-form>
 
-                  <el-card v-else shadow="hover">You have reviewed this paper!</el-card>
+                  
                 </div>
               </div>
             </section>
@@ -305,7 +307,7 @@ export default {
     }
   },
   computed: {
-    reviewDisiabled() {
+    reviewDisabled() {
       let tmp = this.reviewForm;
       return !tmp.score || tmp.comment == "" || tmp.confidence == "";
     }
