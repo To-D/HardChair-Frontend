@@ -170,7 +170,12 @@ export default {
         file:null,
         conferenceTopics:"",
         // Upload form
-        paperForm: {},
+        paperForm: {
+          title:"",
+          summary:"",
+          topics:[],
+          authors:[]
+        },
         rules:{
             title: [
                 {
@@ -396,13 +401,15 @@ export default {
             this.paperForm = this.paper;
             this.isEdit = true;
             this.files[0].name = this.paperForm.title+".pdf";
-            this.conferenceTopics = this.topics[0].topic.split(',');
+            this.conferenceTopics = this.topics[0].topic.split(',');            
             this.paperForm.authors.sort(function(a, b){return a.orderOfAuthor - b.orderOfAuthor});
             return;
         }
 
         // First upload
-        this.conferenceTopics = this.topics.split(',');
+        console.log(this.topics);
+        this.conferenceTopics = this.topics.split(',');        
+        console.log(this.paperForm);
         this.files=[];
     }
 };

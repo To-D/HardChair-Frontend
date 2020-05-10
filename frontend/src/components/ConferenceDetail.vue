@@ -156,14 +156,14 @@
             </section>
           </el-tab-pane>
 
-          <el-tab-pane v-if="!isCHAIR && isSUBMIT_ALLOWED && !forbidContribute" label="Paper Submission" name="contribution">
+          <el-tab-pane v-if="!isCHAIR && !isADMIN && isSUBMIT_ALLOWED && !forbidContribute" label="Paper Submission" name="contribution">
             <section>
               <div class="row">
                 <div class="col-xl-6 col-lg-6">
                   <h2>
                     <i class="el-icon-upload2"></i> Paper Submission
                   </h2>                  
-                  <contribution :conferenceId="conference.id" :topics="conference.topics"></contribution>
+                  <contribution v-if="this.conference.id" :conferenceId="conference.id" :topics="conference.topics"></contribution>
                 </div>
               </div>
             </section>
@@ -707,19 +707,19 @@ export default {
           this.papers = resp.data.papers;
           this.authorities = resp.data.authorities;
           this.conference = resp.data.conference;
-
           // Authority
           //Don't display function part for ADMIN
           if (this.$store.state.userType == "ADMIN") {
             this.isADMIN = true;
           } else {
             // Normal user
-            let len = this.authorities.length;
+            let len = this.authorities.length;            
             for (let i = 0; i < len; i++) {
               switch (this.authorities[i].authority) {
                 case "CHAIR":
                   this.isCHAIR = true;
                   this.forbidContribute = true;
+                  console.log('??');
                   break;
                 case "PC_MEMBER":
                   this.isPC_MEMBER = true;

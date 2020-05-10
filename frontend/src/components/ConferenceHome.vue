@@ -99,7 +99,7 @@ export default {
       openResult:[],
       pageSize:6,
       currentPage:1,
-      noMeeting: false,
+      
 
       options: [{
         value:'ALL',
@@ -158,10 +158,10 @@ export default {
         this.submitAllowed = resp.data.SUBMIT_ALLOWED;
         this.openReview = resp.data.OPEN_REVIEW;
         this.openResult = resp.data.OPEN_RESULT;
-        this.all.push.apply(this.all,resp.data.CHECKED);
-        this.all.push.apply(this.all,resp.data.SUBMIT_ALLOWED);
-        this.all.push.apply(this.all,resp.data.OPEN_REVIEW);
-        this.all.push.apply(this.all,resp.data.OPEN_RESULT);
+        this.all.push.apply(this.all,this.checked);
+        this.all.push.apply(this.all,this.submitAllowed);
+        this.all.push.apply(this.all,this.openReview);
+        this.all.push.apply(this.all,this.openResult);
         this.conferences = this.all;
       } else {
         this.$message.error("Request Error.")
