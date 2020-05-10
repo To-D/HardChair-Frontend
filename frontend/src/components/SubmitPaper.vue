@@ -60,7 +60,7 @@
       >
         <div slot="header" class="clearfix">
           <span
-            style="font-weight: bold"
+            style="font-weight: bold; line-height: unset"
           >{{ (index+1) + (['st', 'nd', 'rd'][(index+1) &lt; 20 ? index : (index+1) % 10 - 1] || 'th')}} Author
           </span>
           <el-button
@@ -113,7 +113,7 @@
     >
       <i class="el-icon-upload"></i>
       <div class="el-upload__text">
-        Drag file here to upload，or
+        Drag file here to upload, or
         <em>click here</em>
       </div>
       <div class="el-upload__tip" slot="tip">Please upload one PDF file only.</div>
@@ -414,3 +414,38 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+.contentContainer {
+  padding: 2em;
+}
+section {
+  padding: 0.5em;
+}
+.itemlabel,
+h2 {
+  color: #3755be;
+  font-weight: bold;
+}
+.infoitem {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.onPageBtn {
+  margin-left: 12px;
+}
+el-form-item {
+  margin-bottom: 0;
+}
+.el-tag {
+  margin-right: 5px;
+}
+.input-new-tag {
+  width: 103px;
+  margin-right: 5px;
+  vertical-align: bottom;
+}
+.checkboxes {
+  margin-right: 0;
+}
+</style>
