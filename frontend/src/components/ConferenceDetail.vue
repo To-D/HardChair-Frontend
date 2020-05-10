@@ -213,12 +213,14 @@
                     </p>
                     <!-- paper operation -->
                     <div class="row">
-                      <preview :id="paper.id">Preview</preview>
-                      <download :id="paper.id" :title="paper.title"></download>
-                      <el-button
-                        type="primary"
-                        @click="$router.push({path:'/paper/'+paper.id}) "
-                      >Edit</el-button>
+                      <preview class="onPageBtn" :id="paper.id">Preview</preview>
+                      <download class="onPageBtn" :id="paper.id" :title="paper.title"></download>
+                      <div class="onPageBtn">
+                        <el-button
+                          type="primary"
+                          @click="$router.push({path:'/paper/'+paper.id}) "
+                        >Edit</el-button>
+                      </div>
                     </div>
                   </el-card>
                   <div class="row">
