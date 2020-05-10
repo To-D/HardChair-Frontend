@@ -87,51 +87,29 @@
   export default {
     name: "Login",
     data() {
-      const validateUsername=(rule,value,callback)=>{
-        this.isUsernameValid = false;
-        if (value === ''||!value) {
-          callback(new Error('Username is required'));
-        } else {
-          let pattern = /^[a-zA-Z-][a-zA-Z0-9-_]{4,31}$/;
-          if (!pattern.test(value )) {
-            callback(new Error('Invalid username '));
-          }else {
-            this.isUsernameValid = true;
-          }
-        }
-        callback();
-        this.changeDisabled();
-      }
-
-      const validatePassword=(rule,value,callback)=>{
-        this.isPasswordValid = false;
-        if (value === ''|| !value) {
-          callback(new Error('Password is required'));
-        } else if(value.length < 6 || value.length > 32){
-          callback(new Error('Password must be between 6 and 32 characters'));
-        } else {
-          this.isPasswordValid = true;
-        }
-        callback();
-        this.changeDisabled();
-      }
-
       return {
-        isDisabled:true,
-        isUsernameValid:false,
-        isPasswordValid:false,
         loginForm: {
           username: "",
           password: ""
         },
         rules: {
-          username: [{validator:validateUsername, trigger:"change"}],
-          password: [{validator:validatePassword, trigger:"change"}]
+          username: [
+            {required:true,message:"Username is required",blur:"change"},
+            {pattern:/^[a-zA-Z-][a-zA-Z0-9-_]{4,31}$/,message:"Invalid username",blur:"change"}
+          ],
+          password: [
+            {required:true, message:"Password is required", blur:"change"},
+            {pattern:/^[\w-]{6,32}$/, message:"Invalid password",blur:"change"},
+          ]
         },
         loading: false,
       };
     },
-
+    computed:{
+      isDisabled(){
+        return !(/^[a-zA-Z-][a-zA-Z0-9-_]{4,31}$/.test(this.loginForm.username) && /^[\w-]{6,32}$/.test(this.loginForm.password));
+      }
+    },
     methods: {
       login() {
         // Turn to loading mode when the form is submitted,and come back when getting response
@@ -145,9 +123,13 @@
             if (resp.status === 200 && resp.data.hasOwnProperty("token")) {
               //Save token
               this.$store.commit("login", resp.data);
-              this.successNotification();
-              this.$router.replace({ path: "/" });
-            
+              this.$message({
+                dangerouslyUseHTMLString: true,
+                type:'success',
+                message: '<strong style="color:teal">Welcome back!</strong>',
+                center:true
+              });
+              this.$router.replace({ path: "/" });            
             } else {
               this.errorNotification();
               this.loading = false;
@@ -158,19 +140,6 @@
             this.errorNotification();
             this.loading = false;
           });
-      },
-
-      //Control the "disable" attribution of the "sign in" button
-      changeDisabled(){
-       this.isDisabled = (!this.isUsernameValid) || (!this.isPasswordValid);
-       },
-      successNotification(){
-        this.$message({
-          dangerouslyUseHTMLString: true,
-          type:'success',
-          message: '<strong style="color:teal">Welcome back!</strong>',
-          center:true
-        });
       },
       errorNotification(){
         this.$notify({

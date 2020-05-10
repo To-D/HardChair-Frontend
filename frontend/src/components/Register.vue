@@ -37,7 +37,7 @@
               label-position="left"
               label-width="0px"
               v-loading="loading"
-              :ref="registerForm"
+              ref="registerForm"
             >
               <!-- username -->
               <el-form-item prop="username" size="medium">
@@ -156,98 +156,7 @@
 export default {
   name: "Register",
   data() {
-    //Validators
-    const validateUsername = (rule, value, callback)=>{
-      this.isUsernameValid = false;
-      if (value === ''||!value) {
-        callback(new Error('Username is required'));
-      } else {
-        let pattern = /^[a-zA-Z-][a-zA-Z0-9-_]{4,31}$/;
-        if (!pattern.test(value )) {
-          callback(new Error('Invalid username '));
-        }else {
-          this.isUsernameValid = true;
-        }
-      }
-      callback();
-      this.changeDisabled();
-    }
-
-    const validatePassword = (rule, value, callback)=>{
-      this.isPasswordValid = false;
-      if (value === ''||!value) {
-        callback(new Error('Password is required'));
-      } else {
-        let pattern = /(?!^(\d+|[a-zA-Z]+|[-_]+)$)^[\w-]{6,32}$/;
-        if (!pattern.test(value )) {
-          callback(new Error('Invalid Password'));
-        }else if(value.indexOf(this.registerForm.username)!==-1) {
-          callback(new Error('password cannot contain the username'));
-        }else{
-          this.isPasswordValid = true;
-        }
-      }
-      callback();
-      this.changeDisabled();
-    }
-
-    const validateEmail = (rule, value, callback)=>{
-      this.isEmailValid = false;
-      if (value === ''||!value) {
-        callback(new Error('Email is required'));
-      } else {
-        let pattern =/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
-        if (!pattern.test(value )) {
-          callback(new Error('Invalid Email'));
-        }else {
-          this.isEmailValid = true;
-        }
-      }
-      callback();
-      this.changeDisabled();
-    }
-
-    const validateFullname = (rule, value, callback)=>{
-      this.isFullnameValid = false;
-      if (value === ''||!value) {
-        callback(new Error('Real name is required'));
-      }else{
-        this.isFullnameValid = true;
-      }
-      callback();
-      this.changeDisabled();
-    }
-
-    const validateOrganization = (rule, value, callback)=>{
-      this.isOrganizationValid = false;
-      if (value === ''||!value) {
-        callback(new Error('Organization is required'));
-      }else{
-        this.isOrganizationValid = true;
-      }
-      callback();
-      this.changeDisabled();
-    }
-
-    const validateRegion = (rule, value, callback)=>{
-      this.isRegionValid = false;
-      if (value === ''||!value) {
-        callback(new Error('Region is required'));
-      }else{
-        this.isRegionValid = true;
-      }
-      callback();
-      this.changeDisabled();
-    }
-
     return {
-      isDisabled: true,
-      isUsernameValid: false,
-      isPasswordValid: false,
-      isEmailValid: false,
-      isFullnameValid: false,
-      isOrganizationValid: false,
-      isRegionValid: false,
       registerForm: {
         username: "",
         password: "",
@@ -257,16 +166,46 @@ export default {
         region:""
       },
       rules: {
-        // blur 失去鼠标焦点时触发验证
-        username: [{ validator: validateUsername, trigger: "change" }],
-        password: [{ validator: validatePassword, trigger: "change" }],
-        email: [{ validator: validateEmail, trigger: "change" }],
-        fullname: [{ validator: validateFullname, trigger: "change" }],
-        organization: [{ validator: validateOrganization, trigger: "change" }],
-        region: [{ validator: validateRegion, trigger: "change" }]
+        username: [
+          {required:true, message:"Username is required", trigger:"change"},
+          {pattern:/^[a-zA-Z-][a-zA-Z0-9-_]{4,31}$/, message:"Invalid username",trigger:"change"},
+          ],
+        password: [
+          {required:true,message:"Password is required",trigger:"change"},
+          {
+            validator:(rule,value,callback)=>{
+              if(value.indexOf(this.registerForm.username)!==-1) {
+                callback(new Error('password cannot contain the username'));
+              }
+              callback();
+            },
+            message:"password cannot contain the username",
+            trigger:"change"
+          },
+          {pattern: /(?!^(\d+|[a-zA-Z]+|[-_]+)$)^[\w-]{6,32}$/, message:"Invalid password", trigger:"change"},          
+          ],
+        email: [
+          {required:true, message:"Email is required",trigger:"change"},
+          {pattern: /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/, message:"Invalid email", trigger:"change"},
+          ],
+        fullname: [{required:true, message:"Fullname is required",trigger:"change"}],
+        organization: [
+          {required:true, message:"Organization is required", trigger:"change"}],
+        region: [{required:true, message:"Region is required", trigger:"change"}]
       },
       loading: false
     };
+  },
+  computed:{
+    isDisabled(){
+      var form = this.registerForm;
+      return !(form.username && form.password && form.email && form.fullname && form.organization && form.region
+              && /^[a-zA-Z-][a-zA-Z0-9-_]{4,31}$/.test(form.username)
+              && /(?!^(\d+|[a-zA-Z]+|[-_]+)$)^[\w-]{6,32}$/.test(form.password)
+              && form.password.indexOf(form.username)==-1
+              && /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(form.email)
+              );
+    }
   },
 
   methods: {
@@ -282,10 +221,13 @@ export default {
           region:this.registerForm.region
         })
         .then(resp => {
-          // 根据后端的返回数据修改
           if (resp.status === 200 && resp.data.hasOwnProperty("id")) {
-            this.successNotification();
-            // 跳转到login
+            this.$message({
+              dangerouslyUseHTMLString: true,
+              type:'success',
+              message: '<strong style="color:teal">Register successfully! You can sign in now.</strong>',
+              center:true
+            });
             this.$router.replace("/login");
           } else {
             this.errorNotification();
@@ -297,19 +239,6 @@ export default {
           this.errorNotification();
           this.loading=false;
         });
-    },
-
-    //Control the "disable" attribution of the "register" button
-    changeDisabled(){
-      this.isDisabled = (!this.isUsernameValid)||(!this.isPasswordValid)||(!this.isEmailValid)||(!this.isFullnameValid)||(!this.isOrganizationValid)||(!this.isRegionValid);
-    },
-    successNotification(){
-      this.$message({
-        dangerouslyUseHTMLString: true,
-        type:'success',
-        message: '<strong style="color:teal">Register successfully! You can sign in now.</strong>',
-        center:true
-      });
     },
     errorNotification(){
       this.$notify.error({
