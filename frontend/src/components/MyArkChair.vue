@@ -93,7 +93,7 @@
                     <span class="itemlabel">
                       <i class="el-icon-s-flag"></i> Status:
                     </span>
-                    {{parseStatus(conference[0].status)}}
+                    <conferenceStatus :status = "conference[0].status"></conferenceStatus>
                   </div>
                 </div>
               </el-card>
@@ -124,10 +124,11 @@
 <script>
 import navbar from "./Nav";
 import footerbar from "./Footer";
+import conferenceStatus from "./ParseConferenceStatus";
 
 export default {
   name: "MyArkChair",
-  components: { navbar, footerbar },
+  components: { navbar, footerbar,conferenceStatus },
   data() {
     return {
       user: {},
@@ -141,28 +142,6 @@ export default {
     pageChange() {
       this.currentPage = currentPage;
     },
-    parseStatus(status) {
-      switch (status) {
-        case "UNCHECKED":
-          return "Waiting for verification";
-          break;
-        case "CHECKED":
-          return "Approved by admin";
-          break;
-        case "SUBMIT_ALLOWED":
-          return "Accepting papers";
-          break;
-        case "OPEN_REVIEW":
-          return "Papers are being reviewed"
-          break;
-        case "OPEN_RESULT":
-          return "Result has been announced"
-          break;
-        default:
-          return "Currently unknown";
-          break;
-      }
-    }
   },
   created() {
     // Get information of conferences that relate to the present user

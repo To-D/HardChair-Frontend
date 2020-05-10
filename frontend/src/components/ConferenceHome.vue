@@ -8,6 +8,17 @@
           <div class="col-lg-9 col-xl-6">
             <h1 class="display-4">Conference Home</h1>
             <p class="lead mb-0">Check out ongoing conferences here.</p>
+            <br/>
+            <!--
+            <el-select v-model="status" placeholder="Filter status">
+              <el-option
+                v-for="statu in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+            -->
           </div>
         </div>
       </div>
@@ -41,7 +52,7 @@
                     <span class="itemlabel">
                       <i class="el-icon-s-flag"></i> Status:
                     </span>
-                    {{parseStatus(conference.status)}}
+                    <conferenceStatus v-if = "conference.status" :status="conference.status"></conferenceStatus>
                   </div>
                 </div>
               </el-card>
@@ -74,10 +85,11 @@
 <script>
 import navbar from "./Nav";
 import footerbar from "./Footer";
+import conferenceStatus from "./ParseConferenceStatus";
 
 export default {
   name: "ConferenceHome",
-  components: { navbar, footerbar },
+  components: { navbar, footerbar,conferenceStatus },
   data() {
     return{
       conferences:[],
@@ -90,19 +102,6 @@ export default {
     pageChange(){
       this.currentPage = currentPage
     },
-    parseStatus(status){
-      switch (status) {
-        case "CHECKED":
-          return "Approved by admin"
-          break;
-        case "SUBMIT_ALLOWED":
-          return "Accepting papers"
-          break;
-        default:
-          return "Currently unknown"
-          break;
-      }
-    }
   },
   created(){
     // 获取会议列表
@@ -110,19 +109,11 @@ export default {
     .get('/ShowConferences',{})
     .then(resp => {
       if (resp.status === 200) {
-        let checked = resp.data.CHECKED;
-        let submitAllowed = resp.data.SUBMIT_ALLOWED;
-        //返回数据为空，提示无会议进行中
-        if(checked.length == 0 && submitAllowed == 0){
-          this.noMeeting = true;
-        }else if(checked ==0 && submitAllowed !== 0){
-          this.conferences = submitAllowed
-        }else if(checked !== 0 && submitAllowed == 0){
-          this.conferences = checked;
-        }else{
-          submitAllowed.push.apply(submitAllowed,checked);
-          this.conferences = submitAllowed;
-        }
+        // [Waiting to polish] add a filter to choose di
+        this.conferences.push.apply(this.conferences,resp.data.CHECKED);
+        this.conferences.push.apply(this.conferences,resp.data.SUBMIT_ALLOWED);
+        this.conferences.push.apply(this.conferences,resp.data.OPEN_REVIEW);
+        this.conferences.push.apply(this.conferences,resp.data.OPEN_RESULT);
       } else {
         this.$message.error("Request Error.")
       }

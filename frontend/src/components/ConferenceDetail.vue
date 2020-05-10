@@ -93,7 +93,7 @@
                       <span class="itemlabel">
                         <i class="el-icon-s-flag"></i> Status:
                       </span>
-                      {{status}}
+                      <conferenceStatus :status = "conference.status"></conferenceStatus>                      
                     </div>
                   </div>
                 </div>
@@ -382,10 +382,11 @@ import download from "./DownloadPaper";
 import preview from "./PreviewPaper";
 import contribution from "./SubmitPaper";
 import showPapers from "./ShowReviewPapers";
+import conferenceStatus from "./ParseConferenceStatus";
 
 export default {
   name: "ConferenceDetail",
-  components: { navbar, footerbar, draggable, download, preview,contribution,showPapers },
+  components: { navbar, footerbar, draggable, download, preview,contribution,showPapers,conferenceStatus },
   inject: ["reload"],
 
   data() {
@@ -693,30 +694,6 @@ export default {
       .catch(error=>{
         console.log(error);
       })
-    }
-  },
-  computed:{
-    status(){
-      switch (this.conference.status) {
-        case "CHECKED":
-          return "Approved by admin";
-          break;
-        case "SUBMIT_ALLOWED":
-          return "Accepting papers";
-          break;
-        case "UNCHECKED":
-          return "Waiting for verification";
-          break;
-        case "OPEN_REVIEW":
-          return "Papers are being reviewed"
-          break;
-        case "OPEN_RESULT":
-          return "Result has been announced"
-          break;
-        default:
-          return "Currently unknown";
-          break;
-      }
     }
   },
   created() {
