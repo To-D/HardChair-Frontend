@@ -258,13 +258,14 @@ export default {
   methods:{
       enterAdd(){
           if(!this.addButtonDisable){
-              this.addAuthor();
+            this.addAuthor();
           }
       },
       showAddAuthorForm(){
         this.addAuthorVisible = true;
         this.$nextTick(_ => {
             this.$refs.authorName.focus();
+            this.$refs["authorForm"].resetFields();
         });
       },
       addAuthor() {
@@ -278,7 +279,6 @@ export default {
         this.cancelAddAuthor();
       },
       cancelAddAuthor() {
-        this.$refs["authorForm"].resetFields();
         this.addAuthorVisible = false;
         this.$refs["paperForm"].validateField("author");
       },
