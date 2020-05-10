@@ -93,7 +93,7 @@
                       <span class="itemlabel">
                         <i class="el-icon-s-flag"></i> Status:
                       </span>
-                      <conferenceStatus :status = "conference.status"></conferenceStatus>                      
+                      <conferenceStatus :status="conference.status"></conferenceStatus>
                     </div>
                   </div>
                 </div>
@@ -126,7 +126,9 @@
                       >Invite PC member</el-button>
                     </div>
 
-                    <div v-if="isCHECKED || isSUBMIT_ALLOWED ||isOPEN_REVIEW || isOPEN_RESULT || isFINISHED">
+                    <div
+                      v-if="isCHECKED || isSUBMIT_ALLOWED ||isOPEN_REVIEW || isOPEN_RESULT || isFINISHED"
+                    >
                       <el-button
                         class="onPageBtn"
                         type="primary"
@@ -144,10 +146,10 @@
 
                     <div>
                       <el-button
-                      v-if="isOPEN_REVIEW"
+                        v-if="isOPEN_REVIEW"
                         class="onPageBtn"
                         type="primary"
-                        @click = "announceResults"
+                        @click="announceResults"
                       >Announce Results</el-button>
                     </div>
                   </div>
@@ -156,14 +158,22 @@
             </section>
           </el-tab-pane>
 
-          <el-tab-pane v-if="!isCHAIR && !isADMIN && isSUBMIT_ALLOWED && !forbidContribute" label="Paper Submission" name="contribution">
+          <el-tab-pane
+            v-if="!isCHAIR && !isADMIN && isSUBMIT_ALLOWED && !forbidContribute"
+            label="Paper Submission"
+            name="contribution"
+          >
             <section>
               <div class="row">
                 <div class="col-xl-6 col-lg-6">
                   <h2>
                     <i class="el-icon-upload2"></i> Paper Submission
-                  </h2>                  
-                  <contribution v-if="this.conference.id" :conferenceId="conference.id" :topics="conference.topics"></contribution>
+                  </h2>
+                  <contribution
+                    v-if="this.conference.id"
+                    :conferenceId="conference.id"
+                    :topics="conference.topics"
+                  ></contribution>
                 </div>
               </div>
             </section>
@@ -202,9 +212,16 @@
                       {{paper.createdTime.substring(0,10)}}
                     </p>
                     <!-- paper operation -->
-                    <preview :id="paper.id">Preview</preview>
-                    <download :id="paper.id" :title="paper.title"></download>
-                    <el-button type="primary" @click="$router.push({path:'/paper/'+paper.id}) ">Edit</el-button>
+                    <div class="row">
+                      <preview class="onPageBtn" :id="paper.id">Preview</preview>
+                      <download class="onPageBtn" :id="paper.id" :title="paper.title"></download>
+                      <div class="onPageBtn">
+                        <el-button
+                          type="primary"
+                          @click="$router.push({path:'/paper/'+paper.id}) "
+                        >Edit</el-button>
+                      </div>
+                    </div>
                   </el-card>
                   <div class="row">
                     <div class="col-xl-6 col-lg-12">
@@ -278,7 +295,7 @@
       </el-form>
 
       <!-- display search result -->
-    <el-table
+      <el-table
         @selection-change="handleSelectionChange"
         :data="users"
         style="width: 100%"
@@ -290,7 +307,7 @@
         <el-table-column prop="region" label="Region" width="150"></el-table-column>
         <el-table-column prop="organization" label="Organization" width="150"></el-table-column>
       </el-table>
-  </el-dialog>
+    </el-dialog>
 
     <!-- Look for current pc_members -->
     <el-dialog title="See current PC member" :visible.sync="dialogMemberTableVisible">
@@ -386,7 +403,16 @@ import conferenceStatus from "./ParseConferenceStatus";
 
 export default {
   name: "ConferenceDetail",
-  components: { navbar, footerbar, draggable, download, preview,contribution,showPapers,conferenceStatus },
+  components: {
+    navbar,
+    footerbar,
+    draggable,
+    download,
+    preview,
+    contribution,
+    showPapers,
+    conferenceStatus
+  },
   inject: ["reload"],
 
   data() {
@@ -399,15 +425,15 @@ export default {
       isCHECKED: false,
       isSUBMIT_ALLOWED: false,
       isFINISHED: false,
-      isOPEN_REVIEW:false,
-      isOPEN_RESULT:false,
+      isOPEN_REVIEW: false,
+      isOPEN_RESULT: false,
 
       // Visitor authority
       isADMIN: false,
       isCHAIR: false,
       isPC_MEMBER: false,
       isAUTHOR: false,
-      forbidContribute:false,
+      forbidContribute: false,
 
       // Choose Authority
       hasChosen: true,
@@ -428,9 +454,9 @@ export default {
       strategy: "",
 
       // tab page
-      activeName:"info",
+      activeName: "info",
 
-      loading:false,
+      loading: false,
 
       // Search & invite form
       dialogFormVisible: false,
@@ -457,7 +483,7 @@ export default {
       users: [],
       searched: false,
       multipleSelection: [],
-      inviteUsers: [],
+      inviteUsers: []
     };
   },
   methods: {
@@ -468,19 +494,19 @@ export default {
           this.isCHAIR = true;
           this.isPC_MEMBER = false;
           this.isAUTHOR = false;
-          this.activeName="operation";
+          this.activeName = "operation";
           break;
         case "PC_MEMBER":
           this.isPC_MEMBER = true;
           this.isCHAIR = false;
           this.isAUTHOR = false;
-          this.activeName="review";
+          this.activeName = "review";
           break;
         case "AUTHOR":
           this.isAUTHOR = true;
           this.isCHAIR = false;
           this.isPC_MEMBER = false;
-          this.activeName="myPaper";
+          this.activeName = "myPaper";
           break;
       }
       this.hasChosen = false;
@@ -680,34 +706,34 @@ export default {
       }
       this.strategy = "";
     },
-    announceResults(){
-      this.$axios.post('/OpenResult',{
-        conferenceId:this.conference.id
-      })
-      .then(resp=>{
-        if(resp.data.message == "open success"){
-          this.isOPEN_REVIEW = false;
-          this.isOPEN_RESULT = true;
-          this.$message({
-            dangerouslyUseHTMLString: true,
-            type: "success",
-            message:
-              '<strong style="color:teal">Open success!</strong>',
-            center: true
-          });
-        }else{
-          this.$message({
-            dangerouslyUseHTMLString: true,
-            type: "error",
-            message:
-              '<strong style="color:teal">There are papers waiting to review now!</strong>',
-            center: true
-          });
-        }
-      })
-      .catch(error=>{
-        console.log(error);
-      })
+    announceResults() {
+      this.$axios
+        .post("/OpenResult", {
+          conferenceId: this.conference.id
+        })
+        .then(resp => {
+          if (resp.data.message == "open success") {
+            this.isOPEN_REVIEW = false;
+            this.isOPEN_RESULT = true;
+            this.$message({
+              dangerouslyUseHTMLString: true,
+              type: "success",
+              message: '<strong style="color:teal">Open success!</strong>',
+              center: true
+            });
+          } else {
+            this.$message({
+              dangerouslyUseHTMLString: true,
+              type: "error",
+              message:
+                '<strong style="color:teal">There are papers waiting to review now!</strong>',
+              center: true
+            });
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   },
   created() {
@@ -727,7 +753,7 @@ export default {
             this.isADMIN = true;
           } else {
             // Normal user
-            let len = this.authorities.length;            
+            let len = this.authorities.length;
             for (let i = 0; i < len; i++) {
               switch (this.authorities[i].authority) {
                 case "CHAIR":

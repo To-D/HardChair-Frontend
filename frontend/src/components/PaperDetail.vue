@@ -71,9 +71,10 @@
                   </h2>
 
                   <div class="row">
-                    <preview v-if="paper.id" :id="paper.id">Preview</preview>
+                    <preview class="onPageBtn" v-if="paper.id" :id="paper.id">Preview</preview>
 
                     <download
+                      class="onPageBtn"
                       v-if="paper.id && paper.title"
                       :id="paper.id"
                       :title="paper.title"

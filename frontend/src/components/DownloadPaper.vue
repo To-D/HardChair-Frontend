@@ -1,6 +1,6 @@
 <template>
 <div>
- <el-button class="onPageBtn" type="primary" @click="download">Download</el-button>
+ <el-button type="primary" @click="download">Download</el-button>
 </div>
 </template>
 
