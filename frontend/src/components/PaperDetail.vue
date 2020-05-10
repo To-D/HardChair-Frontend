@@ -14,7 +14,7 @@
 
     <div class="contentContainer">
       <div class="container">
-        <el-tabs>
+        <el-tabs v-model="activeName">
           <el-tab-pane label="Paper Info" name="info">
             <section>
               <div class="row">
@@ -162,7 +162,7 @@
                   <h2>
                     <i class="el-icon-document-checked"></i> My Results
                   </h2>
-                  <div v-if="paper.reviewResults.length == 0">
+                  <div v-if="conferenceStatus !== 'OPEN_RESULT'">
                     <el-card shadow="hover">Result hasn't been announced!</el-card>
                   </div>
                   <el-card
@@ -197,25 +197,30 @@
             </section>
           </el-tab-pane>
 
-          <el-tab-pane v-if="isAUTHOR" label="Paper Submission" name="submission">
+          <el-tab-pane v-if="isAUTHOR" label="Edit paper" name="submission">
             <section>
               <div class="row">
                 <div class="col-xl-6 col-lg-6">
                   <h2>
-                    <i class="el-icon-upload2"></i> Paper Submission
-                  </h2>
-                  <contribution
-                    v-if="paper.conferenceId"
-                    :paper="paper"
-                    :topics="paper.nTopics"
-                    :conferenceId="paper.conferenceId"
-                  ></contribution>
+                    <i class="el-icon-upload2"></i> Edit paper
+                  </h2>                  
+                  <div v-if="conferenceStatus == 'SUBMIT_ALLOWED'">
+                    <contribution
+                      v-if="paper.conferenceId"
+                      :paper="paper"
+                      :topics="paper.nTopics"
+                      :conferenceId="paper.conferenceId"
+                    ></contribution>
+                  </div>
+                  <div v-else>
+                    <el-card shadow="hover">Papers are being reviewd!</el-card>
+                  </div>
                 </div>
               </div>
             </section>
           </el-tab-pane>
         </el-tabs>
-      </div>
+      </div>  
     </div>
 
     <footerbar></footerbar>
@@ -242,6 +247,9 @@ export default {
 
       // paper
       paper: {},
+
+      activeName:"info",
+      conferenceStatus:"",
 
       // Review form
       reviewForm: {
@@ -286,7 +294,7 @@ export default {
           confidence: tmp.confidence
         })
         .then(resp => {
-          if (resp.status === 200) {
+          if (resp.status === 200) {            
             this.$message({
               dangerouslyUseHTMLString: true,
               type: "success",
@@ -315,6 +323,7 @@ export default {
       .then(resp => {
         if (resp.status === 200 && !resp.data.hasOwnProperty("message")) {
           this.paper = resp.data;
+          this.conferenceStatus = this.paper.nTopics[0].tag;
           this.paper.topics = this.paper.topics.split(",");
           switch (this.paper.url) {
             case "AUTHOR":

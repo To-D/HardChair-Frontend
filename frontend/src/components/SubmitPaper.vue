@@ -407,9 +407,7 @@ export default {
         }
 
         // First upload
-        console.log(this.topics);
         this.conferenceTopics = this.topics.split(',');        
-        console.log(this.paperForm);
         this.files=[];
     }
 };
