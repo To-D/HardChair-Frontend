@@ -39,7 +39,7 @@
                   </span>
                   <el-tag
                   :key="index"
-                  v-for="(topic,index) in paper.topics.split(',')"
+                  v-for="(topic,index) in paper.topics"
                   >
                 {{topic}}
                 </el-tag>
@@ -277,7 +277,7 @@ export default {
     .then(resp=>{
       if(resp.status === 200 && !resp.data.hasOwnProperty("message")){
         this.paper = resp.data;
-        console.log(resp.data);
+        this.paper.topics = this.paper.topics.split(',');  
         switch(this.paper.url){
           case 'AUTHOR':
             this.isAUTHOR = true;

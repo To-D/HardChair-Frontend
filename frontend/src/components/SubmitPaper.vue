@@ -34,7 +34,7 @@
 
   <!-- topic -->
   <el-form-item prop="topic" label="Topic" class="is-required">
-    <el-checkbox-group v-model="paperForm.topics" v-if="conferenceTopics">
+    <el-checkbox-group v-model="paperForm.topics" v-if="paperForm.topics && conferenceTopics">
       <el-checkbox
         class="checkboxes"
         v-for="(topic,index) in conferenceTopics"
@@ -170,12 +170,7 @@ export default {
         file:null,
         conferenceTopics:"",
         // Upload form
-        paperForm: {
-          title: "",
-          summary: "",
-          topics: [],
-          authors: []
-        },
+        paperForm: {},
         rules:{
             title: [
                 {
@@ -402,7 +397,6 @@ export default {
             this.isEdit = true;
             this.files[0].name = this.paperForm.title+".pdf";
             this.conferenceTopics = this.topics[0].topic.split(',');
-            this.paperForm.topics =[];
             this.paperForm.authors.sort(function(a, b){return a.orderOfAuthor - b.orderOfAuthor});
             return;
         }
