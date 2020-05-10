@@ -152,6 +152,12 @@ export default {
         case "SUBMIT_ALLOWED":
           return "Accepting papers";
           break;
+        case "OPEN_REVIEW":
+          return "Papers are being reviewed"
+          break;
+        case "OPEN_RESULT":
+          return "Result has been announced"
+          break;
         default:
           return "Currently unknown";
           break;
