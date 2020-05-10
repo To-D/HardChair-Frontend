@@ -148,20 +148,6 @@ export default {
   name: "ConferenceApplication",
   components: { navbar, footerbar },
   data: function() {
-    //Validators
-
-    //Judgement whether the submit button can work when the from changes
-    const isFormReady = (rule, value, callback) => {
-      this.changeDisabled();
-      callback();
-    };
-    const validateTopic = (rule, value, callback) => {
-      if (this.applicationForm.topic.length < 1) {
-        callback("You should add at least one topic for your conference");
-      }
-      this.changeDisabled();
-    };
-
     // If the deadline or the announcement date has been set, the date range should include it
     // const containDDLAndAnnounceDate = (rule,value,callback)=> {
     //   this.isTimeValid = false;
@@ -189,9 +175,6 @@ export default {
     // }
 
     return {
-      isDisabled: true, //Control the function of the submit button
-      isTimeValid: true, //[deprecated, is always true now since datepickers won't allow illegal dates]
-
       // Topic Tag
       inputVisible: false,
       inputValue: "",
@@ -220,10 +203,10 @@ export default {
           // 3. If not, make sure it's a date after today
           const oneDayTime = 24 * 3600 * 1000;
           if (this.applicationForm.resultAnnounceDate) {
-            return time.getTime() < Date.now() - oneDayTime || time.getTime() >= this.applicationForm.resultAnnounceDate;
+            return time.getTime() < Date.now() - oneDayTime || time.getTime() > this.applicationForm.resultAnnounceDate;
           } else {
             if (this.applicationForm.time) {
-              return time.getTime() < Date.now() - oneDayTime || time.getTime() >= this.applicationForm.time[0];
+              return time.getTime() < Date.now() - oneDayTime || time.getTime() > this.applicationForm.time[0];
             } else {
               return time.getTime() < Date.now() - oneDayTime;
             }
@@ -240,18 +223,18 @@ export default {
           if (this.applicationForm.time) {
             if (this.applicationForm.deadline) {
               return (
-                time.getTime() <= this.applicationForm.deadline ||
-                time.getTime() >= this.applicationForm.time[0]
+                time.getTime() < this.applicationForm.deadline  ||
+                time.getTime() > this.applicationForm.time[0]
               );
             } else {
               return (
                 time.getTime() < Date.now() - oneDayTime ||
-                time.getTime() >= this.applicationForm.time[0]
+                time.getTime() > this.applicationForm.time[0]
               );
             }
           } else {
             if (this.applicationForm.deadline) {
-              return time.getTime() <= this.applicationForm.deadline;
+              return time.getTime() < this.applicationForm.deadline;
             } else {
               return time.getTime() < Date.now() - oneDayTime;
             }
@@ -275,7 +258,6 @@ export default {
             message: "Short name of conference is required",
             trigger: "blur"
           },
-          { validator: isFormReady, trigger: "change" }
         ],
         fullName: [
           {
@@ -283,7 +265,6 @@ export default {
             message: "Full name of conference is required",
             trigger: "blur"
           },
-          { validator: isFormReady, trigger: "change" }
         ],
         topic: [
           {
@@ -292,15 +273,13 @@ export default {
             message: "Topics are required",
             trigger: "blur"
           },
-          { validator: isFormReady, trigger: "blur" }
         ],
         location: [
           {
             required: true,
             message: "Location of conference is required",
             trigger: "blur"
-          },
-          { validator: isFormReady, trigger: "change" }
+          }
         ],
         time: [
           {
@@ -308,7 +287,6 @@ export default {
             message: "Start and end dates of conference are required",
             trigger: "blur"
           },
-          { validator: isFormReady, trigger: "blur" }
         ],
         deadline: [
           {
@@ -316,7 +294,6 @@ export default {
             message: "Submission deadline is required",
             trigger: "blur"
           },
-          { validator: isFormReady, trigger: "change" }
         ],
         resultAnnounceDate: [
           {
@@ -324,11 +301,21 @@ export default {
             message: "Result announcement date is required",
             trigger: "blur"
           },
-          { validator: isFormReady, trigger: "change" }
         ]
       },
       loading: false
     };
+  },
+  computed:{
+    isDisabled(){
+      return this.applicationForm.nameAbbreviation === "" ||
+      this.applicationForm.fullName === "" ||
+      this.applicationForm.topic.length < 1 ||
+      this.applicationForm.time === "" ||
+      this.applicationForm.location === "" ||
+      this.applicationForm.deadline === "" ||
+      this.applicationForm.resultAnnounceDate === "";
+    }
   },
   methods: {
     // manage topic tag
@@ -399,16 +386,6 @@ export default {
         }
       });
     },
-    changeDisabled() {
-      this.isDisabled =
-        this.applicationForm.nameAbbreviation === "" ||
-        this.applicationForm.fullName === "" ||
-        this.applicationForm.topic.length < 1 ||
-        !this.isTimeValid ||
-        this.applicationForm.location === "" ||
-        this.applicationForm.deadline === "" ||
-        this.applicationForm.resultAnnounceDate === "";
-    }
   }
 };
 </script>
