@@ -14,7 +14,7 @@
 
     <div class="contentContainer">
       <div class="container">
-        <el-tabs>
+        <el-tabs v-model="activeName">
           <el-tab-pane label="Paper Info" name="info">
             <section>
               <div class="row">
@@ -214,7 +214,7 @@
             </section>
           </el-tab-pane>
         </el-tabs>
-      </div>
+      </div>  
     </div>
 
     <footerbar></footerbar>
@@ -241,6 +241,8 @@ export default {
 
       // paper
       paper: {},
+
+      activeName:"info",
 
       // Review form
       reviewForm: {
