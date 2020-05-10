@@ -33,7 +33,8 @@
       <div class="row">
         <preview class="onPageBtn" :id="paper.id">Preview</preview>
         <download class="onPageBtn" :id="paper.id" :title="paper.title"></download>
-        <el-button class="onPageBtn" type="primary" @click="$router.push({path:'/paper/'+paper.id}) ">Review</el-button>
+        <el-button v-if="paper.status == -1" class="onPageBtn" type="primary" @click="$router.push({path:'/paper/'+paper.id}) ">Review</el-button>
+        <el-button v-else class="onPageBtn" type="primary" disabled>Reviewed</el-button>
       </div>
     </el-card>
     <div class="row">
