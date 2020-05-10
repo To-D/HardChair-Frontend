@@ -1,6 +1,6 @@
 <template>
 <span>
- <el-button @click="preview">Preview</el-button>
+ <el-button class="onPageBtn" type="primary" @click="preview">Preview</el-button>
  <el-dialog :visible.sync="dialogVisible" width="80%" top="20px">
     <div style="height: 450px">
       <iframe :src="pdfUrl" frameborder="0" style="width: 100%; height: 100%"></iframe>
@@ -44,3 +44,9 @@ export default {
   }
 };
 </script>
+
+<style>
+.onPageBtn {
+  margin-left: 12px;
+}
+</style>

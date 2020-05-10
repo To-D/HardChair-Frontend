@@ -367,22 +367,21 @@ h2 {
 .contentContainer {
   padding: 2em;
 }
-section {
-  padding: 0.5em;
-}
-.itemlabel,
-h2 {
-  color: #3755be;
-  font-weight: bold;
-}
-.infoitem {
-  margin-top: 1em;
-  margin-bottom: 1em;
-}
 .onPageBtn {
   margin-left: 12px;
 }
 el-form-item {
   margin-bottom: 0;
+}
+.el-tag {
+  margin-right: 5px;
+}
+.input-new-tag {
+  width: 103px;
+  margin-right: 5px;
+  vertical-align: bottom;
+}
+.checkboxes {
+  margin-right: 0;
 }
 </style>

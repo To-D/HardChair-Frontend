@@ -1,5 +1,5 @@
 <template>
- <el-button @click="download">Download</el-button>
+ <el-button class="onPageBtn" type="primary" @click="download">Download</el-button>
 </template>
 
 <script>
@@ -48,3 +48,9 @@ export default {
   }
 };
 </script>
+
+<style>
+.onPageBtn {
+  margin-left: 12px;
+}
+</style>

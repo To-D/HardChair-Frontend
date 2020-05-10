@@ -60,7 +60,7 @@
       >
         <div slot="header" class="clearfix">
           <span
-            style="font-weight: bold"
+            style="font-weight: bold; line-height: unset"
           >{{ (index+1) + (['st', 'nd', 'rd'][(index+1) &lt; 20 ? index : (index+1) % 10 - 1] || 'th')}} Author
           </span>
           <el-button
@@ -113,7 +113,7 @@
     >
       <i class="el-icon-upload"></i>
       <div class="el-upload__text">
-        Drag file here to upload，or
+        Drag file here to upload, or
         <em>click here</em>
       </div>
       <div class="el-upload__tip" slot="tip">Please upload one PDF file only.</div>
