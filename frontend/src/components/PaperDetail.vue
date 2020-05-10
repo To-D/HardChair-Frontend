@@ -71,17 +71,13 @@
                   </h2>
 
                   <div class="row">
-                    <div>
-                      <preview v-if="paper.id" :id="paper.id">Preview</preview>
-                    </div>
+                    <preview v-if="paper.id" :id="paper.id">Preview</preview>
 
-                    <div>
-                      <download
-                        v-if="paper.id && paper.title"
-                        :id="paper.id"
-                        :title="paper.title"
-                      >Download</download>
-                    </div>
+                    <download
+                      v-if="paper.id && paper.title"
+                      :id="paper.id"
+                      :title="paper.title"
+                    >Download</download>
                   </div>
                 </div>
               </div>
@@ -95,7 +91,7 @@
                   <h2>
                     <i class="el-icon-upload2"></i> Paper Review
                   </h2>
-                  
+
                   <el-card v-if="paper.status == -1" shadow="hover">You have reviewed this paper!</el-card>
 
                   <el-form
@@ -153,8 +149,6 @@
                       >Submit Review Results</el-button>
                     </el-form-item>
                   </el-form>
-
-                  
                 </div>
               </div>
             </section>

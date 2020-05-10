@@ -1,5 +1,7 @@
 <template>
+<div>
  <el-button class="onPageBtn" type="primary" @click="download">Download</el-button>
+</div>
 </template>
 
 <script>
