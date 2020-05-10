@@ -196,12 +196,12 @@
             </section>
           </el-tab-pane>
 
-          <el-tab-pane v-if="isAUTHOR" label="Paper Submission" name="submission">
+          <el-tab-pane v-if="isAUTHOR" label="Edit paper" name="submission">
             <section>
               <div class="row">
                 <div class="col-xl-6 col-lg-6">
                   <h2>
-                    <i class="el-icon-upload2"></i> Paper Submission
+                    <i class="el-icon-upload2"></i> Edit paper
                   </h2>
                   <contribution
                     v-if="paper.conferenceId"
