@@ -161,7 +161,7 @@
                   <h2>
                     <i class="el-icon-document-checked"></i> My Results
                   </h2>
-                  <div v-if="paper.reviewResults.length == 0">
+                  <div v-if="conferenceStatus !== 'OPEN_RESULT'">
                     <el-card shadow="hover">Result hasn't been announced!</el-card>
                   </div>
                   <el-card
@@ -202,13 +202,18 @@
                 <div class="col-xl-6 col-lg-6">
                   <h2>
                     <i class="el-icon-upload2"></i> Edit paper
-                  </h2>
-                  <contribution
-                    v-if="paper.conferenceId"
-                    :paper="paper"
-                    :topics="paper.nTopics"
-                    :conferenceId="paper.conferenceId"
-                  ></contribution>
+                  </h2>                  
+                  <div v-if="conferenceStatus == 'SUBMIT_ALLOWED'">
+                    <contribution
+                      v-if="paper.conferenceId"
+                      :paper="paper"
+                      :topics="paper.nTopics"
+                      :conferenceId="paper.conferenceId"
+                    ></contribution>
+                  </div>
+                  <div v-else>
+                    <el-card shadow="hover">Papers are being reviewd!</el-card>
+                  </div>
                 </div>
               </div>
             </section>
@@ -243,6 +248,7 @@ export default {
       paper: {},
 
       activeName:"info",
+      conferenceStatus:"",
 
       // Review form
       reviewForm: {
@@ -287,7 +293,7 @@ export default {
           confidence: tmp.confidence
         })
         .then(resp => {
-          if (resp.status === 200) {
+          if (resp.status === 200) {            
             this.$message({
               dangerouslyUseHTMLString: true,
               type: "success",
@@ -316,6 +322,7 @@ export default {
       .then(resp => {
         if (resp.status === 200 && !resp.data.hasOwnProperty("message")) {
           this.paper = resp.data;
+          this.conferenceStatus = this.paper.nTopics[0].tag;
           this.paper.topics = this.paper.topics.split(",");
           switch (this.paper.url) {
             case "AUTHOR":

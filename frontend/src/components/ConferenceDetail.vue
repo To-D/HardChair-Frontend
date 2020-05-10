@@ -631,7 +631,6 @@ export default {
           })
           .then(resp => {
             if (resp.status === 200 ) {
-              console.log(resp.data);
               switch(resp.data.message1){
                 case "open success":
                   this.isSUBMIT_ALLOWED = false;
