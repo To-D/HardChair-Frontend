@@ -58,9 +58,9 @@
         v-for="(author,index) in paperForm.authors"
         :key="index"
       >
-        <div slot="header" class="clearfix">
+        <div slot="header" class="clearfix" style="line-height: 1">
           <span
-            style="font-weight: bold; line-height: unset"
+            style="font-weight: bold"
           >{{ (index+1) + (['st', 'nd', 'rd'][(index+1) &lt; 20 ? index : (index+1) % 10 - 1] || 'th')}} Author
           </span>
           <el-button
