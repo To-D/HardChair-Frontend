@@ -227,7 +227,7 @@
               <div class="row">
                 <div class="col-xl-6 col-lg-6">
                   <h2>
-                    <i class="el-icon-document"></i>Papers to review
+                    <i class="el-icon-document"></i> Papers to review
                   </h2>
                    <showPapers :conferenceId="conference.id"></showPapers>
                 </div>
