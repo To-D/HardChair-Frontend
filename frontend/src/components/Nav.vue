@@ -12,16 +12,16 @@
             <!-- Conference opration -->
             <el-submenu index="1">
               <template slot="title">
-                <i class="el-icon-collection"></i>Conferences
+                <em class="el-icon-collection"></em>Conferences
               </template>
               <router-link to="/conference-home">
                 <el-menu-item>
-                  <i class="el-icon-menu"></i>Browsing
+                  <em class="el-icon-menu"></em>Browsing
                 </el-menu-item>
               </router-link>
               <router-link to="/conference-application" v-if="isNormalUser">
                 <el-menu-item>
-                  <i class="el-icon-edit-outline"></i>Application
+                  <em class="el-icon-edit-outline"></em>Application
                 </el-menu-item>
               </router-link>
             </el-submenu>
@@ -37,23 +37,23 @@
             <!-- Personal info -->
             <el-submenu index="2" v-if="afterLogin">
               <template slot="title">
-                <i class="el-icon-user-solid"></i>My ArkChair
+                <em class="el-icon-user-solid"></em>My ArkChair
                 <el-badge :is-dot="isUpdated" class="mark" />
               </template>
               <router-link to="/my-ark-chair" v-if="isNormalUser">
                 <el-menu-item>
-                  <i class="el-icon-s-order"></i>My ArkChair Center
+                  <em class="el-icon-s-order"></em>My ArkChair Center
                 </el-menu-item>
               </router-link>
               <router-link to="/verification" v-if="isADMIN">
                 <el-menu-item>
-                  <i class="el-icon-s-claim"></i>Verification
+                  <em class="el-icon-s-claim"></em>Verification
                   <el-badge :is-dot="isUpdated" class="mark" />
                 </el-menu-item>
               </router-link>
               <router-link to="/message-inbox" v-if="isNormalUser">
                 <el-menu-item>
-                  <i class="el-icon-message"></i>Messages
+                  <em class="el-icon-message"></em>Messages
                   <el-badge :is-dot="isUpdated" class="mark" />
                 </el-menu-item>
               </router-link>

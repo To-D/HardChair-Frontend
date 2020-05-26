@@ -19,35 +19,35 @@
             <div class="col-xl-8 col-lg-12">
               <div>
                 <h2>
-                  <i class="el-icon-info"></i> My Info
+                  <em class="el-icon-info"></em> My Info
                 </h2>
                 <div class="infoitem">
                   <span class="itemlabel">
-                    <i class="el-icon-user"></i> Username:
+                    <em class="el-icon-user"></em> Username:
                   </span>
                   {{user.username}}
                 </div>
                 <div class="infoitem">
                   <span class="itemlabel">
-                    <i class="el-icon-s-custom"></i> Real name:
+                    <em class="el-icon-s-custom"></em> Real name:
                   </span>
                   {{user.fullname}}
                 </div>
                 <div class="infoitem">
                   <span class="itemlabel">
-                    <i class="el-icon-office-building"></i> Organization:
+                    <em class="el-icon-office-building"></em> Organization:
                   </span>
                   {{user.organization}}
                 </div>
                 <div class="infoitem">
                   <span class="itemlabel">
-                    <i class="el-icon-map-location"></i> Region:
+                    <em class="el-icon-map-location"></em> Region:
                   </span>
                   {{user.region}}
                 </div>
                 <div class="infoitem">
                   <span class="itemlabel">
-                    <i class="el-icon-message"></i> Email:
+                    <em class="el-icon-message"></em> Email:
                   </span>
                   {{user.email}}
                 </div>
@@ -62,7 +62,7 @@
           <div class="row">
             <div class="col-xl-8 col-lg-12">
               <h2>
-                <i class="el-icon-s-management"></i> My Conferences
+                <em class="el-icon-s-management"></em> My Conferences
               </h2>
               <div v-if="noMeeting">
                 <el-card shadow="hover">No related conference now!</el-card>
@@ -85,13 +85,13 @@
                 <div>
                   <div>
                     <span class="itemlabel">
-                      <i class="el-icon-chat-line-round"></i> Full name:
+                      <em class="el-icon-chat-line-round"></em> Full name:
                     </span>
                     {{conference[0].fullName}}
                   </div>
                   <div>
                     <span class="itemlabel">
-                      <i class="el-icon-s-flag"></i> Status:
+                      <em class="el-icon-s-flag"></em> Status:
                     </span>
                     <conferenceStatus :status = "conference[0].status"></conferenceStatus>
                   </div>

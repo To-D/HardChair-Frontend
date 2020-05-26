@@ -65,7 +65,7 @@
                 <div>
                   <div>
                     <span class="itemlabel">
-                      <i class="el-icon-chat-line-round"></i> Content:
+                      <em class="el-icon-chat-line-round"></em> Content:
                     </span>
                     <span v-if="message.content">
                       {{parseMessageContent(message.type, message.content)}}
@@ -90,7 +90,7 @@
                   </div>
                   <div>
                     <span class="itemlabel">
-                      <i class="el-icon-time"></i> Sent Time:
+                      <em class="el-icon-time"></em> Sent Time:
                     </span>
                     <span v-if="message.sentTime">
                     {{message.sentTime.substring(0,10)}}

@@ -48,25 +48,25 @@
                 <div>
                   <div>
                     <span class="itemlabel">
-                      <i class="el-icon-user-solid"></i> Application by:
+                      <em class="el-icon-user-solid"></em> Application by:
                     </span>
                     {{conference.owner}}
                   </div>
                   <div>
                     <span class="itemlabel">
-                      <i class="el-icon-chat-dot-round"></i> Short name:
+                      <em class="el-icon-chat-dot-round"></em> Short name:
                     </span>
                     {{conference.nameAbbreviation}}
                   </div>
                   <div>
                     <span class="itemlabel">
-                      <i class="el-icon-chat-line-round"></i> Full name:
+                      <em class="el-icon-chat-line-round"></em> Full name:
                     </span>
                     {{conference.fullName}}
                   </div>
                   <div>
                   <span class="itemlabel">
-                  <i class="el-icon-price-tag"></i> Topics:
+                  <em class="el-icon-price-tag"></em> Topics:
                   </span>
                   <el-tag
                   :key="index"
@@ -77,13 +77,13 @@
                   </div>
                   <div>
                     <span class="itemlabel">
-                      <i class="el-icon-location"></i> Location:
+                      <em class="el-icon-location"></em> Location:
                     </span>
                     {{conference.location}}
                   </div>
                   <div>
                     <span class="itemlabel">
-                      <i class="el-icon-video-play"></i> Starts at:
+                      <em class="el-icon-video-play"></em> Starts at:
                     </span>
                     <span v-if = "conference.startTime">
                       {{conference.startTime.substring(0,10)}}
@@ -91,7 +91,7 @@
                   </div>
                   <div>
                     <span class="itemlabel">
-                      <i class="el-icon-video-pause"></i> Ends at:
+                      <em class="el-icon-video-pause"></em> Ends at:
                     </span>
                     <span v-if = "conference.endTime">
                       {{conference.endTime.substring(0,10)}}
@@ -99,7 +99,7 @@
                   </div>
                   <div>
                     <span class="itemlabel">
-                      <i class="el-icon-date"></i> Submission deadline:
+                      <em class="el-icon-date"></em> Submission deadline:
                     </span>
                     <span v-if = "conference.deadline">
                       {{conference.deadline.substring(0,10)}}
@@ -107,7 +107,7 @@
                   </div>
                   <div>
                     <span class="itemlabel">
-                      <i class="el-icon-medal-1"></i> Result announcement at:
+                      <em class="el-icon-medal-1"></em> Result announcement at:
                     </span>
                     <span v-if = "conference.resultAnnounceDate">
                       {{conference.resultAnnounceDate.substring(0,10)}}

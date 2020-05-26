@@ -43,13 +43,13 @@
                 <div>
                   <div>
                     <span class="itemlabel">
-                      <i class="el-icon-chat-line-round"></i> Full name:
+                      <em class="el-icon-chat-line-round"></em> Full name:
                     </span>
                     {{conference.fullName}}
                   </div>
                   <div>
                     <span class="itemlabel">
-                      <i class="el-icon-s-flag"></i> Status:
+                      <em class="el-icon-s-flag"></em> Status:
                     </span>
                     <conferenceStatus v-if = "conference.status" :status="conference.status"></conferenceStatus>
                   </div>

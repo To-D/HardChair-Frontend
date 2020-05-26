@@ -21,29 +21,29 @@
                 <div class="col-xl-8 col-lg-12">
                   <div>
                     <h2>
-                      <i class="el-icon-info"></i> Paper Info
+                      <em class="el-icon-info"></em> Paper Info
                     </h2>
                     <div class="infoitem">
                       <span class="itemlabel">
-                        <i class="el-icon-s-opportunity"></i> Title:
+                        <em class="el-icon-s-opportunity"></em> Title:
                       </span>
                       {{paper.title}}
                     </div>
                     <div class="infoitem">
                       <span class="itemlabel">
-                        <i class="el-icon-s-fold"></i> Summary:
+                        <em class="el-icon-s-fold"></em> Summary:
                       </span>
                       {{paper.summary}}
                     </div>
                     <div class="infoitem" v-if="paper.topics">
                       <span class="itemlabel">
-                        <i class="el-icon-price-tag"></i> Topics:
+                        <em class="el-icon-price-tag"></em> Topics:
                       </span>
                       <el-tag :key="index" v-for="(topic,index) in paper.topics">{{topic}}</el-tag>
                     </div>
                     <div class="infoitem">
                       <span class="itemlabel">
-                        <i class="el-icon-s-flag"></i> Status:
+                        <em class="el-icon-s-flag"></em> Status:
                       </span>
                       <span
                         v-if="paper.reviewResults && paper.reviewResults.length"
@@ -52,7 +52,7 @@
                     </div>
                     <div class="infoitem" v-if="paper.createdTime">
                       <span class="itemlabel">
-                        <i class="el-icon-s-flag"></i> Created Time:
+                        <em class="el-icon-s-flag"></em> Created Time:
                       </span>
                       {{paper.createdTime.substring(0,10)}}
                     </div>
@@ -67,7 +67,7 @@
               <div class="row">
                 <div class="col-xl-8 col-lg-8">
                   <h2>
-                    <i class="el-icon-document-copy"></i> This Paper in PDF
+                    <em class="el-icon-document-copy"></em> This Paper in PDF
                   </h2>
 
                   <div class="row">
@@ -90,7 +90,7 @@
               <div class="row">
                 <div class="col-xl-6 col-lg-6">
                   <h2>
-                    <i class="el-icon-upload2"></i> Paper Review
+                    <em class="el-icon-upload2"></em> Paper Review
                   </h2>
 
                   <el-card v-if="paper.status == -1" shadow="hover">You have reviewed this paper!</el-card>
@@ -160,7 +160,7 @@
               <div class="row">
                 <div class="col-xl-6 col-lg-6">
                   <h2>
-                    <i class="el-icon-document-checked"></i> My Results
+                    <em class="el-icon-document-checked"></em> My Results
                   </h2>
                   <div v-if="conferenceStatus !== 'OPEN_RESULT'">
                     <el-card shadow="hover">Result hasn't been announced!</el-card>
@@ -175,19 +175,19 @@
                   >
                     <p>
                       <span class="itemlabel">
-                        <i class="el-icon-s-opportunity"></i> Comment:
+                        <em class="el-icon-s-opportunity"></em> Comment:
                       </span>
                       {{result.comment}}
                     </p>
                     <p>
                       <span class="itemlabel">
-                        <i class="el-icon-s-fold"></i> Confidence:
+                        <em class="el-icon-s-fold"></em> Confidence:
                       </span>
                       {{result.confidence}}
                     </p>
                     <p>
                       <span class="itemlabel">
-                        <i class="el-icon-date"></i> Score：
+                        <em class="el-icon-date"></em> Score：
                       </span>
                       {{result.score}}
                     </p>
@@ -202,7 +202,7 @@
               <div class="row">
                 <div class="col-xl-6 col-lg-6">
                   <h2>
-                    <i class="el-icon-upload2"></i> Edit paper
+                    <em class="el-icon-upload2"></em> Edit paper
                   </h2>                  
                   <div v-if="conferenceStatus == 'SUBMIT_ALLOWED'">
                     <contribution

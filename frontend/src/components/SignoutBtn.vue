@@ -2,7 +2,7 @@
   <div>
     <router-link to="" @click.native="signOut">
       <el-menu-item>
-        <i class="el-icon-circle-close"></i>Sign out
+        <em class="el-icon-circle-close"></em>Sign out
       </el-menu-item>
     </router-link>
   </div>

@@ -28,29 +28,29 @@
                 <div class="col-xl-8 col-lg-8">
                   <div>
                     <h2>
-                      <i class="el-icon-info"></i> Conference Info
+                      <em class="el-icon-info"></em> Conference Info
                     </h2>
                     <div class="infoitem">
                       <span class="itemlabel">
-                        <i class="el-icon-user-solid"></i> Owner:
+                        <em class="el-icon-user-solid"></em> Owner:
                       </span>
                       {{conference.owner}}
                     </div>
                     <div class="infoitem">
                       <span class="itemlabel">
-                        <i class="el-icon-chat-dot-round"></i> Short name:
+                        <em class="el-icon-chat-dot-round"></em> Short name:
                       </span>
                       {{conference.nameAbbreviation}}
                     </div>
                     <div class="infoitem">
                       <span class="itemlabel">
-                        <i class="el-icon-chat-line-round"></i> Full name:
+                        <em class="el-icon-chat-line-round"></em> Full name:
                       </span>
                       {{conference.fullName}}
                     </div>
                     <div class="infoitem" v-if="conference.topics">
                       <span class="itemlabel">
-                        <i class="el-icon-price-tag"></i> Topics:
+                        <em class="el-icon-price-tag"></em> Topics:
                       </span>
                       <el-tag
                         :key="index"
@@ -59,31 +59,31 @@
                     </div>
                     <div class="infoitem">
                       <span class="itemlabel">
-                        <i class="el-icon-location"></i> Location:
+                        <em class="el-icon-location"></em> Location:
                       </span>
                       {{conference.location}}
                     </div>
                     <div class="infoitem">
                       <span class="itemlabel">
-                        <i class="el-icon-video-play"></i> Starts at:
+                        <em class="el-icon-video-play"></em> Starts at:
                       </span>
                       <span v-if="conference.startTime">{{conference.startTime.substring(0, 10) }}</span>
                     </div>
                     <div class="infoitem">
                       <span class="itemlabel">
-                        <i class="el-icon-video-pause"></i> Ends at:
+                        <em class="el-icon-video-pause"></em> Ends at:
                       </span>
                       <span v-if="conference.endTime">{{conference.endTime.substring(0, 10)}}</span>
                     </div>
                     <div class="infoitem">
                       <span class="itemlabel">
-                        <i class="el-icon-date"></i> Submission deadline:
+                        <em class="el-icon-date"></em> Submission deadline:
                       </span>
                       <span v-if="conference.deadline">{{conference.deadline.substring(0, 10)}}</span>
                     </div>
                     <div class="infoitem">
                       <span class="itemlabel">
-                        <i class="el-icon-medal-1"></i> Result announcement at:
+                        <em class="el-icon-medal-1"></em> Result announcement at:
                       </span>
                       <span
                         v-if="conference.resultAnnounceDate"
@@ -91,7 +91,7 @@
                     </div>
                     <div class="infoitem">
                       <span class="itemlabel">
-                        <i class="el-icon-s-flag"></i> Status:
+                        <em class="el-icon-s-flag"></em> Status:
                       </span>
                       <conferenceStatus :status="conference.status"></conferenceStatus>
                     </div>
@@ -106,7 +106,7 @@
               <div class="row">
                 <div class="col-xl-8 col-lg-8">
                   <h2>
-                    <i class="el-icon-magic-stick"></i> Conference Operations
+                    <em class="el-icon-magic-stick"></em> Conference Operations
                   </h2>
 
                   <div class="row">
@@ -167,7 +167,7 @@
               <div class="row">
                 <div class="col-xl-6 col-lg-6">
                   <h2>
-                    <i class="el-icon-upload2"></i> Paper Submission
+                    <em class="el-icon-upload2"></em> Paper Submission
                   </h2>
                   <contribution
                     v-if="this.conference.id"
@@ -184,7 +184,7 @@
               <div class="row">
                 <div class="col-xl-6 col-lg-6">
                   <h2>
-                    <i class="el-icon-document"></i>My Papers
+                    <em class="el-icon-document"></em>My Papers
                   </h2>
                   <el-card
                     shadow="hover"
@@ -195,19 +195,19 @@
                   >
                     <p>
                       <span class="itemlabel">
-                        <i class="el-icon-s-opportunity"></i> Title:
+                        <em class="el-icon-s-opportunity"></em> Title:
                       </span>
                       {{paper.title}}
                     </p>
                     <p>
                       <span class="itemlabel">
-                        <i class="el-icon-s-fold"></i> Summary:
+                        <em class="el-icon-s-fold"></em> Summary:
                       </span>
                       {{paper.summary}}
                     </p>
                     <p v-if="paper.createdTime">
                       <span class="itemlabel">
-                        <i class="el-icon-date"></i> Upload date:
+                        <em class="el-icon-date"></em> Upload date:
                       </span>
                       {{paper.createdTime.substring(0,10)}}
                     </p>
@@ -244,7 +244,7 @@
               <div class="row">
                 <div class="col-xl-6 col-lg-6">
                   <h2>
-                    <i class="el-icon-document"></i> Papers to review
+                    <em class="el-icon-document"></em> Papers to review
                   </h2>
                   <showPapers :conferenceId="conference.id"></showPapers>
                 </div>

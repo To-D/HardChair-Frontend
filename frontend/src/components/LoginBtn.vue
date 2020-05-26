@@ -1,6 +1,6 @@
 <template>
   <div>
-    <i class="el-icon-s-promotion"></i>
+    <em class="el-icon-s-promotion"></em>
     <router-link to="/login">Sign in</router-link>
   </div>
 </template>

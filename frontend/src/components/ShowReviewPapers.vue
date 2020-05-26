@@ -13,19 +13,19 @@
     >
       <p>
         <span class="itemlabel">
-          <i class="el-icon-s-opportunity"></i> Title:
+          <em class="el-icon-s-opportunity"></em> Title:
         </span>
         {{paper.title}}
       </p>
       <p>
         <span class="itemlabel">
-          <i class="el-icon-s-fold"></i> Summary:
+          <em class="el-icon-s-fold"></em> Summary:
         </span>
         {{paper.summary}}
       </p>
       <p v-if="paper.createdTime">
         <span class="itemlabel">
-          <i class="el-icon-date"></i> Upload date:
+          <em class="el-icon-date"></em> Upload date:
         </span>
         {{paper.createdTime.substring(0,10)}}
       </p>

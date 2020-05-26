@@ -71,25 +71,25 @@
         </div>
         <div>
           <span class="itemlabel">
-            <i class="el-icon-s-custom"></i> Name:
+            <em class="el-icon-s-custom"></em> Name:
           </span>
           {{author.name}}
         </div>
         <div>
           <span class="itemlabel">
-            <i class="el-icon-office-building"></i> Organization:
+            <em class="el-icon-office-building"></em> Organization:
           </span>
           {{author.organization}}
         </div>
         <div>
           <span class="itemlabel">
-            <i class="el-icon-map-location"></i> Region:
+            <em class="el-icon-map-location"></em> Region:
           </span>
           {{author.region}}
         </div>
         <div>
           <span class="itemlabel">
-            <i class="el-icon-message"></i> Email:
+            <em class="el-icon-message"></em> Email:
           </span>
           {{author.email}}
         </div>
@@ -111,7 +111,7 @@
       :on-change="handleChange"
       :file-list="files"
     >
-      <i class="el-icon-upload"></i>
+      <em class="el-icon-upload"></em>
       <div class="el-upload__text">
         Drag file here to upload, or
         <em>click here</em>
