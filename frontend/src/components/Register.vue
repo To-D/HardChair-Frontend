@@ -136,7 +136,7 @@
                   v-on:click="register()"
                 >Register</el-button>
               </el-form-item>
-              <!-- <hr /> -->
+              
               <div class="text-center text-small text-muted">
                 <span>
                   Already have an account?

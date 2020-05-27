@@ -7,9 +7,7 @@
         <div class="row my-4 my-md-6 text-light">
           <div class="col-lg-9 col-xl-6">
             <h1 class="display-4">Conference Verification</h1>
-            <!-- <p
-              class="lead mb-0"
-            ></p> -->
+
           </div>
         </div>
       </div>
