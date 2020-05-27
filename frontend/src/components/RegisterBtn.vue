@@ -1,8 +1,10 @@
 <template>
-  <div>
-    <em class="el-icon-connection"></em>
-    <router-link to="/register">Register</router-link>
-  </div>
+  <router-link to="/register">
+    <div>
+      <em class="el-icon-connection"></em>
+      Register
+    </div>
+  </router-link>
 </template>
 
 <script>

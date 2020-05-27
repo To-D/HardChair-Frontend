@@ -1,8 +1,10 @@
 <template>
-  <div>
-    <em class="el-icon-s-promotion"></em>
-    <router-link to="/login">Sign in</router-link>
-  </div>
+  <router-link to="/login">
+    <div>
+      <em class="el-icon-s-promotion"></em>
+      Sign in
+    </div>
+  </router-link>
 </template>
 
 <script>

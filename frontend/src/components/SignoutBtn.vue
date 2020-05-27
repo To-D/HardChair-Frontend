@@ -1,11 +1,9 @@
 <template>
-  <div>
-    <router-link to="" @click.native="signOut">
-      <el-menu-item>
-        <em class="el-icon-circle-close"></em>Sign out
-      </el-menu-item>
-    </router-link>
-  </div>
+  <router-link to @click.native="signOut">
+    <el-menu-item>
+      <em class="el-icon-circle-close"></em>Sign out
+    </el-menu-item>
+  </router-link>
 </template>
 
 <script>
@@ -22,16 +20,14 @@ export default {
       })
         .then(() => {
           this.$store.commit("logout");
-          this.$router.push('/login');
+          this.$router.push("/login");
           this.$message({
             dangerouslyUseHTMLString: true,
             message: '<strong style="color:teal">You have signed out!</strong>',
             center: true
           });
         })
-        .catch(error => {
-          
-        });
+        .catch(error => {});
     }
   }
 };
