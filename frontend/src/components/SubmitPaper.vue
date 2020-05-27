@@ -432,9 +432,6 @@ h2 {
 .onPageBtn {
   margin-left: 12px;
 }
-el-form-item {
-  margin-bottom: 0;
-}
 .el-tag {
   margin-right: 5px;
 }
