@@ -690,6 +690,17 @@ export default {
                   });
                   break;
               }
+              if(resp.data.message2 == "open fail : no solution"){
+                this.$message({
+                  dangerouslyUseHTMLString: true,
+                  type: "error",
+                  message:
+                    '<strong style="color:teal">Fail since paper distribution error.</strong>',
+                  center: true
+                });
+              }
+                  
+              
             }
           })
           .catch(error => {

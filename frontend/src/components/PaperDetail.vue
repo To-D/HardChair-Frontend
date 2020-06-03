@@ -85,71 +85,16 @@
             </section>
           </el-tab-pane>
 
-          <el-tab-pane v-if="isPC_MEMBER" label="Paper Review" name="review">
+          <!--<el-tab-pane v-if="isPC_MEMBER" label="Paper Review" name="review">-->
+          <el-tab-pane label="Paper Review" name="review">
             <section>
               <div class="row">
                 <div class="col-xl-6 col-lg-6">
                   <h2>
                     <em class="el-icon-upload2"></em> Paper Review
                   </h2>
-
                   <el-card v-if="paper.status == -1" shadow="hover">You have reviewed this paper!</el-card>
-
-                  <el-form
-                    v-else
-                    @submit.native.prevent
-                    status-icon
-                    :model="reviewForm"
-                    :rules="rules"
-                    label-position="top"
-                    ref="reviewForm"
-                  >
-                    <!-- score -->
-                    <el-form-item prop="score" label="Score" class="is-required">
-                      <el-rate
-                        v-model="reviewForm.score"
-                        show-text
-                        id="score"
-                        :max="max"
-                        :texts="texts"
-                        :colors="colors"
-                      ></el-rate>
-                    </el-form-item>
-
-                    <!-- comment -->
-                    <el-form-item prop="comment" label="Comment">
-                      <el-input
-                        type="textarea"
-                        autosize
-                        v-model="reviewForm.comment"
-                        auto-complete="off"
-                        id="comment"
-                        placeholder="Your comment on this paper"
-                      ></el-input>
-                    </el-form-item>
-
-                    <!-- confidence -->
-                    <el-form-item prop="confidence" label="Confidence">
-                      <el-radio-group v-model="reviewForm.confidence">
-                        <el-radio-button label="Very low"></el-radio-button>
-                        <el-radio-button label="Low"></el-radio-button>
-                        <el-radio-button label="High"></el-radio-button>
-                        <el-radio-button label="Very High"></el-radio-button>
-                      </el-radio-group>
-                    </el-form-item>
-
-                    <br />
-
-                    <!-- submit button -->
-                    <el-form-item>
-                      <el-button
-                        native-type="submit"
-                        type="primary"
-                        v-on:click="Submit('reviewForm')"
-                        :disabled="reviewDisabled"
-                      >Submit Review Results</el-button>
-                    </el-form-item>
-                  </el-form>
+                  <review v-else :paper="paper"></review>                  
                 </div>
               </div>
             </section>
@@ -233,10 +178,11 @@ import footerbar from "./Footer";
 import download from "./DownloadPaper";
 import preview from "./PreviewPaper";
 import contribution from "./SubmitPaper";
+import review from "./ReviewPaper";
 
 export default {
   name: "PaperDetail",
-  components: { navbar, footerbar, download, preview, contribution },
+  components: { navbar, footerbar, download, preview, contribution,review },
   inject: ["reload"],
 
   data() {
@@ -251,63 +197,70 @@ export default {
       activeName:"info",
       conferenceStatus:"",
 
-      // Review form
-      reviewForm: {
-        score: null,
-        comment: "",
-        confidence: ""
-      },
-      rules: {
-        score: [
-          {
-            validator: (rule, value, callback) => {
-              if (!value) {
-                callback(new Error("Score is required"));
-              }
-              callback();
-            },
-            trigger: "blur"
-          }
-        ],
-        comment: [{ required: true, trigger: "blur" }],
-        confidence: [{ required: true, trigger: "blur" }]
-      },
-      // el-rate
-      texts: [
-        " -2 ( reject )",
-        " -1 ( week reject )",
-        " 1 ( weak accept )",
-        " 2 ( accept )"
-      ],
-      max: 4,
-      colors: ["#99A9BF", "#F7BA2A", "#FF9900"]
+      // // Review form
+      // let len = reviewResults.length;
+      // for(let i = 0; i< len; i++){
+      //   if(reviewResults[i].isPcMember){
+      //     this.currentReview = reviewResults[i];
+      //     break;
+      //   }
+      // }
+      // reviewForm: {
+      //   score: null,
+      //   comment: "",
+      //   confidence: ""
+      // },
+      // rules: {
+      //   score: [
+      //     {
+      //       validator: (rule, value, callback) => {
+      //         if (!value) {
+      //           callback(new Error("Score is required"));
+      //         }
+      //         callback();
+      //       },
+      //       trigger: "blur"
+      //     }
+      //   ],
+      //   comment: [{ required: true, trigger: "blur" }],
+      //   confidence: [{ required: true, trigger: "blur" }]
+      // },
+      // // el-rate
+      // texts: [
+      //   " -2 ( reject )",
+      //   " -1 ( week reject )",
+      //   " 1 ( weak accept )",
+      //   " 2 ( accept )"
+      // ],
+      // max: 4,
+      // colors: ["#99A9BF", "#F7BA2A", "#FF9900"]
     };
   },
   methods: {
-    Submit(formName) {
-      let tmp = this.reviewForm;
-      this.$axios
-        .post("/SubmitReviewResult", {
-          paperId: this.paper.id,
-          score: tmp.score,
-          comment: tmp.comment,
-          confidence: tmp.confidence
-        })
-        .then(resp => {
-          if (resp.status === 200) {            
-            this.$message({
-              dangerouslyUseHTMLString: true,
-              type: "success",
-              message: '<strong style="color:teal">Submit success!</strong>',
-              center: true
-            });
-            this.reload();
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    }
+    // Submit(formName) {
+    //   let tmp = this.reviewForm;
+    //   this.$axios
+    //     .post("/SubmitReviewResult", {
+    //       paperId: this.paper.id,
+    //       score: tmp.score,
+    //       comment: tmp.comment,
+    //       confidence: tmp.confidence
+    //     })
+    //     .then(resp => {
+    //       if (resp.status === 200) {            
+    //         this.$message({
+    //           dangerouslyUseHTMLString: true,
+    //           type: "success",
+    //           message: '<strong style="color:teal">Submit success!</strong>',
+    //           center: true
+    //         });
+    //         this.reload();
+    //       }
+    //     })
+    //     .catch(error => {
+    //       console.log(error);
+    //     });
+    // }
   },
   computed: {
     reviewDisabled() {
@@ -323,8 +276,10 @@ export default {
       .then(resp => {
         if (resp.status === 200 && !resp.data.hasOwnProperty("message")) {
           this.paper = resp.data;
+          console.log(resp);
           this.conferenceStatus = this.paper.nTopics[0].tag;
           this.paper.topics = this.paper.topics.split(",");
+          let reviewResults = this.paper.reviewResults;          
           switch (this.paper.url) {
             case "AUTHOR":
               this.isAUTHOR = true;
