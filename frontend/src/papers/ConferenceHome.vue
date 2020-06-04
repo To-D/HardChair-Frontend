@@ -82,9 +82,9 @@
 </template>
 
 <script>
-import navbar from "./Nav";
-import footerbar from "./Footer";
-import conferenceStatus from "./ParseConferenceStatus";
+import navbar from "../components/Nav";
+import footerbar from "../components/Footer";
+import conferenceStatus from "../components/ParseConferenceStatus";
 
 export default {
   name: "ConferenceHome",

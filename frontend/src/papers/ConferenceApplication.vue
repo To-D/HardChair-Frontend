@@ -141,8 +141,8 @@
 </template>
 
 <script>
-import navbar from "./Nav";
-import footerbar from "./Footer";
+import navbar from "../components/Nav";
+import footerbar from "../components/Footer";
 
 export default {
   name: "ConferenceApplication",

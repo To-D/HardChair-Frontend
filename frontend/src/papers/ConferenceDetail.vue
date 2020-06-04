@@ -392,14 +392,14 @@
 </template>
 
 <script>
-import navbar from "./Nav";
-import footerbar from "./Footer";
+import navbar from "../components/Nav";
+import footerbar from "../components/Footer";
 import draggable from "vuedraggable";
-import download from "./DownloadPaper";
-import preview from "./PreviewPaper";
-import contribution from "./SubmitPaper";
-import showPapers from "./ShowReviewPapers";
-import conferenceStatus from "./ParseConferenceStatus";
+import download from "../components/DownloadPaper";
+import preview from "../components/PreviewPaper";
+import contribution from "../components/SubmitPaper";
+import showPapers from "../components/ShowReviewPapers";
+import conferenceStatus from "../components/ParseConferenceStatus";
 
 export default {
   name: "ConferenceDetail",

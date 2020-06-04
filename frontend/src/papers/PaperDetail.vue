@@ -173,12 +173,12 @@
 </template>
 
 <script>
-import navbar from "./Nav";
-import footerbar from "./Footer";
-import download from "./DownloadPaper";
-import preview from "./PreviewPaper";
-import contribution from "./SubmitPaper";
-import review from "./ReviewPaper";
+import navbar from "../components/Nav";
+import footerbar from "../components/Footer";
+import download from "../components/DownloadPaper";
+import preview from "../components/PreviewPaper";
+import contribution from "../components/SubmitPaper";
+import review from "../components/ReviewPaper";
 
 export default {
   name: "PaperDetail",
