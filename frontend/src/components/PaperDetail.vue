@@ -94,7 +94,7 @@
                     <em class="el-icon-upload2"></em> Paper Review
                   </h2>
                   <el-card v-if="paper.status == -1" shadow="hover">You have reviewed this paper!</el-card>
-                  <review v-else :paper="paper"></review>                  
+                  <review v-else-if="paper.id" :reviewResult="reviewResult" :id="paper.id"></review>
                 </div>
               </div>
             </section>
@@ -197,6 +197,8 @@ export default {
       activeName:"info",
       conferenceStatus:"",
 
+      reviewResult:null,
+
       // // Review form
       // let len = reviewResults.length;
       // for(let i = 0; i< len; i++){
@@ -276,10 +278,23 @@ export default {
       .then(resp => {
         if (resp.status === 200 && !resp.data.hasOwnProperty("message")) {
           this.paper = resp.data;
-          console.log(resp);
           this.conferenceStatus = this.paper.nTopics[0].tag;
           this.paper.topics = this.paper.topics.split(",");
-          let reviewResults = this.paper.reviewResults;          
+          // Get present pc's review result
+          let reviewResults = this.paper.reviewResults;
+          let len = reviewResults.length;
+          for(let i = 0; i<len; i++){
+            if(reviewResults[i].isPcMember){
+              this.reviewResult = reviewResults[i];
+            }
+          }
+          
+          // // For test
+          // this.reviewResult = {
+          //   score: 3,
+          //   comment: "niubia",
+          //   confidence: "Low"
+          // };
           switch (this.paper.url) {
             case "AUTHOR":
               this.isAUTHOR = true;

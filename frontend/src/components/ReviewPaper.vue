@@ -1,66 +1,81 @@
 <template>
-          <!--v-else-->
-          <el-form     
-            @submit.native.prevent
-            status-icon
-            :model="reviewForm"
-            :rules="rules"
-            label-position="top"
-            ref="reviewForm"
-          >
-            <!-- score -->
-            <el-form-item prop="score" label="Score" class="is-required">
-              <el-rate
-                v-model="reviewForm.score"
-                show-text
-                id="score"
-                :max="max"
-                :texts="texts"
-                :colors="colors"
-              ></el-rate>
-            </el-form-item>
+<el-form     
+  @submit.native.prevent
+  status-icon
+  :model="reviewForm"
+  :rules="rules"
+  label-position="top"
+  ref="reviewForm"
+>
+  <!-- score -->
+  <el-form-item prop="score" label="Score" class="is-required">
+    <el-rate
+      v-model="reviewForm.score"
+      show-text
+      id="score"
+      :max="max"
+      :texts="texts"
+      :colors="colors"
+    ></el-rate>
+  </el-form-item>
 
-            <!-- comment -->
-            <el-form-item prop="comment" label="Comment">
-              <el-input
-                type="textarea"
-                autosize
-                v-model="reviewForm.comment"
-                auto-complete="off"
-                id="comment"
-                placeholder="Your comment on this paper"
-              ></el-input>
-            </el-form-item>
+  <!-- comment -->
+  <el-form-item prop="comment" label="Comment">
+    <el-input
+      type="textarea"
+      autosize
+      v-model="reviewForm.comment"
+      auto-complete="off"
+      id="comment"
+      placeholder="Your comment on this paper"
+    ></el-input>
+  </el-form-item>
 
-            <!-- confidence -->
-            <el-form-item prop="confidence" label="Confidence">
-              <el-radio-group v-model="reviewForm.confidence">
-                <el-radio-button label="Very low"></el-radio-button>
-                <el-radio-button label="Low"></el-radio-button>
-                <el-radio-button label="High"></el-radio-button>
-                <el-radio-button label="Very High"></el-radio-button>
-              </el-radio-group>
-            </el-form-item>
+  <!-- confidence -->
+  <el-form-item prop="confidence" label="Confidence">
+    <el-radio-group v-model="reviewForm.confidence">
+      <el-radio-button label="Very low"></el-radio-button>
+      <el-radio-button label="Low"></el-radio-button>
+      <el-radio-button label="High"></el-radio-button>
+      <el-radio-button label="Very High"></el-radio-button>
+    </el-radio-group>
+  </el-form-item>
 
-            <br />
+  <br />
 
-            <!-- submit button -->
-            <el-form-item>
-              <el-button
-                native-type="submit"
-                type="primary"
-                v-on:click="Submit('reviewForm')"
-                :disabled="reviewDisabled"
-              >Submit Review Results</el-button>
-            </el-form-item>
-          </el-form>
+  <!-- submit button -->
+  <el-form-item v-if = "!isEdit">
+    <el-button
+      native-type="submit"
+      type="primary"
+      v-on:click="Submit('reviewForm')"
+      :disabled="reviewDisabled"
+    >Submit Review Results</el-button>
+  </el-form-item>
+
+  <!-- modify button -->
+  <el-form-item v-else>
+    <el-button
+      native-type="submit"
+      type="primary"
+      v-on:click="modify('reviewForm')"
+      :disabled="reviewDisabled"
+    >Submit new Result</el-button>
+    <el-button
+      type="primary"
+      v-on:click="confirm"
+      :disabled="reviewDisabled"
+    >Do not Modify</el-button>
+  </el-form-item>
+</el-form>
 </template>
 <script>
 export default {
     name: "ReviewPaper",
-    props:['paper'],
+    props:['reviewResult','id'],
     data(){
       return{
+          isEdit:false,
           reviewForm: {
             score: null,
             comment: "",
@@ -72,7 +87,7 @@ export default {
                 validator: (rule, value, callback) => {
                   if (!value) {
                     callback(new Error("Score is required"));
-                  }
+                  }                  
                   callback();
                 },
                 trigger: "blur"
@@ -98,12 +113,12 @@ export default {
         return !tmp.score || tmp.comment == "" || tmp.confidence == "";
       }
     },
-    methods:{
+    methods:{      
       Submit(formName) {
         let tmp = this.reviewForm;
         this.$axios
           .post("/SubmitReviewResult", {
-            paperId: this.paper.id,
+            paperId: this.id,
             score: tmp.score,
             comment: tmp.comment,
             confidence: tmp.confidence
@@ -122,23 +137,65 @@ export default {
           .catch(error => {
             console.log(error);
           });
+      },
+      confirm(){
+      this.$confirm("Are you sure that you won't modify your result?", "Confirm", {
+          confirmButtonText: "Yes",
+          cancelButtonText: "No"
+        })
+          .then(() => {
+            this.$axios
+            .post('/ReviseOrConfirmReviewResult',{
+              reviewResultId:this.reviewForm.id,
+              score: this.reviewForm.score,
+              comment: this.reviewForm.comment,
+              confidence: this.reviewForm.confidence                
+            })
+            .then(resp=>{
+              if(resp.status === 200){
+                this.$message({
+                  dangerouslyUseHTMLString: true,
+                  type: "success",
+                  message: '<strong style="color:teal">Confirm successfully!</strong>',
+                  center: true
+                });                  
+              }
+            })
+            .catch(error=>{
+              console.log(error);
+            })
+          })
+          .catch(error => {});
+      },
+      modify(formName){
+        this.$axios
+        .post('/ReviseOrConfirmReviewResult',{
+          reviewResultId:this.reviewForm.id,
+          score: this.reviewForm.score,
+          comment: this.reviewForm.comment,
+          confidence: this.reviewForm.confidence                
+        })
+        .then(resp => {
+          if (resp.status === 200) {            
+            this.$message({
+              dangerouslyUseHTMLString: true,
+              type: "success",
+              message: '<strong style="color:teal">Modify successfully!</strong>',
+              center: true
+            });
+            this.reload();
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
       }
     },
      created(){
-       console.log(this.paper);
-    //     // Edit
-    //     if(this.paper !== undefined){
-    //         this.paperForm = this.paper;
-    //         this.isEdit = true;
-    //         this.files[0].name = this.paperForm.title+".pdf";
-    //         this.conferenceTopics = this.topics[0].topic.split(',');            
-    //         this.paperForm.authors.sort(function(a, b){return a.orderOfAuthor - b.orderOfAuthor});
-    //         return;
-    //     }
-
-    //     // First upload
-    //     this.conferenceTopics = this.topics.split(',');        
-    //     this.files=[];
+       if(this.reviewResult != null){
+         this.isEdit = true;
+         this.reviewForm = this.reviewResult;
+       }
      }
 }
 </script>
