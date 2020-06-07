@@ -93,10 +93,59 @@
                   <h2>
                     <em class="el-icon-upload2"></em> Paper Review
                   </h2>
-                  <el-card v-if="paper.status == -1" shadow="hover">You have reviewed this paper!</el-card>
+                  <el-card v-if="reviewResult && (reviewResult.confirm == 2 || reviewResult.confirm == 1 && !paper.rebuttal)" shadow="hover">You have reviewed this paper!</el-card>
                   <review v-else-if="paper.id" :reviewResult="reviewResult" :id="paper.id"></review>
                 </div>
               </div>
+            </section>
+          </el-tab-pane>
+
+          <el-tab-pane v-if="isCHAIR || isPC_MEMBER" label="Forum" name="forum">
+            <section>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6">
+                  <h2>
+                    <em class="el-icon-document-checked"></em>Forum
+                  </h2>
+
+                  <div v-if="paper.posts">
+                    <el-card                            
+                    shadow="hover"
+                    class="box-card"
+                    style="margin-top: 1em;"                  
+                    v-for="(post,index) in paper.posts.slice((currentPage- 1)*pageSize,currentPage*pageSize)"
+                    :key="index"
+                    >
+                    <!-- header -->
+                      <div slot="header" class="clearfix">
+                        <span>{{post.username}}</span>                  
+                        <span style="float: right; padding: 3px 0">
+                          {{post.createdTime}}
+                        </span>
+                      </div>
+
+                      <div>
+                        {{post.postContent}}
+                      </div>
+
+                      <el-button>Reply</el-button>
+                    </el-card>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+              <div class="col-xl-6 col-lg-12">
+                <el-pagination
+                  hide-on-  single-page
+                  layout="prev, pager, next"
+                  :page-size="pageSize"
+                  :current-page.sync="currentPage"
+                  :total="paper.posts.length"
+                >></el-pagination>
+              </div>
+            </div>
+
             </section>
           </el-tab-pane>
 
@@ -138,7 +187,7 @@
                     </p>
                   </el-card>
                 </div>
-              </div>
+              </div>              
             </section>
           </el-tab-pane>
 
@@ -190,6 +239,7 @@ export default {
       // Authorities
       isAUTHOR: false,
       isPC_MEMBER: false,
+      isCHAIR:true,
 
       // paper
       paper: {},
@@ -199,76 +249,9 @@ export default {
 
       reviewResult:null,
 
-      // // Review form
-      // let len = reviewResults.length;
-      // for(let i = 0; i< len; i++){
-      //   if(reviewResults[i].isPcMember){
-      //     this.currentReview = reviewResults[i];
-      //     break;
-      //   }
-      // }
-      // reviewForm: {
-      //   score: null,
-      //   comment: "",
-      //   confidence: ""
-      // },
-      // rules: {
-      //   score: [
-      //     {
-      //       validator: (rule, value, callback) => {
-      //         if (!value) {
-      //           callback(new Error("Score is required"));
-      //         }
-      //         callback();
-      //       },
-      //       trigger: "blur"
-      //     }
-      //   ],
-      //   comment: [{ required: true, trigger: "blur" }],
-      //   confidence: [{ required: true, trigger: "blur" }]
-      // },
-      // // el-rate
-      // texts: [
-      //   " -2 ( reject )",
-      //   " -1 ( week reject )",
-      //   " 1 ( weak accept )",
-      //   " 2 ( accept )"
-      // ],
-      // max: 4,
-      // colors: ["#99A9BF", "#F7BA2A", "#FF9900"]
+      pageSize: 6,
+      currentPage: 1,
     };
-  },
-  methods: {
-    // Submit(formName) {
-    //   let tmp = this.reviewForm;
-    //   this.$axios
-    //     .post("/SubmitReviewResult", {
-    //       paperId: this.paper.id,
-    //       score: tmp.score,
-    //       comment: tmp.comment,
-    //       confidence: tmp.confidence
-    //     })
-    //     .then(resp => {
-    //       if (resp.status === 200) {            
-    //         this.$message({
-    //           dangerouslyUseHTMLString: true,
-    //           type: "success",
-    //           message: '<strong style="color:teal">Submit success!</strong>',
-    //           center: true
-    //         });
-    //         this.reload();
-    //       }
-    //     })
-    //     .catch(error => {
-    //       console.log(error);
-    //     });
-    // }
-  },
-  computed: {
-    reviewDisabled() {
-      let tmp = this.reviewForm;
-      return !tmp.score || tmp.comment == "" || tmp.confidence == "";
-    }
   },
   created() {
     this.$axios
@@ -278,6 +261,7 @@ export default {
       .then(resp => {
         if (resp.status === 200 && !resp.data.hasOwnProperty("message")) {
           this.paper = resp.data;
+          console.log(this.paper);
           this.conferenceStatus = this.paper.nTopics[0].tag;
           this.paper.topics = this.paper.topics.split(",");
           // Get present pc's review result
@@ -293,8 +277,22 @@ export default {
           // this.reviewResult = {
           //   score: 3,
           //   comment: "niubia",
-          //   confidence: "Low"
+          //   confidence: "Low",
+          //   confirm:2
           // };
+          // this.paper.rebuttal = "hh";
+
+          this.paper.posts=[{
+            username:"li",
+            createdTime:"2020-06-07",
+            postContent:"hi",
+          },
+          {
+            username:"li",
+            createdTime:"2020-06-07",
+            postContent:"hi",
+          },
+          ]
           switch (this.paper.url) {
             case "AUTHOR":
               this.isAUTHOR = true;
