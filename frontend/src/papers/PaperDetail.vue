@@ -85,8 +85,7 @@
             </section>
           </el-tab-pane>
 
-          <!--<el-tab-pane v-if="isPC_MEMBER" label="Paper Review" name="review">-->
-          <el-tab-pane label="Paper Review" name="review">
+          <el-tab-pane v-if="isPC_MEMBER" label="Paper Review" name="review">
             <section>
               <div class="row">
                 <div class="col-xl-6 col-lg-6">
@@ -128,7 +127,7 @@
                         {{post.postContent}}
                       </div>
 
-                      <el-button>Reply</el-button>
+                      <el-button @click="reply">Reply</el-button>
                     </el-card>
                   </div>
                 </div>
@@ -144,6 +143,21 @@
                   :total="paper.posts.length"
                 >></el-pagination>
               </div>
+            </div>
+
+            <div id="reply_area">
+              <p>Reply</p>
+              <br>
+              <p>the post you quote</p>
+              <el-input
+                type="textarea"
+                autosize
+                v-model="replyContent"
+                auto-complete="off"
+                id="comment"
+                placeholder="Enter what you want to say"
+              ></el-input>              
+              <el-button  :disabled ="submitDisable"  @click= "submitPost"> Submit </el-button>
             </div>
 
             </section>
@@ -243,15 +257,35 @@ export default {
 
       // paper
       paper: {},
-
       activeName:"info",
       conferenceStatus:"",
 
       reviewResult:null,
 
+      // paging
       pageSize: 6,
       currentPage: 1,
+
+      replyContent:"",
+
     };
+  },
+  methods:{
+    reply(){
+      document.getElementById('reply_area').scrollIntoView({
+            block: 'start',
+            inline: 'nearest',
+            behavior: 'smooth'
+        })
+    },
+    submitPost(){
+
+    }
+  },
+  computed:{
+    submitDisable(){
+      return this.replyContent == "";
+    }
   },
   created() {
     this.$axios
@@ -273,26 +307,29 @@ export default {
             }
           }
           
-          // // For test
+          // For test
           // this.reviewResult = {
           //   score: 3,
           //   comment: "niubia",
           //   confidence: "Low",
-          //   confirm:2
+          //   confirm:0
           // };
-          // this.paper.rebuttal = "hh";
+          //this.paper.rebuttal = "hh";
 
           this.paper.posts=[{
             username:"li",
             createdTime:"2020-06-07",
             postContent:"hi",
+            status:1,
           },
           {
             username:"li",
             createdTime:"2020-06-07",
             postContent:"hi",
+            status:2,
           },
           ]
+
           switch (this.paper.url) {
             case "AUTHOR":
               this.isAUTHOR = true;
