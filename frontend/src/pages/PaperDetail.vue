@@ -154,7 +154,8 @@
                 autosize
                 v-model="postContent"
                 auto-complete="off"
-                id="comment"
+                maxlength="500"
+                show-word-limit
                 placeholder="Enter what you want to say"
               ></el-input>              
               <el-button  :disabled ="submitDisable"  @click= "submitPost"> Submit </el-button>
@@ -253,7 +254,7 @@ export default {
       // Authorities
       isAUTHOR: false,
       isPC_MEMBER: false,
-      isCHAIR:false,
+      isCHAIR:true,
 
       // paper
       paper: {},
