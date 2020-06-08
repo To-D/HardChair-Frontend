@@ -133,7 +133,7 @@
                 </div>
               </div>
 
-              <div class="row" v-if="paper.posts">
+              <div class="row" v-if="paper.posts.length>0">
               <div class="col-xl-6 col-lg-12">
                 <el-pagination
                   hide-on-  single-page
@@ -340,7 +340,6 @@ export default {
       .then(resp => {
         if (resp.status === 200 && !resp.data.hasOwnProperty("message")) {
           this.paper = resp.data;
-          console.log(this.paper);
           this.conferenceStatus = this.paper.nTopics[0].tag;
           this.paper.topics = this.paper.topics.split(",");
           // Get present pc's review result

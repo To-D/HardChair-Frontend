@@ -29,7 +29,8 @@
           <div class="col-xl-8 col-lg-12">
             <div class="text item">
               <div v-if = "conferences.length == 0"><el-card shadow="hover">No conference now!</el-card></div>
-              <el-card v-else
+              <el-card 
+                v-else
                 shadow="hover"
                 class="box-card"
                 style="margin-top: 1em;"
@@ -97,6 +98,7 @@ export default {
       submitAllowed:[],
       openReview:[],
       openResult:[],
+      openFinalResult:[],
       pageSize:6,
       currentPage:1,
       
@@ -116,6 +118,9 @@ export default {
       }, {
         value: 'OPEN_RESULT',
         label: 'Result announced'
+      }, {
+        value: 'OPEN_FINAL_RESULT',
+        label: 'Final Result announced'
       }],
       value: 'ALL'
 
@@ -142,6 +147,9 @@ export default {
         case "OPEN_RESULT":
           this.conferences = this.openResult;
           break;
+        case "OPEN_FINAL_RESULT":
+          this.conferences = this.openFinalResult;
+          break;
         default:
           this.conferences = this.all;
           break;
@@ -158,10 +166,12 @@ export default {
         this.submitAllowed = resp.data.SUBMIT_ALLOWED;
         this.openReview = resp.data.OPEN_REVIEW;
         this.openResult = resp.data.OPEN_RESULT;
+        this.openFinalResult = resp.data.OPEN_FINAL_RESULT;
         this.all.push.apply(this.all,this.checked);
         this.all.push.apply(this.all,this.submitAllowed);
         this.all.push.apply(this.all,this.openReview);
         this.all.push.apply(this.all,this.openResult);
+        this.all.push.apply(this.all,this.openFinalResult);
         this.conferences = this.all;
       } else {
         this.$message.error("Request Error.")

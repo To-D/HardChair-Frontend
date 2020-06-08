@@ -127,7 +127,7 @@
                     </div>
 
                     <div
-                      v-if="isCHECKED || isSUBMIT_ALLOWED ||isOPEN_REVIEW || isOPEN_RESULT || isFINISHED"
+                      v-if="isCHECKED || isSUBMIT_ALLOWED ||isOPEN_REVIEW || isOPEN_RESULT ||isOPEN_FINAL_RESULT||isFINISHED"
                     >
                       <el-button
                         class="onPageBtn"
@@ -152,6 +152,16 @@
                         @click="announceResults"
                       >Announce Results</el-button>
                     </div>
+
+                    <div>
+                      <el-button
+                        v-if="isOPEN_RESULT"
+                        class="onPageBtn"
+                        type="primary"
+                        @click="announceResults"
+                      >Announce Final Results</el-button>
+                    </div>
+
                   </div>
                 </div>
               </div>
@@ -427,6 +437,7 @@ export default {
       isFINISHED: false,
       isOPEN_REVIEW: false,
       isOPEN_RESULT: false,
+      isOPEN_FINAL_RESULT:false,
 
       // Visitor authority
       isADMIN: false,
@@ -723,23 +734,44 @@ export default {
           conferenceId: this.conference.id
         })
         .then(resp => {
-          if (resp.data.message == "open success") {
-            this.isOPEN_REVIEW = false;
-            this.isOPEN_RESULT = true;
-            this.$message({
-              dangerouslyUseHTMLString: true,
-              type: "success",
-              message: '<strong style="color:teal">Open success!</strong>',
-              center: true
-            });
-          } else {
-            this.$message({
-              dangerouslyUseHTMLString: true,
-              type: "error",
-              message:
-                '<strong style="color:teal">There are papers waiting to review now!</strong>',
-              center: true
-            });
+          if(resp.status === 200){
+            switch(resp.data.message){
+              case "open success":
+                if(this.isOPEN_REVIEW){
+                  this.isOPEN_REVIEW = false;
+                  this.isOPEN_RESULT = true;
+                  this.conference.status = "OPEN_RESULT";
+                }else{
+                  this.isOPEN_RESULT = false;
+                  this.isOPEN_FINAL_RESULT = true;
+                  this.conference.status = "OPEN_FINAL_RESULT";
+                }                
+                this.$message({
+                  dangerouslyUseHTMLString: true,
+                  type: "success",
+                  message: '<strong style="color:teal">Open success!</strong>',
+                  center: true
+                });
+                break;
+              case "open fail: wait for review":
+                this.$message({
+                  dangerouslyUseHTMLString: true,
+                  type: "error",
+                  message:
+                    '<strong style="color:teal">There are papers waiting to review now!</strong>',
+                  center: true
+                });
+                break;
+              case "wait for all review results to be confirmed or revised!":
+                this.$message({
+                  dangerouslyUseHTMLString: true,
+                  type: "error",
+                  message:
+                    '<strong style="color:teal">There are review results to be confirmed or revised!</strong>',
+                  center: true
+                });
+                break;
+            }
           }
         })
         .catch(error => {
@@ -797,6 +829,9 @@ export default {
               break;
             case "OPEN_RESULT":
               this.isOPEN_RESULT = true;
+              break;
+            case "OPEN_FINAL_RESULT":
+              this.isOPEN_FINAL_RESULT = true;
               break;
           }
 

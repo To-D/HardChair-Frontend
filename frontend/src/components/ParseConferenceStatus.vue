@@ -24,6 +24,9 @@ export default {
               case "OPEN_RESULT":
                 return "Result has been announced"
                 break;
+              case "OPEN_FINAL_RESULT":
+                return "Final result has been annouced"
+                break;
               default:
                 return "Currently unknown";
                 break;
