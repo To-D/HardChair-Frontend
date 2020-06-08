@@ -253,7 +253,7 @@ export default {
       // Authorities
       isAUTHOR: false,
       isPC_MEMBER: false,
-      isCHAIR:true,
+      isCHAIR:false,
 
       // paper
       paper: {},
@@ -382,6 +382,10 @@ export default {
               this.isAUTHOR = true;
               break;
             case "PC_MEMBER":
+              this.isPC_MEMBER = true;
+              break;
+            case "CHAIR":
+              this.isCHAIR = true;
               this.isPC_MEMBER = true;
               break;
             case "A&P":
