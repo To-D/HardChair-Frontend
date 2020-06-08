@@ -127,13 +127,13 @@
                         {{post.postContent}}
                       </div>
 
-                      <el-button @click="reply">Reply</el-button>
+                      <el-button @click="reply(post)">Reply</el-button>
                     </el-card>
                   </div>
                 </div>
               </div>
 
-              <div class="row">
+              <div class="row" v-if="paper.posts">
               <div class="col-xl-6 col-lg-12">
                 <el-pagination
                   hide-on-  single-page
@@ -145,14 +145,14 @@
               </div>
             </div>
 
-            <div id="reply_area">
-              <p>Reply</p>
+            <div ref="reply_area">
+              <p ref="quote">Reply Area</p>
               <br>
-              <p>the post you quote</p>
+              <p v-if="quoteContent">{{quoteContent}}</p>
               <el-input
                 type="textarea"
                 autosize
-                v-model="replyContent"
+                v-model="postContent"
                 auto-complete="off"
                 id="comment"
                 placeholder="Enter what you want to say"
@@ -266,25 +266,69 @@ export default {
       pageSize: 6,
       currentPage: 1,
 
-      replyContent:"",
+      postContent:"",
+      quoteId:-1,
+      quoteContent:"",
 
     };
   },
   methods:{
-    reply(){
-      document.getElementById('reply_area').scrollIntoView({
+    reply(post){
+      this.quoteId = post.id;
+      this.quoteContent = post.username+" : " +post.postContent;
+      this.$refs.reply_area.scrollIntoView({
             block: 'start',
             inline: 'nearest',
             behavior: 'smooth'
         })
     },
     submitPost(){
-
+      this.$axios.post('/SubmitPost',{
+        postContent:this.postContent,
+        paperId:this.paper.id,
+        quoteId:this.quoteId
+      })
+      .then(resp=>{
+        if(resp.status === 200){
+          switch(resp.data.message){
+            case "success":
+              this.$message({
+                dangerouslyUseHTMLString: true,
+                type: "success",
+                message: '<strong style="color:teal">Reply successfully!</strong>',
+                center: true
+              });
+              break;            
+            case "No Authority":
+              this.$message({
+                dangerouslyUseHTMLString: true,
+                type: "error",
+                message: '<strong style="color:teal">You don\'t hava the authority!</strong>',
+                center: true
+              });
+              break;
+            case "fail: conference status":
+              this.$message({
+                dangerouslyUseHTMLString: true,
+                type: "error",
+                message: '<strong style="color:teal">You cannot submit at this conference stage!</strong>',
+                center: true
+              });
+              break;              
+          }
+        }
+      })
+      .catch(error=>{
+        console.log(error);
+      })
+      this.postContent="";
+      this.quoteContent = "";
+      this.quoteId=-1;
     }
   },
   computed:{
     submitDisable(){
-      return this.replyContent == "";
+      return this.postContent == "";
     }
   },
   created() {
@@ -315,20 +359,23 @@ export default {
           //   confirm:0
           // };
           //this.paper.rebuttal = "hh";
-
-          this.paper.posts=[{
-            username:"li",
-            createdTime:"2020-06-07",
-            postContent:"hi",
-            status:1,
-          },
-          {
-            username:"li",
-            createdTime:"2020-06-07",
-            postContent:"hi",
-            status:2,
-          },
-          ]
+          // this.paper.posts=[{
+          //   username:"li",
+          //   createdTime:"2020-06-07",
+          //   postContent:"hi",
+          //   quoteId:-1,
+          //   status:1,
+          //   id:2
+          // },
+          // {
+          //   username:"li",
+          //   createdTime:"2020-06-07",
+          //   postContent:"cao",
+          //   quoteId:1,
+          //   status:2,
+          //   id:3
+          // },
+          // ]
 
           switch (this.paper.url) {
             case "AUTHOR":
