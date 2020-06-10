@@ -92,7 +92,10 @@
                   <h2>
                     <em class="el-icon-upload2"></em> Paper Review
                   </h2>
-                  <el-card v-if="reviewResult && (reviewResult.confirm == 2 || reviewResult.confirm == 1 && !paper.rebuttal)" shadow="hover">You have reviewed this paper!</el-card>
+                  <el-card
+                    v-if="reviewResult && (reviewResult.confirm == 2 || reviewResult.confirm == 1 && !paper.rebuttal)"
+                    shadow="hover"
+                  >You have reviewed this paper!</el-card>
                   <review v-else-if="paper.id" :reviewResult="reviewResult" :id="paper.id"></review>
                 </div>
               </div>
@@ -108,24 +111,20 @@
                   </h2>
 
                   <div v-if="paper.posts">
-                    <el-card                            
-                    shadow="hover"
-                    class="box-card"
-                    style="margin-top: 1em;"                  
-                    v-for="(post,index) in paper.posts.slice((currentPage- 1)*pageSize,currentPage*pageSize)"
-                    :key="index"
+                    <el-card
+                      shadow="hover"
+                      class="box-card"
+                      style="margin-top: 1em;"
+                      v-for="(post,index) in paper.posts.slice((currentPage- 1)*pageSize,currentPage*pageSize)"
+                      :key="index"
                     >
-                    <!-- header -->
+                      <!-- header -->
                       <div slot="header" class="clearfix">
-                        <span>{{post.username}}</span>                  
-                        <span style="float: right; padding: 3px 0">
-                          {{post.createdTime}}
-                        </span>
+                        <span>{{post.username}}</span>
+                        <span style="float: right; padding: 3px 0">{{post.createdTime}}</span>
                       </div>
 
-                      <div>
-                        {{post.postContent}}
-                      </div>
+                      <div>{{post.postContent}}</div>
 
                       <el-button @click="reply(post)">Reply</el-button>
                     </el-card>
@@ -134,33 +133,37 @@
               </div>
 
               <div class="row" v-if="paper.posts.length>0">
-              <div class="col-xl-6 col-lg-12">
-                <el-pagination
-                  hide-on-  single-page
-                  layout="prev, pager, next"
-                  :page-size="pageSize"
-                  :current-page.sync="currentPage"
-                  :total="paper.posts.length"
-                >></el-pagination>
+                <div class="col-xl-6 col-lg-6">
+                  <el-pagination
+                    hide-on-
+                    single-page
+                    layout="prev, pager, next"
+                    :page-size="pageSize"
+                    :current-page.sync="currentPage"
+                    :total="paper.posts.length"
+                  ></el-pagination>
+                </div>
               </div>
-            </div>
 
-            <div ref="reply_area">
-              <p ref="quote">Reply Area</p>
-              <br>
-              <p v-if="quoteContent">{{quoteContent}}</p>
-              <el-input
-                type="textarea"
-                autosize
-                v-model="postContent"
-                auto-complete="off"
-                maxlength="500"
-                show-word-limit
-                placeholder="Enter what you want to say"
-              ></el-input>              
-              <el-button  :disabled ="submitDisable"  @click= "submitPost"> Submit </el-button>
-            </div>
-
+              <div class="row">
+                <div class="col-xl-6 col-lg-6">
+                  <div ref="reply_area">
+                    <p ref="quote">Reply Area</p>
+                    <br />
+                    <p v-if="quoteContent">{{quoteContent}}</p>
+                    <el-input
+                      type="textarea"
+                      autosize
+                      v-model="postContent"
+                      auto-complete="off"
+                      maxlength="500"
+                      show-word-limit
+                      placeholder="Enter what you want to say"
+                    ></el-input>
+                    <el-button :disabled="submitDisable" @click="submitPost">Submit</el-button>
+                  </div>
+                </div>
+              </div>
             </section>
           </el-tab-pane>
 
@@ -202,7 +205,7 @@
                     </p>
                   </el-card>
                 </div>
-              </div>              
+              </div>
             </section>
           </el-tab-pane>
 
@@ -212,7 +215,7 @@
                 <div class="col-xl-6 col-lg-6">
                   <h2>
                     <em class="el-icon-upload2"></em> Edit paper
-                  </h2>                  
+                  </h2>
                   <div v-if="conferenceStatus == 'SUBMIT_ALLOWED'">
                     <contribution
                       v-if="paper.conferenceId"
@@ -222,14 +225,14 @@
                     ></contribution>
                   </div>
                   <div v-else>
-                    <el-card shadow="hover">Papers are being reviewd!</el-card>
+                    <el-card shadow="hover">Papers are being reviewed!</el-card>
                   </div>
                 </div>
               </div>
             </section>
           </el-tab-pane>
         </el-tabs>
-      </div>  
+      </div>
     </div>
 
     <footerbar></footerbar>
@@ -246,7 +249,7 @@ import review from "../components/ReviewPaper";
 
 export default {
   name: "PaperDetail",
-  components: { navbar, footerbar, download, preview, contribution,review },
+  components: { navbar, footerbar, download, preview, contribution, review },
   inject: ["reload"],
 
   data() {
@@ -254,81 +257,84 @@ export default {
       // Authorities
       isAUTHOR: false,
       isPC_MEMBER: false,
-      isCHAIR:true,
+      isCHAIR: true,
 
       // paper
       paper: {},
-      activeName:"info",
-      conferenceStatus:"",
+      activeName: "info",
+      conferenceStatus: "",
 
-      reviewResult:null,
+      reviewResult: null,
 
       // paging
       pageSize: 6,
       currentPage: 1,
 
-      postContent:"",
-      quoteId:-1,
-      quoteContent:"",
-
+      postContent: "",
+      quoteId: -1,
+      quoteContent: ""
     };
   },
-  methods:{
-    reply(post){
+  methods: {
+    reply(post) {
       this.quoteId = post.id;
-      this.quoteContent = post.username+" : " +post.postContent;
+      this.quoteContent = post.username + " : " + post.postContent;
       this.$refs.reply_area.scrollIntoView({
-            block: 'start',
-            inline: 'nearest',
-            behavior: 'smooth'
-        })
+        block: "start",
+        inline: "nearest",
+        behavior: "smooth"
+      });
     },
-    submitPost(){
-      this.$axios.post('/SubmitPost',{
-        postContent:this.postContent,
-        paperId:this.paper.id,
-        quoteId:this.quoteId
-      })
-      .then(resp=>{
-        if(resp.status === 200){
-          switch(resp.data.message){
-            case "success":
-              this.$message({
-                dangerouslyUseHTMLString: true,
-                type: "success",
-                message: '<strong style="color:teal">Reply successfully!</strong>',
-                center: true
-              });
-              break;            
-            case "No Authority":
-              this.$message({
-                dangerouslyUseHTMLString: true,
-                type: "error",
-                message: '<strong style="color:teal">You don\'t hava the authority!</strong>',
-                center: true
-              });
-              break;
-            case "fail: conference status":
-              this.$message({
-                dangerouslyUseHTMLString: true,
-                type: "error",
-                message: '<strong style="color:teal">You cannot submit at this conference stage!</strong>',
-                center: true
-              });
-              break;              
+    submitPost() {
+      this.$axios
+        .post("/SubmitPost", {
+          postContent: this.postContent,
+          paperId: this.paper.id,
+          quoteId: this.quoteId
+        })
+        .then(resp => {
+          if (resp.status === 200) {
+            switch (resp.data.message) {
+              case "success":
+                this.$message({
+                  dangerouslyUseHTMLString: true,
+                  type: "success",
+                  message:
+                    '<strong style="color:teal">Reply successfully!</strong>',
+                  center: true
+                });
+                break;
+              case "No Authority":
+                this.$message({
+                  dangerouslyUseHTMLString: true,
+                  type: "error",
+                  message:
+                    '<strong style="color:teal">You don\'t hava the authority!</strong>',
+                  center: true
+                });
+                break;
+              case "fail: conference status":
+                this.$message({
+                  dangerouslyUseHTMLString: true,
+                  type: "error",
+                  message:
+                    '<strong style="color:teal">You cannot submit at this conference stage!</strong>',
+                  center: true
+                });
+                break;
+            }
           }
-        }
-      })
-      .catch(error=>{
-        console.log(error);
-      })
-      this.postContent="";
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      this.postContent = "";
       this.quoteContent = "";
-      this.quoteId=-1;
+      this.quoteId = -1;
     }
   },
-  computed:{
-    submitDisable(){
+  computed: {
+    submitDisable() {
       return this.postContent == "";
     }
   },
@@ -345,12 +351,12 @@ export default {
           // Get present pc's review result
           let reviewResults = this.paper.reviewResults;
           let len = reviewResults.length;
-          for(let i = 0; i<len; i++){
-            if(reviewResults[i].isPcMember){
+          for (let i = 0; i < len; i++) {
+            if (reviewResults[i].isPcMember) {
               this.reviewResult = reviewResults[i];
             }
           }
-          
+
           // For test
           // this.reviewResult = {
           //   score: 3,
