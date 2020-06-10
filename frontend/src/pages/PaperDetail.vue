@@ -127,7 +127,7 @@
                     <el-button :disabled="submitDisable" @click="submitPost">Submit</el-button>
                   </div>
 
-                  <hr>
+                  <br>
 
                   <div v-if="paper.posts">
                     <el-card
@@ -149,7 +149,7 @@
                     </el-card>
                   </div>
 
-                  <hr>
+                  <br>
 
                   <el-pagination
                     hide-on-
