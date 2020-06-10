@@ -171,7 +171,7 @@
                   <h2>
                     <em class="el-icon-document-checked"></em> My Results
                   </h2>
-                  <div v-if="conferenceStatus !== 'OPEN_RESULT'">
+                  <div v-if="conferenceStatus !== 'OPEN_RESULT' || conferenceStatus !== 'OPEN_FINAL_RESULT'">
                     <el-card shadow="hover">Result hasn't been announced!</el-card>
                   </div>
                   <el-card
@@ -201,6 +201,10 @@
                       {{result.score}}
                     </p>
                   </el-card>
+
+                  <!-- rebuttal -->
+                  <el-input v-model="rebuttal"></el-input>
+                  <el-button :disabled="rebuttalSubmitDisable" @click= "submitRebuttal"></el-button>
                 </div>
               </div>              
             </section>
@@ -271,6 +275,8 @@ export default {
       quoteId:-1,
       quoteContent:"",
 
+      rebuttal:"",
+
     };
   },
   methods:{
@@ -325,11 +331,59 @@ export default {
       this.postContent="";
       this.quoteContent = "";
       this.quoteId=-1;
+    },
+    submitRebuttal(){
+      this.$confirm("Your hava only one chance. Your rebuttal is: \n"+this.rebuttal, "Confirm", {
+        confirmButtonText: "Confirm",
+        cancelButtonText: "Cancel"
+      })
+        .then(() => {
+          this.$axios.post('/SubmitRebuttal',{
+            rebuttalContent:this.rebuttal,
+            paperId:this.paper.id
+          })
+          .then(resp=>{
+            if(resp.status === 200){
+              switch(resp.data.message){
+                case "success":
+                  this.$message({
+                    dangerouslyUseHTMLString: true,
+                    type: "success",
+                    message:
+                      '<strong style="color:teal">Your rebuttal has been submitted!</strong>',
+                    center: true
+                  });
+                case "No Authority":
+                  this.$message({
+                    dangerouslyUseHTMLString: true,
+                    type: "error",
+                    message:
+                      '<strong style="color:teal">Sorry! Your don\'t have the authority!</strong>',
+                    center: true
+                  });
+                  break;
+                case "you have already submitted the rebuttal!":
+                  this.$message({
+                    dangerouslyUseHTMLString: true,
+                    type: "error",
+                    message:
+                      '<strong style="color:teal">You have already submitted the rebuttal!</strong>',
+                    center: true
+                  });
+                  break;
+              }
+            }
+          })
+        })
+        .catch(error => {console.log(error)});
     }
   },
   computed:{
     submitDisable(){
       return this.postContent == "";
+    },
+    rebuttalSubmitDisable(){
+      return this.rebuttal == "";
     }
   },
   created() {
