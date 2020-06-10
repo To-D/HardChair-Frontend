@@ -358,6 +358,7 @@ export default {
                       '<strong style="color:teal">Your rebuttal has been submitted!</strong>',
                     center: true
                   });
+                  break;
                 case "No Authority":
                   this.$message({
                     dangerouslyUseHTMLString: true,
