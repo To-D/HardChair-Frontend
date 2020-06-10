@@ -110,6 +110,25 @@
                     <em class="el-icon-document-checked"></em>Forum
                   </h2>
 
+                  <div ref="reply_area">
+                    <p ref="quote">Reply Area</p>
+                    <br />
+                    <p v-if="quoteContent">{{quoteContent}}</p>
+                    <el-input
+                      type="textarea"
+                      autosize
+                      size="medium"
+                      v-model="postContent"
+                      auto-complete="off"
+                      maxlength="500"
+                      show-word-limit
+                      placeholder="Enter what you want to say"
+                    ></el-input>
+                    <el-button :disabled="submitDisable" @click="submitPost">Submit</el-button>
+                  </div>
+
+                  <hr>
+
                   <div v-if="paper.posts">
                     <el-card
                       shadow="hover"
@@ -129,11 +148,9 @@
                       <el-button @click="reply(post)">Reply</el-button>
                     </el-card>
                   </div>
-                </div>
-              </div>
 
-              <div class="row" v-if="paper.posts.length>0">
-                <div class="col-xl-6 col-lg-6">
+                  <hr>
+
                   <el-pagination
                     hide-on-
                     single-page
@@ -142,26 +159,7 @@
                     :current-page.sync="currentPage"
                     :total="paper.posts.length"
                   ></el-pagination>
-                </div>
-              </div>
 
-              <div class="row">
-                <div class="col-xl-6 col-lg-6">
-                  <div ref="reply_area">
-                    <p ref="quote">Reply Area</p>
-                    <br />
-                    <p v-if="quoteContent">{{quoteContent}}</p>
-                    <el-input
-                      type="textarea"
-                      autosize
-                      v-model="postContent"
-                      auto-complete="off"
-                      maxlength="500"
-                      show-word-limit
-                      placeholder="Enter what you want to say"
-                    ></el-input>
-                    <el-button :disabled="submitDisable" @click="submitPost">Submit</el-button>
-                  </div>
                 </div>
               </div>
             </section>
