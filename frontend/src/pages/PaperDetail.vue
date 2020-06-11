@@ -407,8 +407,8 @@ export default {
             if (this.paper.reviewResults[i].pcMember) {
               this.reviewResult = this.paper.reviewResults[i];
             }
-            if(this.paper.reviewResults[i].score < 0){
-              this.displayRebuttal = this.paper.type="OPEN_RESULT" && !paper.rebuttal;
+            if (this.paper.reviewResults[i].score < 0){
+              this.displayRebuttal = this.paper.type="OPEN_RESULT" && !this.paper.rebuttal;
             }
           }
 
