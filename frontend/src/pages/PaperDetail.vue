@@ -300,31 +300,13 @@ export default {
           if (resp.status === 200) {
             switch (resp.data.message) {
               case "success":
-                this.$message({
-                  dangerouslyUseHTMLString: true,
-                  type: "success",
-                  message:
-                    '<strong style="color:teal">Reply successfully!</strong>',
-                  center: true
-                });
+                this.notify("Reply successfully!","success");
                 break;
               case "No Authority":
-                this.$message({
-                  dangerouslyUseHTMLString: true,
-                  type: "error",
-                  message:
-                    '<strong style="color:teal">You don\'t hava the authority!</strong>',
-                  center: true
-                });
+                this.notify("You don\'t hava the authority!","error");
                 break;
               case "fail: conference status":
-                this.$message({
-                  dangerouslyUseHTMLString: true,
-                  type: "error",
-                  message:
-                    '<strong style="color:teal">You cannot submit at this conference stage!</strong>',
-                  center: true
-                });
+                this.notify("You cannot submit at this conference stage!","error");
                 break;
             }
           }
@@ -350,33 +332,13 @@ export default {
             if(resp.status === 200){
               switch(resp.data.message){
                 case "success":
-                  this.$message({
-                    dangerouslyUseHTMLString: true,
-                    type: "success",
-                    message:
-                      '<strong style="color:teal">Your rebuttal has been submitted!</strong>',
-                    center: true
-                  });
+                  this.notify("Your rebuttal has been submitted!","success");
                   break;
                 case "No Authority":
-                  notify("You have already submitted the rebuttal!","error");
-                  this.$message({
-                    dangerouslyUseHTMLString: true,
-                    type: "error",
-                    message:
-                      '<strong style="color:teal">Sorry! Your don\'t have the authority!</strong>',
-                    center: true
-                  });
+                  this.notify("Sorry! Your don\'t have the authority!","error");
                   break;
                 case "you have already submitted the rebuttal!":
-                  notify("You have already submitted the rebuttal!","error");
-                  // this.$message({
-                  //   dangerouslyUseHTMLString: true,
-                  //   type: "error",
-                  //   message:
-                  //     '<strong style="color:teal">You have already submitted the rebuttal!</strong>',
-                  //   center: true
-                  // });
+                  this.notify("You have already submitted the rebuttal!","error");
                   break;
               }
             }
@@ -401,7 +363,7 @@ export default {
       return this.rebuttal == "";
     }
   },
-  created() {
+  created() {    
     this.$axios
       .post("/PaperAuthority", {
         paperId: this.$route.params.paperID
@@ -477,8 +439,8 @@ export default {
       })
       .catch(error => {
         console.log(error);
-      });
-  }
+      });      
+  },
 };
 </script>
 
