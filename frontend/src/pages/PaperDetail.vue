@@ -419,10 +419,9 @@ export default {
               break;
             case "CHAIR":
               this.isCHAIR = true;
-              this.isPC_MEMBER = true;
               break;
-            case "A&P":
-              this.isAUTHOR = true;
+            case "CP":
+              this.isCHAIR = true;
               this.isPC_MEMBER = true;
               break;
           }
