@@ -204,7 +204,7 @@
                   </el-card>
 
                   <!-- rebuttal-->
-                  <div v-if="paper.status == 2 && !paper.rebuttal">
+                  <div v-if="displayRebuttal">
                     <el-input v-model="rebuttal"></el-input>
                     <el-button :disabled="rebuttalSubmitDisable" @click= "submitRebuttal"></el-button>
                   </div>
@@ -275,6 +275,7 @@ export default {
       quoteContent:"",
 
       rebuttal:"",
+      displayRebuttal:false
 
     };
   },
@@ -405,6 +406,9 @@ export default {
           for (let i = 0; i < len; i++) {
             if (this.paper.reviewResults[i].pcMember) {
               this.reviewResult = this.paper.reviewResults[i];
+            }
+            if(this.paper.reviewResults[i].score < 0){
+              this.displayRebuttal = this.paper.type="OPEN_RESULT" && !paper.rebuttal;
             }
           }
 
