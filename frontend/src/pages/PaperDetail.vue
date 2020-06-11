@@ -93,7 +93,7 @@
                     <em class="el-icon-upload2"></em> Paper Review
                   </h2>
                   <el-card
-                    v-if="reviewResult && (reviewResult.confirm == 2 || reviewResult.confirm == 1 && paper.rebuttal =='')"
+                    v-if="reviewResult && (reviewResult.confirm == 2 || reviewResult.confirm == 1 && !paper.rebuttal)"
                     shadow="hover"
                   >You have reviewed this paper!</el-card>
                   <review v-else-if="paper.id" :reviewResult="reviewResult" :id="paper.id"></review>
@@ -110,7 +110,7 @@
                     <em class="el-icon-document-checked"></em>Forum
                   </h2>
 
-                  <div ref="reply_area">
+                  <div ref="reply_area" v-if="conferenceStatus == 'OPEN_REVIEW' || conferenceStatus == 'OPEN_RESULT' && paper.rebuttal">
                     <p ref="quote">Reply Area</p>
                     <br />
                     <div v-if="quoteContent">
@@ -129,6 +129,7 @@
                     ></el-input>
                     <el-button :disabled="submitDisable" @click="submitPost">Submit</el-button>
                   </div>
+                  <el-card shadow="hover" v-else>It's not the time for discussing !</el-card>
 
                   <br>
 
@@ -393,7 +394,7 @@ export default {
               this.reviewResult = this.paper.reviewResults[i];
             }
             if (this.paper.reviewResults[i].score < 0){
-              this.displayRebuttal = this.paper.type=="OPEN_RESULT" && this.paper.rebuttal == "";
+              this.displayRebuttal = this.conferenceStatus=="OPEN_RESULT" && !this.paper.rebuttal;
             }
           }
 
@@ -414,7 +415,7 @@ export default {
               break;
           }
 
-          // Get
+          this.conferenceStatus = 'OPEN_RESULT'
         } else {
           this.$router.go(-1);
           this.$message({
