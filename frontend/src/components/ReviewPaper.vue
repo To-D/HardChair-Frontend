@@ -115,7 +115,7 @@ export default {
       }
     },
     methods:{      
-      Submit(formName) {
+      Submit() {
         let tmp = this.reviewForm;
         this.$axios
           .post("/SubmitReviewResult", {
@@ -140,35 +140,16 @@ export default {
           });
       },
       confirm(){
-      this.$confirm("Are you sure that you won't modify your result?", "Confirm", {
-          confirmButtonText: "Yes",
-          cancelButtonText: "No"
+        this.$confirm("Are you sure that you won't modify your result?", "Confirm", {
+            confirmButtonText: "Yes",
+            cancelButtonText: "No"
         })
-          .then(() => {
-            this.$axios
-            .post('/ReviseOrConfirmReviewResult',{
-              reviewResultId:this.reviewForm.id,
-              score: this.reviewForm.score,
-              comment: this.reviewForm.comment,
-              confidence: this.reviewForm.confidence                
-            })
-            .then(resp=>{
-              if(resp.status === 200){
-                this.$message({
-                  dangerouslyUseHTMLString: true,
-                  type: "success",
-                  message: '<strong style="color:teal">Confirm successfully!</strong>',
-                  center: true
-                });                  
-              }
-            })
-            .catch(error=>{
-              console.log(error);
-            })
-          })
-          .catch(error => {});
+        .then(() => {
+          modify();
+        })
+        .catch(error => {console.log(error)});
       },
-      modify(formName){
+      modify(){
         this.$axios
         .post('/ReviseOrConfirmReviewResult',{
           reviewResultId:this.reviewForm.id,
@@ -178,19 +159,34 @@ export default {
         })
         .then(resp => {
           if (resp.status === 200) {            
-            this.$message({
-              dangerouslyUseHTMLString: true,
-              type: "success",
-              message: '<strong style="color:teal">Modify successfully!</strong>',
-              center: true
-            });
-            this.reload();
+            switch(resp.data.message){
+              case "success":
+                this.notify("Confirm successfully!","success");
+                break;
+              case "Please confirm or revise the result after you have discussed with other PC MEMBER":
+                this.notify("No discussion yet!","error");
+                break;
+              case "you have already confirmed or revised the result!!":
+                this.notify("You have already confirmed or revised the result!","error");
+                break;
+              case "No Authority":
+                this.notify("You don't have the authority!","error");
+                break;
+            }
           }
         })
         .catch(error => {
           console.log(error);
         });
-      }
+      },
+      },
+      notify(content,format){
+        this.$message({
+          dangerouslyUseHTMLString: true,
+          type: format,
+          message:'<strong style="color:teal">'+content+'</strong>',
+          center: true
+        });      
     },
      created(){
        if(this.reviewResult != null){
