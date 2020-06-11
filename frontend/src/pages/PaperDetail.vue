@@ -142,9 +142,8 @@
                         <span>{{post.username}}</span>
                         <span style="float: right; padding: 3px 0">{{post.createdTime}}</span>
                       </div>
-
+                      <div v-if="post.quoteId != -1">{{getQuoteContent(post.quoteId)}}</div>
                       <div>{{post.postContent}}</div>
-
                       <el-button @click="reply(post)">Reply</el-button>
                     </el-card>
                   </div>
@@ -353,6 +352,14 @@ export default {
         message:'<strong style="color:teal">'+content+'</strong>',
         center: true
       });      
+    },
+    getQuoteContent(quoteId){
+      let len = this.paper.posts.length;
+      for(let i = 0; i< len; i++){
+        if(this.paper.posts[i].quoteId == quoteId){
+          return this.paper.posts[i].postContent;
+        }
+      }
     }
   },
   computed: {
