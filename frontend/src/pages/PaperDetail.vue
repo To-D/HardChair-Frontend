@@ -359,6 +359,7 @@ export default {
                   });
                   break;
                 case "No Authority":
+                  notify("You have already submitted the rebuttal!","error");
                   this.$message({
                     dangerouslyUseHTMLString: true,
                     type: "error",
@@ -368,19 +369,28 @@ export default {
                   });
                   break;
                 case "you have already submitted the rebuttal!":
-                  this.$message({
-                    dangerouslyUseHTMLString: true,
-                    type: "error",
-                    message:
-                      '<strong style="color:teal">You have already submitted the rebuttal!</strong>',
-                    center: true
-                  });
+                  notify("You have already submitted the rebuttal!","error");
+                  // this.$message({
+                  //   dangerouslyUseHTMLString: true,
+                  //   type: "error",
+                  //   message:
+                  //     '<strong style="color:teal">You have already submitted the rebuttal!</strong>',
+                  //   center: true
+                  // });
                   break;
               }
             }
           })
         })
         .catch(error => {console.log(error)});
+    },
+    notify(content,format){
+      this.$message({
+        dangerouslyUseHTMLString: true,
+        type: format,
+        message:'<strong style="color:teal">'+content+'</strong>',
+        center: true
+      });      
     }
   },
   computed: {
@@ -408,7 +418,7 @@ export default {
               this.reviewResult = this.paper.reviewResults[i];
             }
             if (this.paper.reviewResults[i].score < 0){
-              this.displayRebuttal = this.paper.type="OPEN_RESULT" && !this.paper.rebuttal;
+              this.displayRebuttal = this.paper.type=="OPEN_RESULT" && !this.paper.rebuttal;
             }
           }
 
