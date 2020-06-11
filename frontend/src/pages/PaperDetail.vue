@@ -203,8 +203,8 @@
                     </p>
                   </el-card>
 
-                  <!-- rebuttal  还没写显示逻辑-->
-                  <div v-if="paper.status == 2 && !rebuttal">
+                  <!-- rebuttal-->
+                  <div v-if="paper.status == 2 && !paper.rebuttal">
                     <el-input v-model="rebuttal"></el-input>
                     <el-button :disabled="rebuttalSubmitDisable" @click= "submitRebuttal"></el-button>
                   </div>
