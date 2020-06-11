@@ -202,31 +202,30 @@
                     </p>
                   </el-card>
 
-                  <!-- rebuttal -->
-                  <el-input v-model="rebuttal"></el-input>
-                  <el-button :disabled="rebuttalSubmitDisable" @click= "submitRebuttal"></el-button>
+                  <!-- rebuttal  还没写显示逻辑-->
+                  <div v-if="paper.status == 2 && !rebuttal">
+                    <el-input v-model="rebuttal"></el-input>
+                    <el-button :disabled="rebuttalSubmitDisable" @click= "submitRebuttal"></el-button>
+                  </div>
                 </div>
               </div>              
             </section>
           </el-tab-pane>
 
-          <el-tab-pane v-if="isAUTHOR" label="Edit paper" name="submission">
+          <el-tab-pane v-if="isAUTHOR && conferenceStatus == 'SUBMIT_ALLOWED'" label="Edit paper" name="submission">
             <section>
               <div class="row">
                 <div class="col-xl-6 col-lg-6">
                   <h2>
                     <em class="el-icon-upload2"></em> Edit paper
                   </h2>                  
-                  <div v-if="conferenceStatus == 'SUBMIT_ALLOWED'">
+                  <div>
                     <contribution
                       v-if="paper.conferenceId"
                       :paper="paper"
                       :topics="paper.nTopics"
                       :conferenceId="paper.conferenceId"
                     ></contribution>
-                  </div>
-                  <div v-else>
-                    <el-card shadow="hover">Papers are being reviewd!</el-card>
                   </div>
                 </div>
               </div>
@@ -258,7 +257,7 @@ export default {
       // Authorities
       isAUTHOR: false,
       isPC_MEMBER: false,
-      isCHAIR:true,
+      isCHAIR:false,
 
       // paper
       paper: {},
