@@ -73,6 +73,7 @@
 export default {
     name: "ReviewPaper",
     props:['reviewResult','id'],
+    inject: ["reload"],
     data(){
       return{
           isEdit:false,

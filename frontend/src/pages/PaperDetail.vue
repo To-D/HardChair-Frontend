@@ -250,8 +250,7 @@ import review from "../components/ReviewPaper";
 
 export default {
   name: "PaperDetail",
-  components: { navbar, footerbar, download, preview, contribution, review },
-  inject: ["reload"],
+  components: { navbar, footerbar, download, preview, contribution, review },  
 
   data() {
     return {
@@ -402,11 +401,10 @@ export default {
           this.conferenceStatus = this.paper.nTopics[0].tag;
           this.paper.topics = this.paper.topics.split(",");
           // Get present pc's review result
-          let reviewResults = this.paper.reviewResults;
-          let len = reviewResults.length;
+          let len = this.paper.reviewResults.length;
           for (let i = 0; i < len; i++) {
-            if (reviewResults[i].isPcMember) {
-              this.reviewResult = reviewResults[i];
+            if (this.paper.reviewResults[i].pcMember) {
+              this.reviewResult = this.paper.reviewResults[i];
             }
           }
 
