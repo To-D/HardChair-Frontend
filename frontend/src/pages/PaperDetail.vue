@@ -172,7 +172,7 @@
                   <h2>
                     <em class="el-icon-document-checked"></em> My Results
                   </h2>
-                  <div v-if="conferenceStatus !== 'OPEN_RESULT' || conferenceStatus !== 'OPEN_FINAL_RESULT'">
+                  <div v-if="conferenceStatus !== 'OPEN_RESULT' && conferenceStatus !== 'OPEN_FINAL_RESULT'">
                     <el-card shadow="hover">Result hasn't been announced!</el-card>
                   </div>
                   <el-card
