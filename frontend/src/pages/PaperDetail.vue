@@ -115,7 +115,7 @@
                     <br />
                     <div v-if="quoteContent">
                       <p>{{quoteContent}}</p>
-                      <el-button @click= "quoteContent =''">Cancel quoting</el-button>
+                      <el-button @click= "quoteContent ='';quoteId = -1">Cancel quoting</el-button>
                     </div>
                     <el-input
                       type="textarea"
@@ -254,6 +254,7 @@ import review from "../components/ReviewPaper";
 export default {
   name: "PaperDetail",
   components: { navbar, footerbar, download, preview, contribution, review },  
+  inject:['reload'],
 
   data() {
     return {
@@ -304,6 +305,7 @@ export default {
             switch (resp.data.message) {
               case "success":
                 this.notify("Reply successfully!","success");
+                this.reload();
                 break;
               case "No Authority":
                 this.notify("You don\'t hava the authority!","error");
@@ -360,7 +362,7 @@ export default {
     getQuoteContent(quoteId){
       let len = this.paper.posts.length;
       for(let i = 0; i< len; i++){
-        if(this.paper.posts[i].quoteId == quoteId){
+        if(this.paper.posts[i].id == quoteId){
           return this.paper.posts[i].postContent;
         }
       }
