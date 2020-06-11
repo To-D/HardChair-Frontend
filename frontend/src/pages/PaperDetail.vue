@@ -41,15 +41,15 @@
                       </span>
                       <el-tag :key="index" v-for="(topic,index) in paper.topics">{{topic}}</el-tag>
                     </div>
+                    <!--
                     <div class="infoitem">
                       <span class="itemlabel">
                         <em class="el-icon-s-flag"></em> Status:
                       </span>
-                      <span
-                        v-if="paper.reviewResults && paper.reviewResults.length"
-                      >Scores announced</span>
+                      <span v-if="paper.reviewResults && paper.reviewResults.length">Scores announced</span>
                       <span v-else>Wating for reviewing</span>
                     </div>
+                    -->
                     <div class="infoitem" v-if="paper.createdTime">
                       <span class="itemlabel">
                         <em class="el-icon-s-flag"></em> Created Time:

@@ -48,7 +48,7 @@
     <el-button
       native-type="submit"
       type="primary"
-      v-on:click="Submit('reviewForm')"
+      v-on:click="Submit()"
       :disabled="reviewDisabled"
     >Submit Review Results</el-button>
   </el-form-item>
@@ -58,7 +58,7 @@
     <el-button
       native-type="submit"
       type="primary"
-      v-on:click="modify('reviewForm')"
+      v-on:click="modify()"
       :disabled="reviewDisabled"
     >Submit new Result</el-button>
     <el-button
@@ -145,7 +145,7 @@ export default {
             cancelButtonText: "No"
         })
         .then(() => {
-          modify();
+          this.modify();
         })
         .catch(error => {console.log(error)});
       },
