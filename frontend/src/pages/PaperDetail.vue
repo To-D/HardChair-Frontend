@@ -414,8 +414,6 @@ export default {
               this.isPC_MEMBER = true;
               break;
           }
-
-          this.conferenceStatus = 'OPEN_RESULT'
         } else {
           this.$router.go(-1);
           this.$message({
