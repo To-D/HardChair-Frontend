@@ -673,58 +673,26 @@ export default {
                   this.isSUBMIT_ALLOWED = false;
                   this.isOPEN_REVIEW = true;
                   this.conference.status = "OPEN_REVIEW";
-                  this.$message({
-                    dangerouslyUseHTMLString: true,
-                    type: "success",
-                    message:
-                      '<strong style="color:teal">PC members will start to review papers!</strong>',
-                    center: true
-                  });
+                  this.notify("PC members will start to review papers!","success");
                   this.seeChooseStrategy = false;
                   break;
                 case "open fail: at least 1 paper is expected":
-                  this.$message({
-                    dangerouslyUseHTMLString: true,
-                    type: "error",
-                    message:
-                      '<strong style="color:teal">Fail since no paper contributed to the conference.</strong>',
-                    center: true
-                  });
+                  this.notify("Fail since no paper contributed to the conference.","error");
                   break;
                 case "open fail: number of PC MEMBER should more than 2":
-                  this.$message({
-                    dangerouslyUseHTMLString: true,
-                    type: "error",
-                    message:
-                      '<strong style="color:teal">Fail since less than 2 pc members in the conference.</strong>',
-                    center: true
-                  });
+                  this.notify("Fail since less than 2 pc members in the conference.","error");                  
                   break;
-              }
-              if(resp.data.message2 == "open fail : no solution"){
-                this.$message({
-                  dangerouslyUseHTMLString: true,
-                  type: "error",
-                  message:
-                    '<strong style="color:teal">Fail since paper distribution error.</strong>',
-                  center: true
-                });
-              }
-                  
-              
+                case "open fail : no solution":
+                  this.notify("Fail since paper distribution error.","error");
+                  break;
+              }                                
             }
           })
           .catch(error => {
             console.log(error);
           });
       } else {
-        this.$message({
-          dangerouslyUseHTMLString: true,
-          type: "warning",
-          message:
-            '<strong style="color:teal">Please choose a strategy!</strong>',
-          center: true
-        });
+        this.notify("Please choose a strategy!","warning");
       }
       this.strategy = "";
     },
@@ -740,30 +708,13 @@ export default {
                 this.isOPEN_REVIEW = false;
                 this.isOPEN_RESULT = true;
                 this.conference.status = "OPEN_RESULT";                                
-                this.$message({
-                  dangerouslyUseHTMLString: true,
-                  type: "success",
-                  message: '<strong style="color:teal">Open success!</strong>',
-                  center: true
-                });
+                this.notify("Open success!","success");
                 break;
               case "open fail: wait for review":
-                this.$message({
-                  dangerouslyUseHTMLString: true,
-                  type: "error",
-                  message:
-                    '<strong style="color:teal">There are papers waiting to review now!</strong>',
-                  center: true
-                });
+                this.notify("There are papers waiting to review now!","error");
                 break;
               case "wait for all review results to be confirmed or revised!":
-                this.$message({
-                  dangerouslyUseHTMLString: true,
-                  type: "error",
-                  message:
-                    '<strong style="color:teal">There are review results to be confirmed or revised!</strong>',
-                  center: true
-                });
+                this.notify("There are review results to be confirmed or revised!","error");
                 break;
             }
           }
@@ -780,30 +731,26 @@ export default {
         if(resp.status === 200){
           switch(reap.data.message){
             case "wait for all review results to be confirmed or revised!":
-              this.$message({
-                  dangerouslyUseHTMLString: true,
-                  type: "error",
-                  message:
-                    '<strong style="color:teal">Wait for all review results to be confirmed or revised!</strong>',
-                  center: true
-                });
+              this.notify("Wait for all review results to be confirmed or revised!","error");
               break;
             case "success":
               this.isOPEN_RESULT = false;
               this.isOPEN_FINAL_RESULT = true;
               this.conference.status = "OPEN_FINAL_RESULT";                
-              this.$message({
-                  dangerouslyUseHTMLString: true,
-                  type: "success",
-                  message:
-                    '<strong style="color:teal">Open success!</strong>',
-                  center: true
-                });
+              this.notify("Open success!","success");
               break;
           }
         }
       })
       .catch(error=>{console.log(error)});      
+    },
+    notify(content,format){
+      this.$message({
+        dangerouslyUseHTMLString: true,
+        type: format,
+        message:'<strong style="color:teal">'+content+'</strong>',
+        center: true
+      });      
     }
   },
   created() {

@@ -384,32 +384,6 @@ export default {
             }
           }
 
-          // For test
-          // this.reviewResult = {
-          //   score: 3,
-          //   comment: "niubia",
-          //   confidence: "Low",
-          //   confirm:0
-          // };
-          //this.paper.rebuttal = "hh";
-          // this.paper.posts=[{
-          //   username:"li",
-          //   createdTime:"2020-06-07",
-          //   postContent:"hi",
-          //   quoteId:-1,
-          //   status:1,
-          //   id:2
-          // },
-          // {
-          //   username:"li",
-          //   createdTime:"2020-06-07",
-          //   postContent:"cao",
-          //   quoteId:1,
-          //   status:2,
-          //   id:3
-          // },
-          // ]
-
           switch (this.paper.url) {
             case "AUTHOR":
               this.isAUTHOR = true;
