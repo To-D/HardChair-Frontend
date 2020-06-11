@@ -113,7 +113,10 @@
                   <div ref="reply_area">
                     <p ref="quote">Reply Area</p>
                     <br />
-                    <p v-if="quoteContent">{{quoteContent}}</p>
+                    <div v-if="quoteContent">
+                      <p>{{quoteContent}}</p>
+                      <el-button @click= "quoteContent =''">Cancel quoting</el-button>
+                    </div>
                     <el-input
                       type="textarea"
                       autosize
@@ -140,7 +143,7 @@
                       <!-- header -->
                       <div slot="header" class="clearfix">
                         <span>{{post.username}}</span>
-                        <span style="float: right; padding: 3px 0">{{post.createdTime}}</span>
+                        <span style="float: right; padding: 3px 0" v-if= "post.createdTime">{{post.createdTime.substr(0,10)}} {{post.createdTime.substr(11,8)}}</span>
                       </div>
                       <div v-if="post.quoteId != -1">{{getQuoteContent(post.quoteId)}}</div>
                       <div>{{post.postContent}}</div>
@@ -151,6 +154,7 @@
                   <br>
 
                   <el-pagination
+                    v-if = "paper.posts"
                     hide-on-
                     single-page
                     layout="prev, pager, next"
@@ -391,6 +395,7 @@ export default {
             }
           }
 
+          // Get the authority of the present user
           switch (this.paper.url) {
             case "AUTHOR":
               this.isAUTHOR = true;
@@ -406,6 +411,8 @@ export default {
               this.isPC_MEMBER = true;
               break;
           }
+
+          // Get
         } else {
           this.$router.go(-1);
           this.$message({
