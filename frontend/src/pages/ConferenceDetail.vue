@@ -158,7 +158,7 @@
                         v-if="isOPEN_RESULT"
                         class="onPageBtn"
                         type="primary"
-                        @click="announceResults"
+                        @click="announceFinalResults"
                       >Announce Final Results</el-button>
                     </div>
 
@@ -737,15 +737,9 @@ export default {
           if(resp.status === 200){
             switch(resp.data.message){
               case "open success":
-                if(this.isOPEN_REVIEW){
-                  this.isOPEN_REVIEW = false;
-                  this.isOPEN_RESULT = true;
-                  this.conference.status = "OPEN_RESULT";
-                }else{
-                  this.isOPEN_RESULT = false;
-                  this.isOPEN_FINAL_RESULT = true;
-                  this.conference.status = "OPEN_FINAL_RESULT";
-                }                
+                this.isOPEN_REVIEW = false;
+                this.isOPEN_RESULT = true;
+                this.conference.status = "OPEN_RESULT";                                
                 this.$message({
                   dangerouslyUseHTMLString: true,
                   type: "success",
@@ -777,6 +771,39 @@ export default {
         .catch(error => {
           console.log(error);
         });
+    },
+    announceFinalResults(){
+      this.$axios.post('/OpenFinalResult',{
+        conferenceId:this.conference.id
+      })
+      .then(resp=>{
+        if(resp.status === 200){
+          switch(reap.data.message){
+            case "wait for all review results to be confirmed or revised!":
+              this.$message({
+                  dangerouslyUseHTMLString: true,
+                  type: "error",
+                  message:
+                    '<strong style="color:teal">Wait for all review results to be confirmed or revised!</strong>',
+                  center: true
+                });
+              break;
+            case "success":
+              this.isOPEN_RESULT = false;
+              this.isOPEN_FINAL_RESULT = true;
+              this.conference.status = "OPEN_FINAL_RESULT";                
+              this.$message({
+                  dangerouslyUseHTMLString: true,
+                  type: "success",
+                  message:
+                    '<strong style="color:teal">Open success!</strong>',
+                  center: true
+                });
+              break;
+          }
+        }
+      })
+      .catch(error=>{console.log(error)});      
     }
   },
   created() {
