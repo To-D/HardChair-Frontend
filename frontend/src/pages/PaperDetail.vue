@@ -41,7 +41,6 @@
                       </span>
                       <el-tag :key="index" v-for="(topic,index) in paper.topics">{{topic}}</el-tag>
                     </div>
-                    <!--
                     <div class="infoitem">
                       <span class="itemlabel">
                         <em class="el-icon-s-flag"></em> Status:
@@ -49,7 +48,6 @@
                       <span v-if="paper.reviewResults && paper.reviewResults.length">Scores announced</span>
                       <span v-else>Wating for reviewing</span>
                     </div>
-                    -->
                     <div class="infoitem" v-if="paper.createdTime">
                       <span class="itemlabel">
                         <em class="el-icon-s-flag"></em> Created Time:
@@ -165,10 +163,15 @@
                   </el-card>
 
                   <!-- rebuttal-->
-                  <div v-if="displayRebuttal">
-                    <el-input v-model="rebuttal"></el-input>
-                    <el-button :disabled="rebuttalSubmitDisable" @click= "submitRebuttal"></el-button>
+                  <br>
+                  <div v-if="!paper.rebuttal">
+                    <div v-if="displayRebuttal">
+                      <p>Rebuttal</p>
+                      <el-input v-model="rebuttal"></el-input>
+                      <el-button :disabled="rebuttalSubmitDisable" @click= "submitRebuttal">Submit</el-button>
+                    </div>
                   </div>
+                  <el-card v-else>Your rebuttal is: {{paper.rebuttal}}</el-card>
                 </div>
               </div>
             </section>
@@ -233,62 +236,21 @@ export default {
       pageSize: 6,
       currentPage: 1,
 
+      // Forum
       canFirstDiscuss:false,
       canSecondDiscuss:false,
       firstDiscussPosts:[],
       secondDiscussPosts:[],
 
-      postContent:"",
-      quoteId:-1,
-      quoteContent:"",
-
+      // Rebuttal
       rebuttal:"",
       displayRebuttal:false
 
     };
   },
   methods: {
-    reply(post) {
-      this.quoteId = post.id;
-      this.quoteContent = post.username + " : " + post.postContent;
-      this.$refs.reply_area.scrollIntoView({
-        block: "start",
-        inline: "nearest",
-        behavior: "smooth"
-      });
-    },
-    submitPost() {
-      this.$axios
-        .post("/SubmitPost", {
-          postContent: this.postContent,
-          paperId: this.paper.id,
-          quoteId: this.quoteId
-        })
-        .then(resp => {
-          if (resp.status === 200) {
-            switch (resp.data.message) {
-              case "success":
-                this.notify("Reply successfully!","success");
-                this.reload();
-                break;
-              case "No Authority":
-                this.notify("You don\'t hava the authority!","error");
-                break;
-              case "fail: conference status":
-                this.notify("You cannot submit at this conference stage!","error");
-                break;
-            }
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
-      this.postContent = "";
-      this.quoteContent = "";
-      this.quoteId=-1;
-    },
     submitRebuttal(){
-      this.$confirm("Your hava only one chance. Your rebuttal is: \n"+this.rebuttal, "Confirm", {
+      this.$confirm("Are you sure to submit ? (one chance only)", "Confirm", {
         confirmButtonText: "Confirm",
         cancelButtonText: "Cancel"
       })
@@ -302,6 +264,7 @@ export default {
               switch(resp.data.message){
                 case "success":
                   this.notify("Your rebuttal has been submitted!","success");
+                  this.reload();
                   break;
                 case "No Authority":
                   this.notify("Sorry! Your don\'t have the authority!","error");
@@ -323,19 +286,8 @@ export default {
         center: true
       });      
     },
-    getQuoteContent(quoteId){
-      let len = this.paper.posts.length;
-      for(let i = 0; i< len; i++){
-        if(this.paper.posts[i].id == quoteId){
-          return this.paper.posts[i].postContent;
-        }
-      }
-    }
   },
   computed: {
-    submitDisable() {
-      return this.postContent == "";
-    },
     rebuttalSubmitDisable(){
       return this.rebuttal == "";
     }
