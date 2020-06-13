@@ -105,65 +105,22 @@
           <el-tab-pane v-if="isCHAIR || isPC_MEMBER" label="Forum" name="forum">
             <section>
               <div class="row">
-                <div class="col-xl-6 col-lg-6">
+                <div class="col-xl-8 col-lg-8">
                   <h2>
                     <em class="el-icon-document-checked"></em>Forum
                   </h2>
-
-                  <div ref="reply_area" v-if="conferenceStatus == 'OPEN_REVIEW' || conferenceStatus == 'OPEN_RESULT' && paper.rebuttal">
-                    <p ref="quote">Reply Area</p>
-                    <br />
-                    <div v-if="quoteContent">
-                      <p>{{quoteContent}}</p>
-                      <el-button @click= "quoteContent ='';quoteId = -1">Cancel quoting</el-button>
-                    </div>
-                    <el-input
-                      type="textarea"
-                      autosize
-                      size="medium"
-                      v-model="postContent"
-                      auto-complete="off"
-                      maxlength="500"
-                      show-word-limit
-                      placeholder="Enter what you want to say"
-                    ></el-input>
-                    <el-button :disabled="submitDisable" @click="submitPost">Submit</el-button>
-                  </div>
-                  <el-card shadow="hover" v-else>It's not the time for discussing !</el-card>
-
-                  <br>
-
-                  <div v-if="paper.posts">
-                    <el-card
-                      shadow="hover"
-                      class="box-card"
-                      style="margin-top: 1em;"
-                      v-for="(post,index) in paper.posts.slice((currentPage- 1)*pageSize,currentPage*pageSize)"
-                      :key="index"
-                    >
-                      <!-- header -->
-                      <div slot="header" class="clearfix">
-                        <span>{{post.username}}</span>
-                        <span style="float: right; padding: 3px 0" v-if= "post.createdTime">{{post.createdTime.substr(0,10)}} {{post.createdTime.substr(11,8)}}</span>
-                      </div>
-                      <div v-if="post.quoteId != -1">{{getQuoteContent(post.quoteId)}}</div>
-                      <div>{{post.postContent}}</div>
-                      <el-button @click="reply(post)">Reply</el-button>
-                    </el-card>
-                  </div>
-
-                  <br>
-
-                  <el-pagination
-                    v-if = "paper.posts"
-                    hide-on-
-                    single-page
-                    layout="prev, pager, next"
-                    :page-size="pageSize"
-                    :current-page.sync="currentPage"
-                    :total="paper.posts.length"
-                  ></el-pagination>
-
+                  <el-collapse accordion>
+                    <el-collapse-item title="First Discussion" name="1">
+                      <forum :paperId="paper.id" :posts="firstDiscussPosts" :canDiscuss="canFirstDiscuss"></forum>
+                    </el-collapse-item>
+                    <el-collapse-item title="Author's Rebuttal" name="2">
+                      <el-card v-if="paper.rebuttal">{{paper.rebuttal}}</el-card>
+                      <el-card v-else>NO rebuttal now!</el-card>
+                    </el-collapse-item>
+                    <el-collapse-item title="Second Discussion" name="3">
+                      <forum :paperId="paper.id" :posts="secondDiscussPosts" :canDiscuss="canSecondDiscuss"></forum>                
+                    </el-collapse-item>
+                  </el-collapse>
                 </div>
               </div>
             </section>
@@ -251,10 +208,11 @@ import download from "../components/DownloadPaper";
 import preview from "../components/PreviewPaper";
 import contribution from "../components/SubmitPaper";
 import review from "../components/ReviewPaper";
+import forum from "../components/Forum"
 
 export default {
   name: "PaperDetail",
-  components: { navbar, footerbar, download, preview, contribution, review },  
+  components: { navbar, footerbar, download, preview, contribution, review,forum },  
   inject:['reload'],
 
   data() {
@@ -274,6 +232,11 @@ export default {
       // paging
       pageSize: 6,
       currentPage: 1,
+
+      canFirstDiscuss:false,
+      canSecondDiscuss:false,
+      firstDiscussPosts:[],
+      secondDiscussPosts:[],
 
       postContent:"",
       quoteId:-1,
@@ -398,6 +361,26 @@ export default {
             }
           }
 
+          // Set forum
+          if(this.conferenceStatus == "OPEN_REVIEW"){
+            this.canFirstDiscuss = true;
+            this.canSecondDiscuss = false;
+          }
+          if(this.conferenceStatus == "OPEN_RESULT" && this.paper.rebuttal){
+            this.canFirstDiscuss = false;
+            this.canSecondDiscuss = true;
+          }
+
+          len = this.paper.posts.length;
+          for(let i =0;i<len;i++){
+            if(this.paper.posts[i].status == 1){
+              this.firstDiscussPosts.push(this.paper.posts[i]);
+            }else{
+              this.secondDiscussPosts.push(this.paper.posts[i]);
+            }
+          }
+          
+
           // Get the authority of the present user
           switch (this.paper.url) {
             case "AUTHOR":
@@ -416,13 +399,7 @@ export default {
           }
         } else {
           this.$router.go(-1);
-          this.$message({
-            dangerouslyUseHTMLString: true,
-            type: "error",
-            message:
-              '<strong style="color:teal">Sorry! Your don\'t have the authority!</strong>',
-            center: true
-          });
+          this.notify("Sorry! You don\'t have the authority!","error");
         }
       })
       .catch(error => {

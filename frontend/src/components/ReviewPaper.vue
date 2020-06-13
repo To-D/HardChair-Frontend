@@ -58,12 +58,12 @@
     <el-button
       native-type="submit"
       type="primary"
-      v-on:click="modify()"
+      v-on:click="confirm()"
       :disabled="reviewDisabled"
     >Submit new Result</el-button>
     <el-button
       type="primary"
-      v-on:click="confirm"
+      v-on:click="confirm()"
       :disabled="reviewDisabled"
     >Do not Modify</el-button>
   </el-form-item>
@@ -126,12 +126,7 @@ export default {
           })
           .then(resp => {
             if (resp.status === 200) {            
-              this.$message({
-                dangerouslyUseHTMLString: true,
-                type: "success",
-                message: '<strong style="color:teal">Submit success!</strong>',
-                center: true
-              });
+              this.notify("Submit success!","success");
               this.reload();
             }
           })
@@ -140,53 +135,51 @@ export default {
           });
       },
       confirm(){
-        this.$confirm("Are you sure that you won't modify your result?", "Confirm", {
+        this.$confirm("Are you sure about your result?", "Confirm", {
             confirmButtonText: "Yes",
             cancelButtonText: "No"
         })
         .then(() => {
-          this.modify();
-        })
+          this.$axios
+            .post('/ReviseOrConfirmReviewResult',{
+              reviewResultId:this.reviewForm.id,
+              score: this.reviewForm.score,
+              comment: this.reviewForm.comment,
+              confidence: this.reviewForm.confidence                
+            })
+            .then(resp => {
+              if (resp.status === 200) {            
+                switch(resp.data.message){
+                  case "success":
+                    this.notify("Confirm successfully!","success");
+                    this.reload();
+                    break;
+                  case "Please confirm or revise the result after you have discussed with other PC MEMBER":
+                    this.notify("No discussion yet!","error");
+                    break;
+                  case "you have already confirmed or revised the result!!":
+                    this.notify("You have already confirmed or revised the result!","error");
+                    break;
+                  case "No Authority":
+                    this.notify("You don't have the authority!","error");
+                    break;
+                }
+              }
+            })
+            .catch(error => {
+              console.log(error);
+            });
+          })
         .catch(error => {console.log(error)});
-      },
-      modify(){
-        this.$axios
-        .post('/ReviseOrConfirmReviewResult',{
-          reviewResultId:this.reviewForm.id,
-          score: this.reviewForm.score,
-          comment: this.reviewForm.comment,
-          confidence: this.reviewForm.confidence                
-        })
-        .then(resp => {
-          if (resp.status === 200) {            
-            switch(resp.data.message){
-              case "success":
-                this.notify("Confirm successfully!","success");
-                break;
-              case "Please confirm or revise the result after you have discussed with other PC MEMBER":
-                this.notify("No discussion yet!","error");
-                break;
-              case "you have already confirmed or revised the result!!":
-                this.notify("You have already confirmed or revised the result!","error");
-                break;
-              case "No Authority":
-                this.notify("You don't have the authority!","error");
-                break;
-            }
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
-      },
-      },
+      },      
       notify(content,format){
         this.$message({
           dangerouslyUseHTMLString: true,
           type: format,
           message:'<strong style="color:teal">'+content+'</strong>',
           center: true
-        });      
+        });  
+      }    
     },
      created(){
        if(this.reviewResult != null){
