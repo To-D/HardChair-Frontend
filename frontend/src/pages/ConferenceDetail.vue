@@ -201,7 +201,7 @@
               </div>
             </section>
           </el-tab-pane>
-
+          
           <el-tab-pane v-if="isPC_MEMBER" label="Papers to review" name="review">
             <section>
               <div class="row">
