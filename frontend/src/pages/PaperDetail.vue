@@ -108,14 +108,13 @@
                     <em class="el-icon-document-checked"></em>Forum
                   </h2>
                   <el-collapse accordion>
-                    <el-collapse-item title="First Discussion" name="1">
+                    <el-collapse-item title="First Discussion" name="1" v-if="canFirstDiscuss">
                       <forum :paperId="paper.id" :posts="firstDiscussPosts" :canDiscuss="canFirstDiscuss"></forum>
                     </el-collapse-item>
-                    <el-collapse-item title="Author's Rebuttal" name="2">
-                      <el-card v-if="paper.rebuttal">{{paper.rebuttal}}</el-card>
-                      <el-card v-else>NO rebuttal now!</el-card>
+                    <el-collapse-item title="Author's Rebuttal" name="2" v-if="paper.rebuttal">
+                      <el-card>{{paper.rebuttal}}</el-card>
                     </el-collapse-item>
-                    <el-collapse-item title="Second Discussion" name="3">
+                    <el-collapse-item title="Second Discussion" name="3" v-if="canSecondDiscuss">
                       <forum :paperId="paper.id" :posts="secondDiscussPosts" :canDiscuss="canSecondDiscuss"></forum>                
                     </el-collapse-item>
                   </el-collapse>
