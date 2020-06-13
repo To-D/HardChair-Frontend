@@ -196,54 +196,7 @@
                   <h2>
                     <em class="el-icon-document"></em>My Papers
                   </h2>
-                  <el-card
-                    shadow="hover"
-                    class="box-card"
-                    style="margin-top: 1em;"
-                    v-for="paper in papers.slice((currentPage- 1)*pageSize,currentPage*pageSize)"
-                    :key="paper.id"
-                  >
-                    <p>
-                      <span class="itemlabel">
-                        <em class="el-icon-s-opportunity"></em> Title:
-                      </span>
-                      {{paper.title}}
-                    </p>
-                    <p>
-                      <span class="itemlabel">
-                        <em class="el-icon-s-fold"></em> Summary:
-                      </span>
-                      {{paper.summary}}
-                    </p>
-                    <p v-if="paper.createdTime">
-                      <span class="itemlabel">
-                        <em class="el-icon-date"></em> Upload date:
-                      </span>
-                      {{paper.createdTime.substring(0,10)}}
-                    </p>
-                    <!-- paper operation -->
-                    <div class="row">
-                      <preview class="onPageBtn" :id="paper.id">Preview</preview>
-                      <download class="onPageBtn" :id="paper.id" :title="paper.title"></download>
-                      <div class="onPageBtn">
-                        <el-button
-                          type="primary"
-                          @click="$router.push({path:'/paper/'+paper.id}) "
-                        >Edit</el-button>
-                      </div>
-                    </div>
-                  </el-card>
-                  <div class="row">
-                    <div class="col-xl-6 col-lg-12">
-                      <el-pagination
-                        hide-on-single-page
-                        layout="prev, pager, next"
-                        :page-size="pageSize"
-                        :current-page.sync="currentPage"
-                        :total="papers.length"
-                      >></el-pagination>
-                    </div>
-                  </div>
+                  <showPapers :paper="papers"></showPapers>                                    
                 </div>
               </div>
             </section>
@@ -257,6 +210,19 @@
                     <em class="el-icon-document"></em> Papers to review
                   </h2>
                   <showPapers :conferenceId="conference.id"></showPapers>
+                </div>
+              </div>
+            </section>
+          </el-tab-pane>
+
+          <el-tab-pane v-if="isCHAIR" label="All Papers" name="allPapers">
+            <section>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6">
+                  <h2>
+                    <em class="el-icon-document"></em> All papers contributed
+                  </h2>
+                  <showPapers :paper="papers"></showPapers>                  
                 </div>
               </div>
             </section>

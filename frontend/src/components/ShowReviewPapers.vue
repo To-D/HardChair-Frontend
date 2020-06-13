@@ -33,7 +33,7 @@
       <div class="row">
         <preview class="onPageBtn" :id="paper.id">Preview</preview>
         <download class="onPageBtn" :id="paper.id" :title="paper.title"></download>
-        <el-button class="onPageBtn" type="primary" @click="$router.push({path:'/paper/'+paper.id}) ">Review</el-button>
+        <el-button class="onPageBtn" type="primary" @click="$router.push({path:'/paper/'+paper.id}) ">Do more</el-button>
       </div>
     </el-card>
     <div class="row">
@@ -57,7 +57,7 @@ import preview from "./PreviewPaper";
 export default {
   name: "ShowPapers",
   components: { download, preview },
-  props: ["conferenceId"],
+  props: ["conferenceId","paper"],
   data() {
     return {
       pageSize: 2,
@@ -66,7 +66,8 @@ export default {
     };
   },
   created() {
-    this.$axios
+    if(this.conferenceId){
+      this.$axios
       .post("/ReviewPapers", {
         conferenceId: this.conferenceId
       })
@@ -76,6 +77,10 @@ export default {
       .catch(error => {
         console.log(error);
       });
+    }else{
+      this.papers = this.paper;
+    }
+    
   }
 };
 </script>
