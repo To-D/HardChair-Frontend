@@ -45,7 +45,7 @@
                       <span class="itemlabel">
                         <em class="el-icon-s-flag"></em> Status:
                       </span>
-                      <span v-if="paper.reviewResults && paper.reviewResults.length">Scores announced</span>
+                      <span v-if="conferenceStatus == 'OPEN_RESULT' || conferenceStatus =='OPEN_FINAL_RESULT'">Scores announced</span>
                       <span v-else>Wating for reviewing</span>
                     </div>
                     <div class="infoitem" v-if="paper.createdTime">

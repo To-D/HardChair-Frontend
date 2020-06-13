@@ -729,7 +729,7 @@ export default {
       })
       .then(resp=>{
         if(resp.status === 200){
-          switch(reap.data.message){
+          switch(resp.data.message){
             case "wait for all review results to be confirmed or revised!":
               this.notify("Wait for all review results to be confirmed or revised!","error");
               break;
