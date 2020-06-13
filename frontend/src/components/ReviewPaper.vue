@@ -181,11 +181,18 @@ export default {
         });  
       }    
     },
-     created(){
+     created(){       
        if(this.reviewResult != null){
          this.isEdit = true;
          this.reviewForm = this.reviewResult;
+         if(this.reviewForm.score < 0){
+           this.reviewForm.score +=3;
+         }else{
+           this.reviewForm.score += 2;
+         }
        }
+       
+       
      }
 }
 </script>
