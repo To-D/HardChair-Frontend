@@ -186,7 +186,16 @@
                   </h2>
                   <div v-if="!paper.rebuttal">
                     <div v-if="displayRebuttal">
-                      <el-input v-model="rebuttal"></el-input>
+                      <el-input
+                        v-model="rebuttal"
+                        type="textarea"
+                        autosize
+                        size="medium"
+                        auto-complete="off"
+                        maxlength="250"
+                        show-word-limit
+                        placeholder="Input your rebuttal here"
+                      ></el-input>
                       <br />
                       <el-button
                         class="discussInput"
