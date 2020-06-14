@@ -105,7 +105,7 @@
           <el-tab-pane v-if="isCHAIR || isPC_MEMBER" label="Forum" name="forum">
             <section>
               <div class="row">
-                <div class="col-xl-8 col-lg-8">
+                <div class="col-xl-6 col-lg-6">
                   <h2>
                     <em class="el-icon-document-checked"></em>Forum
                   </h2>

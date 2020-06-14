@@ -9,6 +9,7 @@
         <el-button @click="quoteContent='';quoteId=-1">Cancel quoting</el-button>
       </div>
       <el-input
+        class="discussInput"
         type="textarea"
         autosize
         size="medium"
@@ -20,6 +21,7 @@
       ></el-input>
       <br />
       <el-button
+        class="discussInput"
         :disabled="submitDisable"
         @click="submitPost"
         size="medium"
@@ -153,3 +155,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.discussInput{
+  margin-top: 1em;
+}
+</style>
