@@ -45,7 +45,9 @@
                       <span class="itemlabel">
                         <em class="el-icon-s-flag"></em> Status:
                       </span>
-                      <span v-if="conferenceStatus == 'OPEN_RESULT' || conferenceStatus =='OPEN_FINAL_RESULT'">Scores announced</span>
+                      <span
+                        v-if="conferenceStatus == 'OPEN_RESULT' || conferenceStatus =='OPEN_FINAL_RESULT'"
+                      >Scores announced</span>
                       <span v-else>Waiting for review</span>
                     </div>
                     <div class="infoitem" v-if="paper.createdTime">
@@ -108,14 +110,22 @@
                     <em class="el-icon-document-checked"></em>Forum
                   </h2>
                   <el-collapse accordion>
-                    <el-collapse-item title="First Discussion" name="1" >
-                      <forum :paperId="paper.id" :posts="firstDiscussPosts" :canDiscuss="canFirstDiscuss"></forum>
+                    <el-collapse-item title="First Discussion" name="1">
+                      <forum
+                        :paperId="paper.id"
+                        :posts="firstDiscussPosts"
+                        :canDiscuss="canFirstDiscuss"
+                      ></forum>
                     </el-collapse-item>
                     <el-collapse-item title="Author's Rebuttal" name="2" v-if="paper.rebuttal">
                       <el-card>{{paper.rebuttal}}</el-card>
                     </el-collapse-item>
                     <el-collapse-item title="Second Discussion" name="3" v-if="paper.rebuttal">
-                      <forum :paperId="paper.id" :posts="secondDiscussPosts" :canDiscuss="canSecondDiscuss"></forum>                
+                      <forum
+                        :paperId="paper.id"
+                        :posts="secondDiscussPosts"
+                        :canDiscuss="canSecondDiscuss"
+                      ></forum>
                     </el-collapse-item>
                   </el-collapse>
                 </div>
@@ -130,7 +140,9 @@
                   <h2>
                     <em class="el-icon-document-checked"></em> My Results
                   </h2>
-                  <div v-if="conferenceStatus !== 'OPEN_RESULT' && conferenceStatus !== 'OPEN_FINAL_RESULT'">
+                  <div
+                    v-if="conferenceStatus !== 'OPEN_RESULT' && conferenceStatus !== 'OPEN_FINAL_RESULT'"
+                  >
                     <el-card shadow="hover">Result hasn't been announced!</el-card>
                   </div>
                   <el-card
@@ -175,10 +187,19 @@
                   <div v-if="!paper.rebuttal">
                     <div v-if="displayRebuttal">
                       <el-input v-model="rebuttal"></el-input>
-                      <br>
-                      <el-button :disabled="rebuttalSubmitDisable" @click= "submitRebuttal">Submit</el-button>
+                      <br />
+                      <el-button
+                        size="medium"
+                        type="primary"
+                        style="width:100% "
+                        :disabled="rebuttalSubmitDisable"
+                        @click="submitRebuttal"
+                      >Submit</el-button>
                     </div>
-                    <el-card shadow="hover" v-else>Rebuttal not available now. Please try at a later date.</el-card>
+                    <el-card
+                      shadow="hover"
+                      v-else
+                    >Rebuttal not available now. Please try at a later date.</el-card>
                   </div>
                   <el-card shadow="hover" v-else>My rebuttal: {{paper.rebuttal}}</el-card>
                 </div>
@@ -186,13 +207,17 @@
             </section>
           </el-tab-pane>
 
-          <el-tab-pane v-if="isAUTHOR && conferenceStatus == 'SUBMIT_ALLOWED'" label="Edit paper" name="submission">
+          <el-tab-pane
+            v-if="isAUTHOR && conferenceStatus == 'SUBMIT_ALLOWED'"
+            label="Edit paper"
+            name="submission"
+          >
             <section>
               <div class="row">
                 <div class="col-xl-6 col-lg-6">
                   <h2>
                     <em class="el-icon-upload2"></em> Edit paper
-                  </h2>                  
+                  </h2>
                   <div>
                     <contribution
                       v-if="paper.conferenceId"
@@ -220,19 +245,27 @@ import download from "../components/DownloadPaper";
 import preview from "../components/PreviewPaper";
 import contribution from "../components/SubmitPaper";
 import review from "../components/ReviewPaper";
-import forum from "../components/Forum"
+import forum from "../components/Forum";
 
 export default {
   name: "PaperDetail",
-  components: { navbar, footerbar, download, preview, contribution, review,forum },  
-  inject:['reload'],
+  components: {
+    navbar,
+    footerbar,
+    download,
+    preview,
+    contribution,
+    review,
+    forum
+  },
+  inject: ["reload"],
 
   data() {
     return {
       // Authorities
       isAUTHOR: false,
       isPC_MEMBER: false,
-      isCHAIR:false,
+      isCHAIR: false,
 
       // paper
       paper: {},
@@ -246,62 +279,70 @@ export default {
       currentPage: 1,
 
       // Forum
-      canFirstDiscuss:false,
-      canSecondDiscuss:false,
-      firstDiscussPosts:[],
-      secondDiscussPosts:[],
+      canFirstDiscuss: false,
+      canSecondDiscuss: false,
+      firstDiscussPosts: [],
+      secondDiscussPosts: [],
 
       // Rebuttal
-      rebuttal:"",
-      displayRebuttal:false
-
+      rebuttal: "",
+      displayRebuttal: false
     };
   },
   methods: {
-    submitRebuttal(){
+    submitRebuttal() {
       this.$confirm("Are you sure to submit ? (one chance only)", "Confirm", {
         confirmButtonText: "Confirm",
         cancelButtonText: "Cancel"
       })
         .then(() => {
-          this.$axios.post('/SubmitRebuttal',{
-            rebuttalContent:this.rebuttal,
-            paperId:this.paper.id
-          })
-          .then(resp=>{
-            if(resp.status === 200){
-              switch(resp.data.message){
-                case "success":
-                  this.notify("Your rebuttal has been submitted!","success");
-                  this.reload();
-                  break;
-                case "No Authority":
-                  this.notify("Sorry! Your don\'t have the authority!","error");
-                  break;
-                case "you have already submitted the rebuttal!":
-                  this.notify("You have already submitted the rebuttal!","error");
-                  break;
+          this.$axios
+            .post("/SubmitRebuttal", {
+              rebuttalContent: this.rebuttal,
+              paperId: this.paper.id
+            })
+            .then(resp => {
+              if (resp.status === 200) {
+                switch (resp.data.message) {
+                  case "success":
+                    this.notify("Your rebuttal has been submitted!", "success");
+                    this.reload();
+                    break;
+                  case "No Authority":
+                    this.notify(
+                      "Sorry! Your don't have the authority!",
+                      "error"
+                    );
+                    break;
+                  case "you have already submitted the rebuttal!":
+                    this.notify(
+                      "You have already submitted the rebuttal!",
+                      "error"
+                    );
+                    break;
+                }
               }
-            }
-          })
+            });
         })
-        .catch(error => {console.log(error)});
+        .catch(error => {
+          console.log(error);
+        });
     },
-    notify(content,format){
+    notify(content, format) {
       this.$message({
         dangerouslyUseHTMLString: true,
         type: format,
-        message:'<strong style="color:teal">'+content+'</strong>',
+        message: '<strong style="color:teal">' + content + "</strong>",
         center: true
-      });      
-    },
+      });
+    }
   },
   computed: {
-    rebuttalSubmitDisable(){
+    rebuttalSubmitDisable() {
       return this.rebuttal == "";
     }
   },
-  created() {    
+  created() {
     this.$axios
       .post("/PaperAuthority", {
         paperId: this.$route.params.paperID
@@ -317,30 +358,30 @@ export default {
             if (this.paper.reviewResults[i].pcMember) {
               this.reviewResult = this.paper.reviewResults[i];
             }
-            if (this.paper.reviewResults[i].score < 0){
-              this.displayRebuttal = this.conferenceStatus=="OPEN_RESULT" && !this.paper.rebuttal;
+            if (this.paper.reviewResults[i].score < 0) {
+              this.displayRebuttal =
+                this.conferenceStatus == "OPEN_RESULT" && !this.paper.rebuttal;
             }
           }
 
           // Set forum
-          if(this.conferenceStatus == "OPEN_REVIEW"){
+          if (this.conferenceStatus == "OPEN_REVIEW") {
             this.canFirstDiscuss = true;
             this.canSecondDiscuss = false;
           }
-          if(this.conferenceStatus == "OPEN_RESULT" && this.paper.rebuttal){
+          if (this.conferenceStatus == "OPEN_RESULT" && this.paper.rebuttal) {
             this.canFirstDiscuss = false;
             this.canSecondDiscuss = true;
           }
 
           len = this.paper.posts.length;
-          for(let i =0;i<len;i++){
-            if(this.paper.posts[i].status == 1){
+          for (let i = 0; i < len; i++) {
+            if (this.paper.posts[i].status == 1) {
               this.firstDiscussPosts.push(this.paper.posts[i]);
-            }else{
+            } else {
               this.secondDiscussPosts.push(this.paper.posts[i]);
             }
           }
-          
 
           // Get the authority of the present user
           switch (this.paper.url) {
@@ -360,13 +401,13 @@ export default {
           }
         } else {
           this.$router.go(-1);
-          this.notify("Sorry! You don\'t have the authority!","error");
+          this.notify("Sorry! You don't have the authority!", "error");
         }
       })
       .catch(error => {
         console.log(error);
-      });      
-  },
+      });
+  }
 };
 </script>
 

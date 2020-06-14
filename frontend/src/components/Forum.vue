@@ -19,7 +19,13 @@
         placeholder="What do you think of the essay?"
       ></el-input>
       <br />
-      <el-button :disabled="submitDisable" @click="submitPost">Submit</el-button>
+      <el-button
+        :disabled="submitDisable"
+        @click="submitPost"
+        size="medium"
+        type="primary"
+        style="width:100% "
+      >Submit</el-button>
     </div>
     <el-card shadow="hover" v-else>Discussion is not available now. Please try at a later date.</el-card>
 
