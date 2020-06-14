@@ -4,7 +4,7 @@
     <div v-if="canDiscuss" ref="reply_area">
       <div class="el-icon-edit-outline">Join the discussion here!</div>
       <el-tag
-        class="discussQuoteTag"
+        class="discussInput discussQuoteTag"
         v-if="quoteContent"
         @close="quoteContent='';quoteId=-1"
         closable
@@ -51,7 +51,6 @@
             @click="reply(post)"
           >Reply</el-button>
         </div>
-        <!-- <div v-if="post.quoteId != -1">{{getQuoteContent(post.quoteId)}}</div> -->
         <el-tag
           class="discussQuoteTag"
           v-if="post.quoteId != -1"
@@ -110,7 +109,7 @@ export default {
       let len = this.posts.length;
       for (let i = 0; i < len; i++) {
         if (this.posts[i].id == quoteId) {
-          return this.posts[i].postContent;
+          return (this.posts[i].username + ": " + this.posts[i].postContent);
         }
       }
     },
@@ -164,7 +163,6 @@ export default {
   margin-top: 1em;
 }
 .discussQuoteTag {
-  margin-top: 1em;
   white-space: unset;
   height: unset;
 }
