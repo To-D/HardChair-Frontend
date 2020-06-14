@@ -2,7 +2,7 @@
   <div>
     <!-- reply area -->
     <div v-if="canDiscuss" ref="reply_area">
-      <p>Join the discussion here!</p>
+      <div class="el-icon-edit-outline">Join the discussion here!</div>
       <br />
       <div v-if="quoteContent">
         <p>{{quoteContent}}</p>
@@ -18,6 +18,7 @@
         show-word-limit
         placeholder="What do you think of the essay?"
       ></el-input>
+      <br />
       <el-button :disabled="submitDisable" @click="submitPost">Submit</el-button>
     </div>
     <el-card shadow="hover" v-else>Discussion is not available now. Please try at a later date.</el-card>
