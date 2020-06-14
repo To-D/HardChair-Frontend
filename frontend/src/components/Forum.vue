@@ -30,7 +30,7 @@
         style="width:100% "
       >Submit</el-button>
     </div>
-    <el-card shadow="hover" v-else>Discussion is not available now. Please try at a later date.</el-card>
+    <el-card shadow="hover" v-else>Discussion is not available now.</el-card>
 
     <!-- post area -->
     <div v-if="posts">

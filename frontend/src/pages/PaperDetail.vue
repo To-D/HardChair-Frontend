@@ -182,13 +182,14 @@
               <div class="row">
                 <div class="col-xl-6 col-lg-6">
                   <h2>
-                    <em class="el-icon-question"></em> My Rebutttal
+                    <em class="el-icon-question"></em> My Rebuttal
                   </h2>
                   <div v-if="!paper.rebuttal">
                     <div v-if="displayRebuttal">
                       <el-input v-model="rebuttal"></el-input>
                       <br />
                       <el-button
+                        class="discussInput"
                         size="medium"
                         type="primary"
                         style="width:100% "
@@ -440,5 +441,8 @@ h2 {
 }
 .checkboxes {
   margin-right: 0;
+}
+.discussInput {
+  margin-top: 1em;
 }
 </style>
