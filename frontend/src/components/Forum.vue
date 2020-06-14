@@ -3,11 +3,6 @@
     <!-- reply area -->
     <div v-if="canDiscuss" ref="reply_area">
       <div class="el-icon-edit-outline">Join the discussion here!</div>
-      <!-- <br />
-      <div v-if="quoteContent">
-        <p>{{quoteContent}}</p>
-        <el-button @click="quoteContent='';quoteId=-1">Cancel quoting</el-button>
-      </div>-->
       <el-tag
         class="discussQuoteTag"
         v-if="quoteContent"
@@ -56,7 +51,11 @@
             @click="reply(post)"
           >Reply</el-button>
         </div>
-        <div v-if="post.quoteId != -1">{{getQuoteContent(post.quoteId)}}</div>
+        <!-- <div v-if="post.quoteId != -1">{{getQuoteContent(post.quoteId)}}</div> -->
+        <el-tag
+          class="discussQuoteTag"
+          v-if="post.quoteId != -1"
+        >{{getQuoteContent(post.quoteId)}}</el-tag>
         <div>{{post.postContent}}</div>
       </el-card>
     </div>
