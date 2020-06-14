@@ -370,6 +370,7 @@ export default {
                   message:
                     "<strong style='color:teal'>Submission successful!</strong>"
                 });
+                this.reload();
               }
             })
             .catch(error => {
