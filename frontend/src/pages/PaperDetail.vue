@@ -178,8 +178,9 @@
                       <br>
                       <el-button :disabled="rebuttalSubmitDisable" @click= "submitRebuttal">Submit</el-button>
                     </div>
+                    <el-card shadow="hover" v-else>Rebuttal not available now. Please try at a later date.</el-card>
                   </div>
-                  <el-card v-else>My rebuttal: {{paper.rebuttal}}</el-card>
+                  <el-card shadow="hover" v-else>My rebuttal: {{paper.rebuttal}}</el-card>
                 </div>
               </div>
             </section>
