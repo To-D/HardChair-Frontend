@@ -9,7 +9,7 @@
         <el-button @click="quoteContent='';quoteId=-1">Cancel quoting</el-button>
       </div>-->
       <el-tag
-        class="discussInput"
+        class="discussQuoteTag"
         v-if="quoteContent"
         @close="quoteContent='';quoteId=-1"
         closable
@@ -163,5 +163,10 @@ export default {
 <style scoped>
 .discussInput {
   margin-top: 1em;
+}
+.discussQuoteTag {
+  margin-top: 1em;
+  white-space: unset;
+  height: unset;
 }
 </style>
