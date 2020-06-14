@@ -16,7 +16,7 @@
         size="medium"
         v-model="postContent"
         auto-complete="off"
-        maxlength="500"
+        maxlength="250"
         show-word-limit
         placeholder="What do you think of the essay?"
       ></el-input>
