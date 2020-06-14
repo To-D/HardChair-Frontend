@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="papers.length == 0">
+    <div v-if="!papers || papers.length == 0">
       <el-card shadow="hover">No paper now!</el-card>
     </div>
     <el-card
@@ -39,6 +39,7 @@
     <div class="row">
       <div class="col-xl-6 col-lg-12">
         <el-pagination
+          v-if="papers && papers.length > 0"
           hide-on-single-page
           layout="prev, pager, next"
           :page-size="pageSize"
@@ -80,7 +81,6 @@ export default {
     }else{
       this.papers = this.paper;
     }
-    
   }
 };
 </script>

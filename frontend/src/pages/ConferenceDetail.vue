@@ -189,14 +189,14 @@
             </section>
           </el-tab-pane>
 
-          <el-tab-pane v-if=" isAUTHOR " label="My Papers" name="myPaper">
+          <el-tab-pane v-if=" isAUTHOR" label="My Papers" name="myPaper">
             <section>
               <div class="row">
                 <div class="col-xl-6 col-lg-6">
                   <h2>
                     <em class="el-icon-document"></em>My Papers
                   </h2>
-                  <showPapers :paper="papers"></showPapers>                                    
+                  <showPapers :paper="papers" key="1"></showPapers>                                    
                 </div>
               </div>
             </section>
@@ -209,7 +209,7 @@
                   <h2>
                     <em class="el-icon-document"></em> Papers to review
                   </h2>
-                  <showPapers :conferenceId="conference.id"></showPapers>
+                  <showPapers v-if="conference.id" :conferenceId="conference.id" key="2"></showPapers>
                 </div>
               </div>
             </section>
@@ -222,7 +222,7 @@
                   <h2>
                     <em class="el-icon-document"></em> All papers contributed
                   </h2>
-                  <showPapers :paper="papers"></showPapers>                  
+                  <showPapers :paper="papers" key="3"></showPapers>                  
                 </div>
               </div>
             </section>
