@@ -3,11 +3,17 @@
     <!-- reply area -->
     <div v-if="canDiscuss" ref="reply_area">
       <div class="el-icon-edit-outline">Join the discussion here!</div>
-      <br />
+      <!-- <br />
       <div v-if="quoteContent">
         <p>{{quoteContent}}</p>
         <el-button @click="quoteContent='';quoteId=-1">Cancel quoting</el-button>
-      </div>
+      </div>-->
+      <el-tag
+        class="discussInput"
+        v-if="quoteContent"
+        @close="quoteContent='';quoteId=-1"
+        closable
+      >{{quoteContent}}</el-tag>
       <el-input
         class="discussInput"
         type="textarea"
@@ -30,8 +36,6 @@
       >Submit</el-button>
     </div>
     <el-card shadow="hover" v-else>Discussion is not available now. Please try at a later date.</el-card>
-
-    <br />
 
     <!-- post area -->
     <div v-if="posts">
@@ -157,7 +161,7 @@ export default {
 </script>
 
 <style scoped>
-.discussInput{
+.discussInput {
   margin-top: 1em;
 }
 </style>
