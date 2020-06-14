@@ -46,7 +46,7 @@
                         <em class="el-icon-s-flag"></em> Status:
                       </span>
                       <span v-if="conferenceStatus == 'OPEN_RESULT' || conferenceStatus =='OPEN_FINAL_RESULT'">Scores announced</span>
-                      <span v-else>Wating for reviewing</span>
+                      <span v-else>Waiting for review</span>
                     </div>
                     <div class="infoitem" v-if="paper.createdTime">
                       <span class="itemlabel">
@@ -160,17 +160,26 @@
                       {{result.score}}
                     </p>
                   </el-card>
+                </div>
+              </div>
+            </section>
+          </el-tab-pane>
 
-                  <!-- rebuttal-->
-                  <br>
+          <el-tab-pane v-if="isAUTHOR" label="My Rebuttal" name="rebuttal">
+            <section>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6">
+                  <h2>
+                    <em class="el-icon-question"></em> My Rebutttal
+                  </h2>
                   <div v-if="!paper.rebuttal">
                     <div v-if="displayRebuttal">
-                      <p>Rebuttal</p>
                       <el-input v-model="rebuttal"></el-input>
+                      <br>
                       <el-button :disabled="rebuttalSubmitDisable" @click= "submitRebuttal">Submit</el-button>
                     </div>
                   </div>
-                  <el-card v-else>Your rebuttal is: {{paper.rebuttal}}</el-card>
+                  <el-card v-else>My rebuttal: {{paper.rebuttal}}</el-card>
                 </div>
               </div>
             </section>

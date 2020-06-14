@@ -2,7 +2,7 @@
   <div>
     <!-- reply area -->
     <div v-if="canDiscuss" ref="reply_area">
-      <p>Reply Area</p>
+      <p>Join the discussion here!</p>
       <br />
       <div v-if="quoteContent">
         <p>{{quoteContent}}</p>
